@@ -44,9 +44,9 @@ En este ejercicio, se incluye un script para aprovisionar una nueva área de tra
 
 Azure Databricks es una plataforma de procesamiento distribuido que usa clústeres* de Apache Spark *para procesar datos en paralelo en varios nodos. Cada clúster consta de un nodo de controlador para coordinar el trabajo y nodos de trabajo para hacer tareas de procesamiento. En este ejercicio, crearás un clúster de *nodo único* para minimizar los recursos de proceso usados en el entorno de laboratorio (en los que se pueden restringir los recursos). En un entorno de producción, normalmente crearías un clúster con varios nodos de trabajo.
 
-> **Sugerencia**: Si ya dispone de un clúster con una versión de runtime 13.3 LTS o superior en su área de trabajo de Azure Databricks, puede utilizarlo para completar este ejercicio y omitir este procedimiento.
+> **Sugerencia**: Si ya dispone de un clúster con una versión de runtime 13.3 LTS o superior en su área de trabajo de Azure Databricks, puede utilizarlo para completar este ejercicio y omitir este procedimiento.
 
-1. En Azure Portal, vaya al grupo de recursos **msl-*xxxxxxx*** que se creó con el script (o al grupo de recursos que contiene el área de trabajo de Azure Databricks existente).
+1. En Azure Portal, vaya al grupo de recursos **msl-*xxxxxxx*** que se creó con el script (o al grupo de recursos que contiene el área de trabajo de Azure Databricks existente)
 1. Seleccione el recurso Azure Databricks Service (llamado **databricks-*xxxxxxx*** si usó el script de instalación para crearlo).
 1. En la página **Información general** del área de trabajo, usa el botón **Inicio del área de trabajo** para abrir el área de trabajo de Azure Databricks en una nueva pestaña del explorador; inicia sesión si se solicita.
 
@@ -58,10 +58,10 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
     - **Directiva**: Unrestricted (Sin restricciones)
     - **Modo de clúster** de un solo nodo
     - **Modo de acceso**: usuario único (*con la cuenta de usuario seleccionada*)
-    - **Versión de runtime de Databricks**: 13.3 LTS (Spark 3.4.1, Scala 2.12) o posterior
+    - **Versión de runtime de Databricks**: 13.3 LTS (Spark 3.4.1, Scala 2.12) o posterior
     - **Usar aceleración de Photon**: seleccionado
     - **Tipo de nodo**: Standard_DS3_v2.
-    - **Finalizar después de** *20* **minutos de inactividad**
+    - **Finaliza después de** *20* **minutos de inactividad**
 
 1. Espera a que se cree el clúster. Esto puede tardar un par de minutos.
 
@@ -78,7 +78,7 @@ Como en muchos entornos de Spark, Databricks es compatible con el uso de cuadern
 
 ### Ingerir datos
 
-1. En la primera celda del cuaderno, escriba el siguiente código, que utiliza comandos de *shell* para descargar archivos de datos de GitHub en el sistema de archivos de Databricks (DBFS) utilizado por el clúster.
+1. En la primera celda del cuaderno, escriba el siguiente código, que utiliza comandos del *shell* para descargar los archivos de datos de GitHub en el sistema de archivos utilizado por el clúster.
 
     ```python
     %sh
@@ -89,7 +89,7 @@ Como en muchos entornos de Spark, Databricks es compatible con el uso de cuadern
     wget -O /dbfs/spark_lab/2021.csv https://raw.githubusercontent.com/MicrosoftLearning/mslearn-databricks/main/data/2021.csv
     ```
 
-1. Utilice la opción **&#9656; Ejecutar celda** del menú situado en la parte superior derecha de la siguiente celda para ejecutarlo. A continuación, espere a que se complete el trabajo de Spark ejecutado por el código.
+1. Use la opción del menú **&#9656; Ejecutar celda** situado a la izquierda de la celda para ejecutarla. A continuación, espere a que se complete el trabajo de Spark ejecutado por el código.
 
 ### Consulta de datos en archivos
 

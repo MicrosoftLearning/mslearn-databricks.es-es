@@ -87,7 +87,7 @@ El escenario de este ejercicio se basa en observaciones de pingüinos en la Ant�
 
 > **Cita**: El conjunto de datos sobre pingüinos que se usa en este ejercicio es un subconjunto de datos que han recopilado y hecho público el [Dr. Kristen Gorman](https://www.uaf.edu/cfos/people/faculty/detail/kristen-gorman.php) y la [Palmer Station, Antarctica LTER](https://pal.lternet.edu/), miembro de la [Long Term Ecological Research Network](https://lternet.edu/).
 
-1. En la primera celda del cuaderno, escriba el siguiente código, que utiliza comandos de *shell* para descargar los datos de pingüinos de GitHub en el sistema de archivos Databricks (DBFS) utilizado por su clúster.
+1. En la primera celda del cuaderno, escriba el siguiente código, que utiliza comandos de *shell* para descargar los datos de pingüinos de GitHub en el sistema de archivos utilizado por el clúster.
 
     ```bash
     %sh
@@ -96,7 +96,7 @@ El escenario de este ejercicio se basa en observaciones de pingüinos en la Ant�
     wget -O /dbfs/hyperopt_lab/penguins.csv https://raw.githubusercontent.com/MicrosoftLearning/mslearn-databricks/main/data/penguins.csv
     ```
 
-1. Utilice la opción **&#9656; Ejecutar celda** del menú situado en la parte superior derecha de la siguiente celda para ejecutarla. A continuación, espera a que se complete el trabajo Spark ejecutado por el código.
+1. Use la opción de menú **&#9656; Ejecutar celda** situado a la izquierda de la celda para ejecutarla. A continuación, espera a que se complete el trabajo Spark ejecutado por el código.
 1. Ahora prepare los datos para el aprendizaje automático. Debajo de la celda de código existente, usa el icono **+** para agregar una nueva celda de código. A continuación, en la nueva celda, escriba y ejecute el siguiente código para:
     - Quitar las filas incompletas
     - Aplicar tipos de datos adecuados

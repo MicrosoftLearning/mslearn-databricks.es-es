@@ -13,9 +13,9 @@ Se tardan aproximadamente **40** minutos en completar este laboratorio.
 
 > **Sugerencia**: Si ya tiene un área de trabajo de Azure Databricks, puede omitir este procedimiento y usar el área de trabajo existente.
 
-En este ejercicio se incluye un script para aprovisionar una nueva área de trabajo de Azure Databricks. El script intenta crear un recurso de área de trabajo de Azure Databricks de nivel *Premium* en una región en la que la suscripción de Azure tiene cuota suficiente para los núcleos de proceso necesarios en este ejercicio, y da por hecho que la cuenta de usuario tiene permisos suficientes en la suscripción para crear un recurso de área de trabajo de Azure Databricks. Si se produce un error en el script debido a que la cuota o los permisos son insuficientes, puede intentar crear un área de trabajo de Azure Databricks de forma interactiva en Azure Portal.
+En este ejercicio, se incluye un script para aprovisionar una nueva área de trabajo de Azure Databricks. El script intenta crear un recurso de área de trabajo de Azure Databricks de nivel *Premium* en una región en la que la suscripción de Azure tiene cuota suficiente para los núcleos de proceso necesarios en este ejercicio, y da por hecho que la cuenta de usuario tiene permisos suficientes en la suscripción para crear un recurso de área de trabajo de Azure Databricks. Si se produjese un error en el script debido a cuota o permisos insuficientes, intente [crear un área de trabajo de Azure Databricks de forma interactiva en Azure Portal](https://learn.microsoft.com/azure/databricks/getting-started/#--create-an-azure-databricks-workspace).
 
-1. En un explorador, inicia sesión en [Azure Portal](https://portal.azure.com) en `https://portal.azure.com`.
+1. En un explorador web, inicia sesión en [Azure Portal](https://portal.azure.com) en `https://portal.azure.com`.
 2. Usa el botón **[\>_]** a la derecha de la barra de búsqueda en la parte superior de la página para crear un nuevo Cloud Shell en Azure Portal, selecciona un entorno de ***PowerShell*** y crea almacenamiento si se te solicita. Cloud Shell proporciona una interfaz de línea de comandos en un panel situado en la parte inferior de Azure Portal, como se muestra a continuación:
 
     ![Azure Portal con un panel de Cloud Shell](./images/cloud-shell.png)
@@ -31,7 +31,7 @@ En este ejercicio se incluye un script para aprovisionar una nueva área de trab
     git clone https://github.com/MicrosoftLearning/mslearn-databricks
     ```
 
-5. Una vez clonado el repositorio, escriba el siguiente comando para ejecutar el script **setup.ps1**, que aprovisiona un área de trabajo de Azure Databricks en una región disponible:
+5. Una vez clonado el repositorio, escriba el siguiente comando para ejecutar el script **setup.ps1**, que aprovisiona un área de trabajo de Azure Databricks en una región disponible:
 
     ```powershell
     ./mslearn-databricks/setup.ps1
@@ -73,7 +73,7 @@ Ahora vamos a crear un cuaderno de Spark e importar los datos con los que trabaj
 
 1. En la barra lateral, usa el vínculo **(+) Nuevo** para crear un **cuaderno**.
 1. Cambie el nombre predeterminado del cuaderno (**Cuaderno sin título *[fecha]***) a **Explorar Delta Lake** y, en la lista desplegable **Conectar**, seleccione su clúster si aún no está seleccionado. Si el clúster no se está ejecutando, puede tardar un minuto en iniciarse.
-1. En la primera celda del cuaderno, escriba el siguiente código, que utiliza comandos de *shell* para descargar archivos de datos de GitHub en el sistema de archivos Databricks (DBFS) utilizado por su clúster.
+1. En la primera celda del cuaderno, escriba el siguiente código, que utiliza comandos del *shell* para descargar los archivos de datos de GitHub en el sistema de archivos utilizado por el clúster.
 
     ```python
     %sh
@@ -82,7 +82,7 @@ Ahora vamos a crear un cuaderno de Spark e importar los datos con los que trabaj
     wget -O /dbfs/delta_lab/products.csv https://raw.githubusercontent.com/MicrosoftLearning/mslearn-databricks/main/data/products.csv
     ```
 
-1. Utilice la opción **&#9656; Ejecutar celda** del menú situado en la parte superior derecha de la siguiente celda para ejecutarla. A continuación, espera a que se complete el trabajo Spark ejecutado por el código.
+1. Use la opción del menú **&#9656; Ejecutar celda** situado a la izquierda de la celda para ejecutarla. A continuación, espere a que se complete el trabajo de Spark ejecutado por el código.
 1. Debajo de la celda de código existente, usa el icono **+** para agregar una nueva celda de código. A continuación, en la nueva celda, escriba y ejecute el siguiente código para cargar los datos del archivo y ver las primeras 10 filas.
 
     ```python
@@ -156,8 +156,8 @@ Las modificaciones de datos se registran, lo que le permite usar las funcionalid
 
 Hasta ahora has trabajado con tablas Delta cargando datos de la carpeta que contiene los archivos Parquet en los que se basa la tabla. Puedes definir *tablas de catálogo* que encapsulan los datos y proporcionar una entidad de tabla denominada a la que puedes hacer referencia en código SQL. Spark admite dos tipos de tablas de catálogo para Delta Lake:
 
-- Tablas *externas* que se definen por la ruta de acceso a los archivos Parquet que contienen los datos de la tabla.
-- Tablas *Administradas* que se definen en la metastore de Hive para el clúster de Spark.
+- Tablas *externas* definidas por la ruta de acceso a los archivos que contienen los datos de la tabla.
+- Tablas *administradas* que se definen en el metastore.
 
 ### Crear una tabla externa
 
@@ -188,7 +188,7 @@ Hasta ahora has trabajado con tablas Delta cargando datos de la carpeta que cont
    spark.sql("DESCRIBE EXTENDED AdventureWorks.ProductsManaged").show(truncate=False)
     ```
 
-    No ha especificado una ruta de acceso para los archivos parquet usados por la tabla; esto se administra en el metastore de Hive y se muestra en la propiedad **Ubicación** en la descripción de la tabla (en la ruta de acceso **dbfs:/user/hive/warehouse/**).
+    No ha especificado una ruta de acceso para los archivos parquet usados por la tabla; esto se administra en el metastore de Hive y se muestra en la propiedad **Ubicación** en la descripción de la tabla.
 
 1. Use el siguiente código para consultar la tabla administrada, teniendo en cuenta que la sintaxis es la misma que para una tabla administrada:
 
