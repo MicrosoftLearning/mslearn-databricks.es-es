@@ -17,9 +17,9 @@ Necesitará una [suscripción de Azure](https://azure.microsoft.com/free) en la 
 
 > **Nota**: Para este ejercicio, necesita un área de trabajo de Azure Databricks **Premium** en una región en la que se admita el *servicio de modelo*. Consulte las [Regiones de Azure Databricks](https://learn.microsoft.com/azure/databricks/resources/supported-regions) para obtener más información sobre sus funcionalidades regionales. Si ya tiene un área de trabajo de Azure Databricks *Premium* o *de prueba* en una región adecuada, puede omitir este procedimiento y usar el área de trabajo existente.
 
-En este ejercicio se incluye un script para aprovisionar una nueva área de trabajo de Azure Databricks. El script intenta crear un recurso de área de trabajo de Azure Databricks de nivel *Premium* en una región en la que la suscripción de Azure tiene una cuota suficiente para los núcleos de proceso necesarios en este ejercicio; y asume que su cuenta de usuario tiene permisos suficientes en la suscripción para crear un recurso de área de trabajo de Azure Databricks. Si se produce un error en el script debido a una cuota o permisos insuficientes, puede intentar crear un área de trabajo de Azure Databricks de forma interactiva en Azure Portal.
+En este ejercicio se incluye un script para aprovisionar una nueva área de trabajo de Azure Databricks. El script intenta crear un recurso de área de trabajo de Azure Databricks de nivel *Premium* en una región en la que la suscripción de Azure tiene cuota suficiente para los núcleos de proceso necesarios en este ejercicio, y da por hecho que la cuenta de usuario tiene permisos suficientes en la suscripción para crear un recurso de área de trabajo de Azure Databricks. Si se produce un error en el script debido a una cuota o permisos insuficientes, puede intentar [crear un área de trabajo de Azure Databricks de forma interactiva en Azure Portal](https://learn.microsoft.com/azure/databricks/getting-started/#--create-an-azure-databricks-workspace).
 
-1. En un explorador, inicia sesión en [Azure Portal](https://portal.azure.com) en `https://portal.azure.com`.
+1. En un explorador web, inicia sesión en [Azure Portal](https://portal.azure.com) en `https://portal.azure.com`.
 2. Usa el botón **[\>_]** a la derecha de la barra de búsqueda en la parte superior de la página para crear un nuevo Cloud Shell en Azure Portal, selecciona un entorno de ***PowerShell*** y crea almacenamiento si se te solicita. Cloud Shell proporciona una interfaz de línea de comandos en un panel situado en la parte inferior de Azure Portal, como se muestra a continuación:
 
     ![Azure Portal con un panel de Cloud Shell](./images/cloud-shell.png)
@@ -48,25 +48,25 @@ En este ejercicio se incluye un script para aprovisionar una nueva área de trab
 
 Azure Databricks es una plataforma de procesamiento distribuido que usa clústeres* de Apache Spark *para procesar datos en paralelo en varios nodos. Cada clúster consta de un nodo de controlador para coordinar el trabajo y nodos de trabajo para hacer tareas de procesamiento. En este ejercicio, crearás un clúster de *nodo único* para minimizar los recursos de proceso usados en el entorno de laboratorio (en los que se pueden restringir los recursos). En un entorno de producción, normalmente crearías un clúster con varios nodos de trabajo.
 
-> **Sugerencia**: Si ya tiene un clúster con una versión de runtime de **<u>ML</u>** de 13.3 LTS o posterior en su área de trabajo de Azure Databricks, puede usarla para completar este ejercicio y omitir este procedimiento.
+> **Sugerencia**: Si ya dispone de un clúster con una versión de runtime 13.3 LTS **<u>ML</u>** o superior en su área de trabajo de Azure Databricks, puede utilizarlo para completar este ejercicio y omitir este procedimiento.
 
-1. En Azure Portal, examine el grupo de recursos **msl-*xxxxxxx*** que se creó mediante el script (o el grupo de recursos que contiene el área de trabajo de Azure Databricks existente)
-1. Seleccione el recurso Azure Databricks Service (denominado **databricks-*xxxxxxx*** si usó el script de instalación para crearlo).
+1. En Azure Portal, vaya al grupo de recursos **msl-*xxxxxxx*** que se creó con el script (o al grupo de recursos que contiene el área de trabajo de Azure Databricks existente)
+1. Seleccione el recurso Azure Databricks Service (llamado **databricks-*xxxxxxx*** si usó el script de instalación para crearlo).
 1. En la página **Información general** del área de trabajo, usa el botón **Inicio del área de trabajo** para abrir el área de trabajo de Azure Databricks en una nueva pestaña del explorador; inicia sesión si se solicita.
 
     > **Sugerencia**: al usar el portal del área de trabajo de Databricks, se pueden mostrar varias sugerencias y notificaciones. Descártalas y sigue las instrucciones proporcionadas para completar las tareas de este ejercicio.
 
-1. En la barra lateral de la izquierda, seleccione la tarea **(+) Nuevo** y, a continuación, seleccione **Clúster**.
+1. En la barra lateral de la izquierda, seleccione la tarea **(+) Nuevo** y luego seleccione **Clúster**.
 1. En la página **Nuevo clúster**, crea un clúster con la siguiente configuración:
     - **Nombre del clúster**: clúster del *Nombre de usuario*  (el nombre del clúster predeterminado)
     - **Directiva**: Unrestricted (Sin restricciones)
     - **Modo de clúster** de un solo nodo
     - **Modo de acceso**: usuario único (*con la cuenta de usuario seleccionada*)
-    - **Versión de runtime de Databricks**: *Seleccione la edición de **<u>ML</u>** de la versión no beta más reciente del runtime (**No** una versión de runtime estándar) que:*
-        - * **No** usa una GPU*
+    - **Versión de runtime de Databricks**: *Seleccione la edición de **<u>ML</u>** de la última versión no beta más reciente del runtime (**No** una versión de runtime estándar) que:*
+        - ***No** usa una GPU*
         - *Incluye Scala > **2.11***
         - *Incluye Spark > **3.4***
-    - **Usa aceleración de Photon**: <u>No</u> seleccionada
+    - **Utilizar la Aceleración de fotones**: <u>No</u> seleccionada
     - **Tipo de nodo**: Standard_DS3_v2.
     - **Finaliza después de** *20* **minutos de inactividad**
 
