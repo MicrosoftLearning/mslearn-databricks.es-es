@@ -74,7 +74,7 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 Como en muchos entornos de Spark, Databricks admite el uso de cuadernos para combinar notas y celdas de código interactivas que puedes usar para explorar datos.
 
 1. Descargue el archivo [**products.csv**](https://raw.githubusercontent.com/MicrosoftLearning/mslearn-databricks/main/data/products.csv) de `https://raw.githubusercontent.com/MicrosoftLearning/mslearn-databricks/main/data/products.csv` en el equipo local y guárdelo como **products.csv**.
-1. 1. En la barra lateral, en el menú del vínculo **(+) Nuevo**, seleccione **Carga de archivos**.
+1. En la barra lateral, en el menú del vínculo **(+) Nuevo**, seleccione **Carga de archivos**.
 1. Cargue el archivo **products.csv** que descargó en el equipo.
 1. En la página **Crear o modificar tabla a partir de la carga de archivos**, asegúrese de que el clúster esté seleccionado en la parte superior derecha de la página. A continuación, elija el catálogo de **hive_metastore** y su esquema predeterminado para crear una nueva tabla denominada **productos**.
 1. En la página **Explorador de catálogos**, cuando se haya creado la página **Productos**, en el menú del botón **Crear**, seleccione **Notebook** para crear un cuaderno.
