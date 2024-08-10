@@ -13,5 +13,5 @@ Estos ejercicios están diseñados para admitir el siguiente contenido de formac
 
 Para realizar estos ejercicios, necesitará una suscripción a Azure con acceso de administrador.
 
-{% assign exercises = site.pages | where_exp:"page", "page.url contains '/Instructions/Exercises'" %} {% for activity in exercises  %}
+{% assign exercises = site.pages | where_exp:"page", "page.url contains '/Instructions'" %} {% for activity in exercises  %}
 - [{{ activity.lab.title }}]({{ site.github.url }}{{ activity.url }}) | {% endfor %}
