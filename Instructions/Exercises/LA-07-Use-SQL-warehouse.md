@@ -11,7 +11,7 @@ Este ejercicio debería tardar en completarse **30** minutos aproximadamente.
 
 ## Aprovisiona un área de trabajo de Azure Databricks.
 
-> **Sugerencia**: Si ya dispone de un área de trabajo de Azure Databricks *Premium* o de *Evaluación* puede omitir este procedimiento y usar su área de trabajo existente.
+> **Sugerencia**: si ya dispones de un área de trabajo de Azure Databricks *Premium* o de *Evaluación* puedes omitir este procedimiento y usar tu área de trabajo existente.
 
 En este ejercicio se incluye un script para aprovisionar un nuevo área de trabajo de Azure Databricks. El script intenta crear un recurso de área de trabajo de Azure Databricks de nivel *Premium* en una región en la que la suscripción de Azure tiene cuota suficiente para los núcleos de proceso necesarios en este ejercicio, y da por hecho que la cuenta de usuario tiene permisos suficientes en la suscripción para crear un recurso de área de trabajo de Azure Databricks. Si se produjese un error en el script debido a cuota o permisos insuficientes, intenta [crear un área de trabajo de Azure Databricks de forma interactiva en Azure Portal](https://learn.microsoft.com/azure/databricks/getting-started/#--create-an-azure-databricks-workspace).
 
@@ -20,7 +20,7 @@ En este ejercicio se incluye un script para aprovisionar un nuevo área de traba
 
     ![Azure Portal con un panel de Cloud Shell](./images/cloud-shell.png)
 
-    > **Nota**: Si creaste anteriormente un Cloud Shell que usa un entorno de *Bash*, usa el menú desplegable situado en la parte superior izquierda del panel de Cloud Shell para cambiarlo a ***PowerShell***.
+    > **Nota**: si creaste anteriormente un Cloud Shell que usa un entorno de *Bash*, usa el menú desplegable situado en la parte superior izquierda del panel de Cloud Shell para cambiarlo a ***PowerShell***.
 
 3. Ten en cuenta que puedes cambiar el tamaño de Cloud Shell arrastrando la barra de separación en la parte superior del panel, o usando los iconos **&#8212;** , **&#9723;** y **X** en la parte superior derecha para minimizar, maximizar y cerrar el panel. Para obtener más información sobre el uso de Azure Cloud Shell, consulta la [documentación de Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
@@ -66,54 +66,41 @@ En este ejercicio se incluye un script para aprovisionar un nuevo área de traba
     ```
 
 4. Usa el botón **► Ejecutar (1000)** para ejecutar el código SQL.
-5. Cuando el código se haya ejecutado correctamente, en el panel **Explorador de esquema**, usa el botón Actualizar situado en la parte inferior del panel para actualizar la lista. Después amplíe **hive_metastore** y **retail_db**, y observe que la base de datos se ha creado, pero no contiene tablas.
+5. Cuando el código se haya ejecutado correctamente, en el panel **Explorador de esquema**, usa el botón Actualizar situado en la parte superior del panel para actualizar la lista. Después amplía **hive_metastore** y **retail_db**, y observa que la base de datos se ha creado, pero no contiene tablas.
 
 Puedes usar la base de datos **predeterminada** para las tablas, pero al compilar un almacén de datos analíticos es mejor para crear bases de datos personalizadas para datos específicos.
 
 ## Creación de una tabla
 
 1. Descarga el archivo [**products.csv**](https://raw.githubusercontent.com/MicrosoftLearning/mslearn-databricks/main/data/products.csv) en el equipo local y guárdalo como **products.csv**.
-1. En el portal del área de trabajo de Azure Databricks, en la barra lateral, selecciona **(+) Nuevo** y después selecciona **Carga de archivos** y carga el archivo **products.csv** que has descargado en el equipo.
-1. En la página **Cargar datos**, seleccione el esquema **retail_db** y establezca el nombre de la tabla en **productos**. Después, selecciona **Crear tabla** en la esquina inferior izquierda de la página.
+1. En el portal del área de trabajo de Azure Databricks, en la barra lateral, selecciona **(+) Nuevo** y después selecciona **Datos**.
+1. En la página **Agregar datos**, selecciona **Crear o modificar tabla** y carga el archivo **products.csv** que descargaste en el equipo.
+1. En la página **Crear o modificar tabla del archivo cargado**, selecciona el esquema **retail_db** y establece el nombre de la tabla en **products**. Después, selecciona **Crear tabla** en la esquina inferior derecha de la página.
 1. Cuando la tabla esté creada, revisa sus detalles.
 
 La capacidad de crear una tabla mediante la importación de datos desde un archivo facilita rellenar una base de datos. También puedes usar Spark SQL para crear tablas mediante código. Las propias tablas son definiciones de metadatos en la tienda de metadatos Hive y los datos que contienen se almacenan en formato Delta en el almacenamiento del sistema de archivos de Databricks (DBFS).
 
-## Creación de una consulta
+## Crear un panel
 
-1. En la barra lateral, selecciona **(+) Nuevo** y luego selecciona **Consulta**.
-2. En el panel **Explorador de esquemas**, expanda **hive_metastore** y **retail_db**, y compruebe que la tabla **productos** aparece enumerada.
-3. En el panel **Nueva consulta**, escribe el siguiente código SQL:
+1. Haz clic en **(+) Nuevo** en la barra lateral y luego selecciona **Panel**.
+2. Selecciona el nombre del nuevo panel y cámbialo a **Panel comercial**.
+3. En la pestaña **Datos**, selecciona **Crear desde SQL** y usa la consulta siguiente:
 
     ```sql
    SELECT ProductID, ProductName, Category
    FROM retail_db.products; 
     ```
 
-4. Usa el botón **► Ejecutar (1000)** para ejecutar el código SQL.
-5. Una vez completada la consulta, revisa la tabla de resultados.
-6. Usa el botón **Guardar** situado en la parte superior derecha del editor de consultas para guardar la consulta como **Productos y categorías**.
+4. Selecciona **Ejecutar** y, a continuación, cambia el nombre del conjunto de datos sin título a **Productos y categorías**.
+5. Selecciona la pestaña **Lienzo** y después selecciona **Agregar una visualización**.
+6. En el editor de visualización, establece las siguientes propiedades:
+    
+    - **Conjunto de datos**: Productos y categorías
+    - **Visualización**: barra
+    - **Eje X**: COUNT(ProductID)
+    - **Eje Y**: categoría
 
-Guardar una consulta facilita recuperar de nuevo los mismos datos más adelante.
-
-## Crear un panel
-
-1. Haz clic en **(+) Nuevo** en la barra lateral y luego selecciona **Panel**.
-2. En el cuadro de diálogo **Nuevo panel de control**, escriba el nombre **Panel de comercio** y seleccione **Guardar**.
-3. En el panel **Panel de comercio**, en la lista desplegable **Agregar**, seleccione **Visualización**.
-4. En el cuadro de diálogo **Agregar widget de visualización**, selecciona la consulta **Productos y categorías**. Luego selecciona **Crear nueva visualización**, establece el título en **Productos por categoría** y selecciona **Crear visualización**.
-5. En el editor de visualización, establece las siguientes propiedades:
-    - **Tipo de visualización**: barra
-    - **Gráfico horizontal**: seleccionado
-    - **Columna Y**: categoría
-    - **Columnas X**: Id. de producto: Recuento
-    - **Agrupar por**: *deja en blanco*
-    - **Apilamiento**: deshabilitado
-    - **Normalizar valores en porcentaje**: <u>no </u>seleccionado
-    - **Valores que faltan y NULL**: no mostrar en el gráfico
-
-6. Guarda la visualización y visualízala en el panel.
-7. Selecciona **Edición finalizada** para ver el panel como lo verán los usuarios.
+7. Selecciona **Publicar** para ver el panel como lo verán los usuarios.
 
 Los paneles son una excelente manera de compartir tablas de datos y visualizaciones con usuarios profesionales. Puedes programar que los paneles se actualicen periódicamente y se envíen por correo electrónico a los suscriptores.
 
@@ -121,4 +108,4 @@ Los paneles son una excelente manera de compartir tablas de datos y visualizacio
 
 En el portal de Azure Databricks, en la página **Almacenes SQL**, seleccione su almacén SQL y seleccione **&#9632; Detener** para apagarlo.
 
-Si ha terminado de explorar Azure Databricks, puede eliminar los recursos que ha creado para evitar costos innecesarios de Azure y liberar capacidad en la suscripción.
+Si has terminado de explorar Azure Databricks, puedes eliminar los recursos que has creado para evitar costes innecesarios de Azure y liberar capacidad en la suscripción.
