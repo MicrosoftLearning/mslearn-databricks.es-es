@@ -15,18 +15,18 @@ Necesitará una [suscripción de Azure](https://azure.microsoft.com/free) en la 
 
 ## Aprovisiona un área de trabajo de Azure Databricks.
 
-> **Sugerencia**: Si ya tiene un área de trabajo de Azure Databricks, puede omitir este procedimiento y usar el área de trabajo existente.
+> **Sugerencia**: si ya tienes un área de trabajo de Azure Databricks, puedes omitir este procedimiento y usar el área de trabajo existente.
 
-En este ejercicio, se incluye un script para aprovisionar una nueva área de trabajo de Azure Databricks. El script intenta crear un recurso de área de trabajo de Azure Databricks de nivel *Premium* en una región en la que la suscripción de Azure tiene cuota suficiente para los núcleos de proceso necesarios en este ejercicio, y da por hecho que la cuenta de usuario tiene permisos suficientes en la suscripción para crear un recurso de área de trabajo de Azure Databricks. Si se produjese un error en el script debido a cuota o permisos insuficientes, intente [crear un área de trabajo de Azure Databricks de forma interactiva en Azure Portal](https://learn.microsoft.com/azure/databricks/getting-started/#--create-an-azure-databricks-workspace).
+En este ejercicio, se incluye un script para aprovisionar una nueva área de trabajo de Azure Databricks. El script intenta crear un recurso de área de trabajo de Azure Databricks de nivel *Premium* en una región en la que la suscripción de Azure tiene cuota suficiente para los núcleos de proceso necesarios en este ejercicio, y da por hecho que la cuenta de usuario tiene permisos suficientes en la suscripción para crear un recurso de área de trabajo de Azure Databricks. Si se produjese un error en el script debido a cuota o permisos insuficientes, intenta [crear un área de trabajo de Azure Databricks de forma interactiva en Azure Portal](https://learn.microsoft.com/azure/databricks/getting-started/#--create-an-azure-databricks-workspace).
 
 1. En un explorador web, inicia sesión en [Azure Portal](https://portal.azure.com) en `https://portal.azure.com`.
 2. Usa el botón **[\>_]** a la derecha de la barra de búsqueda en la parte superior de la página para crear un nuevo Cloud Shell en Azure Portal, selecciona un entorno de ***PowerShell*** y crea almacenamiento si se te solicita. Cloud Shell proporciona una interfaz de línea de comandos en un panel situado en la parte inferior de Azure Portal, como se muestra a continuación:
 
     ![Azure Portal con un panel de Cloud Shell](./images/cloud-shell.png)
 
-    > **Nota**: Si creaste anteriormente un Cloud Shell que usa un entorno de *Bash*, usa el menú desplegable situado en la parte superior izquierda del panel de Cloud Shell para cambiarlo a ***PowerShell***.
+    > **Nota**: si creaste anteriormente un Cloud Shell que usa un entorno de *Bash*, usa el menú desplegable situado en la parte superior izquierda del panel de Cloud Shell para cambiarlo a ***PowerShell***.
 
-3. Tenga en cuenta que puede cambiar el tamaño de Cloud Shell arrastrando la barra de separación en la parte superior del panel, o usando los iconos **&#8212;** , **&#9723;** y **X** en la parte superior derecha para minimizar, maximizar y cerrar el panel. Para obtener más información sobre el uso de Azure Cloud Shell, consulte la [documentación de Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
+3. Ten en cuenta que puedes cambiar el tamaño de Cloud Shell arrastrando la barra de separación en la parte superior del panel, o usando los iconos **&#8212;** , **&#9723;** y **X** en la parte superior derecha para minimizar, maximizar y cerrar el panel. Para obtener más información sobre el uso de Azure Cloud Shell, consulta la [documentación de Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
 4. En el panel de PowerShell, introduce los siguientes comandos para clonar este repositorio:
 
@@ -35,7 +35,7 @@ En este ejercicio, se incluye un script para aprovisionar una nueva área de tra
     git clone https://github.com/MicrosoftLearning/mslearn-databricks
     ```
 
-5. Una vez clonado el repositorio, escriba el siguiente comando para ejecutar el script **setup.ps1**, que aprovisiona un área de trabajo de Azure Databricks en una región disponible:
+5. Una vez clonado el repositorio, escribe el siguiente comando para ejecutar el script **setup.ps1**, que aprovisiona un área de trabajo de Azure Databricks en una región disponible:
 
     ```
     ./mslearn-databricks/setup.ps1
@@ -51,12 +51,12 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 > **Sugerencia**: Si ya dispone de un clúster con una versión de runtime 13.3 LTS **<u>ML</u>** o superior en su área de trabajo de Azure Databricks, puede utilizarlo para completar este ejercicio y omitir este procedimiento.
 
 1. En Azure Portal, vaya al grupo de recursos **msl-*xxxxxxx*** que se creó con el script (o al grupo de recursos que contiene el área de trabajo de Azure Databricks existente)
-1. Seleccione el recurso Azure Databricks Service (llamado **databricks-*xxxxxxx*** si usó el script de instalación para crearlo).
+1. Selecciona el recurso Azure Databricks Service (llamado **databricks-*xxxxxxx*** si usaste el script de instalación para crearlo).
 1. En la página **Información general** del área de trabajo, usa el botón **Inicio del área de trabajo** para abrir el área de trabajo de Azure Databricks en una nueva pestaña del explorador; inicia sesión si se solicita.
 
     > **Sugerencia**: al usar el portal del área de trabajo de Databricks, se pueden mostrar varias sugerencias y notificaciones. Descártalas y sigue las instrucciones proporcionadas para completar las tareas de este ejercicio.
 
-1. En la barra lateral de la izquierda, seleccione la tarea **(+) Nuevo** y luego seleccione **Clúster**.
+1. En la barra lateral de la izquierda, selecciona la tarea **(+) Nuevo** y luego selecciona **Clúster**.
 1. En la página **Nuevo clúster**, crea un clúster con la siguiente configuración:
     - **Nombre del clúster**: clúster del *Nombre de usuario*  (el nombre del clúster predeterminado)
     - **Directiva**: Unrestricted (Sin restricciones)
@@ -72,7 +72,7 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 
 1. Espera a que se cree el clúster. Esto puede tardar un par de minutos.
 
-> **Nota**: si el clúster no se inicia, es posible que la suscripción no tenga cuota suficiente en la región donde se aprovisiona el área de trabajo de Azure Databricks. Para más información consulta [El límite de núcleos de la CPU impide la creación de clústeres](https://docs.microsoft.com/azure/databricks/kb/clusters/azure-core-limit). Si esto sucede, puedes intentar eliminar el área de trabajo y crear una nueva en otra región. Puedes especificar una región como parámetro para el script de configuración de la siguiente manera: `./mslearn-databricks/setup.ps1 eastus`
+> **Nota**: si el clúster no se inicia, es posible que la suscripción no tenga cuota suficiente en la región donde se aprovisiona el área de trabajo de Azure Databricks. Para obtener más información, consulta [El límite de núcleos de la CPU impide la creación de clústeres](https://docs.microsoft.com/azure/databricks/kb/clusters/azure-core-limit). Si esto sucede, puedes intentar eliminar el área de trabajo y crear una nueva en otra región. Puedes especificar una región como parámetro para el script de configuración de la siguiente manera: `./mslearn-databricks/setup.ps1 eastus`
 
 ## Crear un cuaderno
 
@@ -406,93 +406,8 @@ Ahora que tenemos un modelo entrenado, podemos guardar sus pesos entrenados para
    print('Prediction:',predicted.item())
     ```
 
-## Distribución del entrenamiento con Horovod
-
-El entrenamiento del modelo anterior se realizó en un único nodo del clúster. En la práctica, suele ser mejor escalar el entrenamiento del modelo de aprendizaje profundo a través de varias CPU (o, preferiblemente, GPU) en un único equipo, pero en algunos casos en los que es necesario pasar grandes volúmenes de datos de entrenamiento a través de varias capas de un modelo de aprendizaje profundo, se puede lograr cierta eficiencia distribuyendo el trabajo de entrenamiento a través de varios nodos de clúster.
-
-Horovod es una biblioteca de código abierto que se puede utilizar para distribuir la formación de aprendizaje profundo en varios nodos de un clúster de Spark, como los aprovisionados en un área de trabajo de Azure Databricks.
-
-### Creación de una función de entrenamiento
-
-Para usar Horovod, se encapsula el código para configurar los ajustes de entrenamiento y llamar a su función de **entrenamiento** en una nueva función; que se ejecutará usando la clase **HorovodRunner** para distribuir la ejecución a través de múltiples nodos. En su función de contenedor de entrenamiento, puede hacer uso de varias clases Horovod para definir un cargador de datos distribuido para que cada nodo pueda trabajar en un subconjunto del conjunto de datos global), transmitir el estado inicial de los pesos del modelo y el optimizador a todos los nodos, identificar cuántos nodos se están utilizando y determinar en qué nodo se está ejecutando el código.
-
-1. Ejecute el siguiente código para crear una función que entrene un modelo mediante Horovod:
-
-    ```python
-   import horovod.torch as hvd
-   from sparkdl import HorovodRunner
-   
-   def train_hvd(model):
-       from torch.utils.data.distributed import DistributedSampler
-       
-       hvd.init()
-       
-       device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-       if device.type == 'cuda':
-           # Pin GPU to local rank
-           torch.cuda.set_device(hvd.local_rank())
-       
-       # Configure the sampler so that each worker gets a distinct sample of the input dataset
-       train_sampler = DistributedSampler(train_ds, num_replicas=hvd.size(), rank=hvd.rank())
-       # Use train_sampler to load a different sample of data on each worker
-       train_loader = torch.utils.data.DataLoader(train_ds, batch_size=20, sampler=train_sampler)
-       
-       # The effective batch size in synchronous distributed training is scaled by the number of workers
-       # Increase learning_rate to compensate for the increased batch size
-       learning_rate = 0.001 * hvd.size()
-       optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-       
-       # Wrap the local optimizer with hvd.DistributedOptimizer so that Horovod handles the distributed optimization
-       optimizer = hvd.DistributedOptimizer(optimizer, named_parameters=model.named_parameters())
-   
-       # Broadcast initial parameters so all workers start with the same parameters
-       hvd.broadcast_parameters(model.state_dict(), root_rank=0)
-       hvd.broadcast_optimizer_state(optimizer, root_rank=0)
-   
-       optimizer.zero_grad()
-   
-       # Train over 50 epochs
-       epochs = 100
-       for epoch in range(1, epochs + 1):
-           print('Epoch: {}'.format(epoch))
-           # Feed training data into the model to optimize the weights
-           train_loss = train(model, train_loader, optimizer)
-   
-       # Save the model weights
-       if hvd.rank() == 0:
-           model_file = '/dbfs/penguin_classifier_hvd.pt'
-           torch.save(model.state_dict(), model_file)
-           print('model saved as', model_file)
-    ```
-
-1. Use el siguiente código para llamar a la función desde un objeto **HorovodRunner**:
-
-    ```python
-   # Reset random seed for PyTorch
-   torch.manual_seed(0)
-   
-   # Create a new model
-   new_model = PenguinNet()
-   
-   # We'll use CrossEntropyLoss to optimize a multiclass classifier
-   loss_criteria = nn.CrossEntropyLoss()
-   
-   # Run the distributed training function on 2 nodes
-   hr = HorovodRunner(np=2, driver_log_verbosity='all') 
-   hr.run(train_hvd, model=new_model)
-   
-   # Load the trained weights and test the model
-   test_model = PenguinNet()
-   test_model.load_state_dict(torch.load('/dbfs/penguin_classifier_hvd.pt'))
-   test_loss = test(test_model, test_loader)
-    ```
-
-Es posible que tenga que desplazarse para ver toda la salida, que debería mostrar algunos mensajes informativos de Horovod seguidos de la salida registrada de los nodos (porque el parámetro **driver_log_verbosity** está ajustado a **todos**). Las salidas de los nodos deben mostrar la pérdida después de cada época. Por último, la función de **prueba** se usa para probar el modelo entrenado.
-
-> **Sugerencia**: Si la pérdida no se reduce después de cada época, intente ejecutar la célula de nuevo.
-
 ## Limpiar
 
-En el portal de Azure Databricks, en la página **Proceso**, seleccione el clúster y **&#9632; Finalizar** para apagarlo.
+En el portal de Azure Databricks, en la página **Proceso**, selecciona el clúster y **&#9632; Finalizar** para apagarlo.
 
-Si ha terminado de explorar Azure Databricks, puede eliminar los recursos que ha creado para evitar costos innecesarios de Azure y liberar capacidad en su suscripción.
+Si has terminado de explorar Azure Databricks, puedes eliminar los recursos que has creado para evitar costes innecesarios de Azure y liberar capacidad en tu suscripción.
