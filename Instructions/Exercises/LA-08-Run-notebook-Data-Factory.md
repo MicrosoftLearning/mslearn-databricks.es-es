@@ -20,7 +20,7 @@ En este ejercicio, se incluye un script para aprovisionar una nueva área de tra
 
     ![Azure Portal con un panel de Cloud Shell](./images/cloud-shell.png)
 
-    > **Nota**: Si creaste anteriormente un Cloud Shell que usa un entorno de *Bash*, usa el menú desplegable situado en la parte superior izquierda del panel de Cloud Shell para cambiarlo a ***PowerShell***.
+    > **Nota**: si creaste anteriormente un Cloud Shell que usa un entorno de *Bash*, usa el menú desplegable situado en la parte superior izquierda del panel de Cloud Shell para cambiarlo a ***PowerShell***.
 
 3. Ten en cuenta que puedes cambiar el tamaño de Cloud Shell arrastrando la barra de separación en la parte superior del panel, o usando los iconos **&#8212;** , **&#9723;** y **X** en la parte superior derecha para minimizar, maximizar y cerrar el panel. Para obtener más información sobre el uso de Azure Cloud Shell, consulta la [documentación de Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
@@ -162,7 +162,6 @@ Ahora que creaste un servicio vinculado, puedes usarlo en una canalización para
     ```json
     {
         "runPageUrl": "https://adb-..../run/...",
-        "runOutput": "dbfs:/product_data/products.csv",
         "effectiveIntegrationRuntime": "AutoResolveIntegrationRuntime (East US)",
         "executionDuration": 61,
         "durationInQueue": {
@@ -180,8 +179,6 @@ Ahora que creaste un servicio vinculado, puedes usarlo en una canalización para
         }
     }
     ```
-
-5. Fíjate en el valor **runOutput**, que es la variable de *ruta de acceso* en la que el cuaderno guardó los datos.
 
 ## Limpiar
 

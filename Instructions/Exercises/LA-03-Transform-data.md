@@ -24,9 +24,9 @@ En este ejercicio, se incluye un script para aprovisionar una nueva área de tra
 
     ![Azure Portal con un panel de Cloud Shell](./images/cloud-shell.png)
 
-    > **Nota**: Si creaste anteriormente un Cloud Shell que usa un entorno de *Bash*, usa el menú desplegable situado en la parte superior izquierda del panel de Cloud Shell para cambiarlo a ***PowerShell***.
+    > **Nota**: Si ha creado previamente un cloud shell que usa un entorno de *Bash*, use el menú desplegable de la parte superior izquierda del panel de cloud shell para cambiarlo a ***PowerShell***.
 
-3. Ten en cuenta que puedes cambiar el tamaño de Cloud Shell arrastrando la barra de separación en la parte superior del panel, o usando los iconos **&#8212;** , **&#9723;** y **X** en la parte superior derecha para minimizar, maximizar y cerrar el panel. Para obtener más información sobre el uso de Azure Cloud Shell, consulta la [documentación de Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
+3. Tenga en cuenta que puede cambiar el tamaño de Cloud Shell arrastrando la barra de separación en la parte superior del panel, o usando los iconos **&#8212;** , **&#9723;** y **X** en la parte superior derecha para minimizar, maximizar y cerrar el panel. Para obtener más información sobre el uso de Azure Cloud Shell, consulta la [documentación de Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
 4. En el panel de PowerShell, introduce los siguientes comandos para clonar este repositorio:
 
@@ -64,18 +64,18 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
     - **Modo de acceso**: usuario único (*con la cuenta de usuario seleccionada*)
     - **Versión de runtime de Databricks**: 13.3 LTS (Spark 3.4.1, Scala 2.12) o posterior
     - **Usar aceleración de Photon**: seleccionado
-    - **Tipo de nodo**: Standard_DS3_v2.
+    - **Tipo de nodo**: Standard_D4ds_v5
     - **Finaliza después de** *20* **minutos de inactividad**
 
 6. Espera a que se cree el clúster. Esto puede tardar un par de minutos.
 
-> **Nota**: si el clúster no se inicia, es posible que la suscripción no tenga cuota suficiente en la región donde se aprovisiona el área de trabajo de Azure Databricks. Para más información consulta [El límite de núcleos de la CPU impide la creación de clústeres](https://docs.microsoft.com/azure/databricks/kb/clusters/azure-core-limit). Si esto sucede, puedes intentar eliminar el área de trabajo y crear una nueva en otra región. Puedes especificar una región como parámetro para el script de configuración de la siguiente manera: `./mslearn-databricks/setup.ps1 eastus`
+> **Nota**: si el clúster no se inicia, es posible que la suscripción no tenga cuota suficiente en la región donde se aprovisiona el área de trabajo de Azure Databricks. Para obtener más información, consulta [El límite de núcleos de la CPU impide la creación de clústeres](https://docs.microsoft.com/azure/databricks/kb/clusters/azure-core-limit). Si esto sucede, puedes intentar eliminar el área de trabajo y crear una nueva en otra región. Puedes especificar una región como parámetro para el script de configuración de la siguiente manera: `./mslearn-databricks/setup.ps1 eastus`
 
 ## Crear un cuaderno
 
 1. En la barra lateral, usa el vínculo **(+) Nuevo** para crear un **cuaderno**.
 
-2. Cambie el nombre predeterminado del cuaderno (**Cuaderno sin título *[fecha]***) a **Transformar datos con Spark** y en la lista desplegable **Conectar**, selecciona el clúster si aún no está seleccionado. Si el clúster no se está ejecutando, puede tardar un minuto en iniciarse.
+2. Cambia el nombre por defecto del cuaderno (**Cuaderno sin título *[fecha]***) por `Transform data with Spark` y en la lista desplegable **Conectar**, selecciona tu clúster si aún no está seleccionado. Si el clúster no se está ejecutando, puede tardar un minuto en iniciarse.
 
 ## Ingerir datos
 
@@ -186,7 +186,15 @@ Observa que después de actualizar los valores de la columna **Tax**, su tipo de
 
 1. Aunque resulta útil poder insertar instrucciones SQL en una celda que contenga código de PySpark, los analistas de datos suelen preferir trabajar directamente en SQL. Agrega una nueva celda de código y úsala para ejecutar el código siguiente.
 
-    ```sql
+    ```python
+   df.createOrReplaceTempView("salesorders")
+    ```
+
+Esta línea de código creará una vista temporal que se puede usar directamente con instrucciones SQL.
+
+2. En una celda nueva, escribe el código siguiente:
+   
+    ```python
    %sql
     
    SELECT YEAR(OrderDate) AS OrderYear,
@@ -198,7 +206,7 @@ Observa que después de actualizar los valores de la columna **Tax**, su tipo de
 
     Observa lo siguiente:
     
-    - La línea ``%sql` al principio de la celda (llamada un comando magic) indica que se debe usar el runtime del lenguaje Spark SQL para ejecutar el código en esta celda en lugar de PySpark.
+    - La línea **%sql** al principio de la celda (denominada magic) indica que se debe usar el tiempo de ejecución del lenguaje Spark SQL para ejecutar el código en esta celda en lugar de PySpark.
     - El código SQL hace referencia a la vista de **salesorder** que creaste anteriormente.
     - La salida de la consulta SQL se muestra automáticamente como resultado en la celda.
     
@@ -206,6 +214,6 @@ Observa que después de actualizar los valores de la columna **Tax**, su tipo de
 
 ## Limpiar
 
-En el portal de Azure Databricks, en la página **Proceso**, seleccione el clúster y **&#9632; Finalizar** para apagarlo.
+En el portal de Azure Databricks, en la página **Proceso**, selecciona el clúster y **&#9632; Finalizar** para apagarlo.
 
 Si has terminado de explorar Azure Databricks, puedes eliminar los recursos que has creado para evitar costes innecesarios de Azure y liberar capacidad en tu suscripción.

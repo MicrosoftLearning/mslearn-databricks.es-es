@@ -13,7 +13,7 @@ Se tardan aproximadamente **40** minutos en completar este laboratorio.
 
 > **Sugerencia**: si ya tienes un área de trabajo de Azure Databricks, puedes omitir este procedimiento y usar el área de trabajo existente.
 
-En este ejercicio, se incluye un script para aprovisionar una nueva área de trabajo de Azure Databricks. El script intenta crear un recurso de área de trabajo de Azure Databricks de nivel *Premium* en una región en la que la suscripción de Azure tiene cuota suficiente para los núcleos de proceso necesarios en este ejercicio, y da por hecho que la cuenta de usuario tiene permisos suficientes en la suscripción para crear un recurso de área de trabajo de Azure Databricks. Si se produjese un error en el script debido a cuota o permisos insuficientes, intente [crear un área de trabajo de Azure Databricks de forma interactiva en Azure Portal](https://learn.microsoft.com/azure/databricks/getting-started/#--create-an-azure-databricks-workspace).
+En este ejercicio, se incluye un script para aprovisionar una nueva área de trabajo de Azure Databricks. El script intenta crear un recurso de área de trabajo de Azure Databricks de nivel *Premium* en una región en la que la suscripción de Azure tiene cuota suficiente para los núcleos de proceso necesarios en este ejercicio, y da por hecho que la cuenta de usuario tiene permisos suficientes en la suscripción para crear un recurso de área de trabajo de Azure Databricks. Si se produjese un error en el script debido a cuota o permisos insuficientes, intenta [crear un área de trabajo de Azure Databricks de forma interactiva en Azure Portal](https://learn.microsoft.com/azure/databricks/getting-started/#--create-an-azure-databricks-workspace).
 
 1. En un explorador web, inicia sesión en [Azure Portal](https://portal.azure.com) en `https://portal.azure.com`.
 
@@ -21,9 +21,9 @@ En este ejercicio, se incluye un script para aprovisionar una nueva área de tra
 
     ![Azure Portal con un panel de Cloud Shell](./images/cloud-shell.png)
 
-    > **Nota**: Si creaste anteriormente un Cloud Shell que usa un entorno de *Bash*, usa el menú desplegable situado en la parte superior izquierda del panel de Cloud Shell para cambiarlo a ***PowerShell***.
+    > **Nota**: Si ha creado previamente un cloud shell que usa un entorno de *Bash*, use el menú desplegable de la parte superior izquierda del panel de cloud shell para cambiarlo a ***PowerShell***.
 
-3. Ten en cuenta que puedes cambiar el tamaño de Cloud Shell arrastrando la barra de separación en la parte superior del panel, o usando los iconos **&#8212;** , **&#9723;** y **X** en la parte superior derecha para minimizar, maximizar y cerrar el panel. Para obtener más información sobre el uso de Azure Cloud Shell, consulta la [documentación de Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
+3. Tenga en cuenta que puede cambiar el tamaño de Cloud Shell arrastrando la barra de separación en la parte superior del panel, o usando los iconos **&#8212;** , **&#9723;** y **X** en la parte superior derecha para minimizar, maximizar y cerrar el panel. Para obtener más información sobre el uso de Azure Cloud Shell, consulta la [documentación de Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
 4. En el panel de PowerShell, introduce los siguientes comandos para clonar este repositorio:
 
@@ -65,18 +65,18 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
     - **Modo de acceso**: usuario único (*con la cuenta de usuario seleccionada*)
     - **Versión de runtime de Databricks**: 13.3 LTS (Spark 3.4.1, Scala 2.12) o posterior
     - **Usar aceleración de Photon**: seleccionado
-    - **Tipo de nodo**: Standard_DS3_v2.
+    - **Tipo de nodo**: Standard_D4ds_v5
     - **Finaliza después de** *20* **minutos de inactividad**
 
 1. Espera a que se cree el clúster. Esto puede tardar un par de minutos.
 
-    > **Nota**: si el clúster no se inicia, es posible que la suscripción no tenga cuota suficiente en la región donde se aprovisiona el área de trabajo de Azure Databricks. Para más información consulta [El límite de núcleos de la CPU impide la creación de clústeres](https://docs.microsoft.com/azure/databricks/kb/clusters/azure-core-limit). Si esto sucede, puedes intentar eliminar el área de trabajo y crear una nueva en otra región. Puedes especificar una región como parámetro para el script de configuración de la siguiente manera: `./mslearn-databricks/setup.ps1 eastus`
+    > **Nota**: si el clúster no se inicia, es posible que la suscripción no tenga cuota suficiente en la región donde se aprovisiona el área de trabajo de Azure Databricks. Para obtener más información, consulta [El límite de núcleos de la CPU impide la creación de clústeres](https://docs.microsoft.com/azure/databricks/kb/clusters/azure-core-limit). Si esto sucede, puedes intentar eliminar el área de trabajo y crear una nueva en otra región. Puedes especificar una región como parámetro para el script de configuración de la siguiente manera: `./mslearn-databricks/setup.ps1 eastus`
 
 ## Creación de un cuaderno e ingesta de datos
 
 1. En la barra lateral, usa el vínculo **(+) Nuevo** para crear un **cuaderno**.
 
-2. Cambia el nombre predeterminado del cuaderno (**Cuaderno sin título *[fecha]***) a **Crear una canalización con Delta Live Tables** y en la lista desplegable**Conectar**, selecciona el clúster si aún no está seleccionado. Si el clúster no se está ejecutando, puede tardar un minuto en iniciarse.
+2. Cambia el nombre por defecto del cuaderno (**Cuaderno sin título *[fecha]***) por `Create a pipeline with Delta Live tables` y en la lista desplegable **Conectar**, selecciona tu clúster si aún no está seleccionado. Si el clúster no se está ejecutando, puede tardar un minuto en iniciarse.
 
 3. En la primera celda del cuaderno, escribe el siguiente código, que utiliza comandos del *shell* para descargar los archivos de datos de GitHub en el sistema de archivos utilizado por el clúster.
 
@@ -91,7 +91,9 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 
 ## Creación de una canalización de Delta Live Tables mediante SQL
 
-Crea un nuevo cuaderno de SQL y empieza a definir las tablas Delta Live Tables mediante scripts SQL. Asegúrate de que has habilitado la interfaz de usuario de DLT SQL.
+Crea un nuevo cuaderno y empieza a definir las tablas Delta Live Tables mediante scripts SQL.
+
+1. Junto al nombre del cuaderno, selecciona **Python** y cambia el lenguaje predeterminado a **SQL**.
 
 1. Coloca el código siguiente en la primera celda sin ejecutarlo. Todas las celdas se ejecutarán después de crear la canalización. Este código define una tabla Delta Live Table que se rellenará con los datos sin procesar descargados anteriormente:
 
@@ -117,7 +119,7 @@ Crea un nuevo cuaderno de SQL y empieza a definir las tablas Delta Live Tables m
     COMMENT "Formatted and filtered data for analysis."
     AS
     SELECT
-        DATE_FORMAT(Last_Update, 'MM/dd/yyyy') as Report_Date,
+        TO_DATE(Last_Update, 'MM/dd/yyyy') as Report_Date,
         Country_Region,
         Confirmed,
         Deaths,
@@ -154,8 +156,8 @@ Crea un nuevo cuaderno de SQL y empieza a definir las tablas Delta Live Tables m
  
 7. Una vez ejecutada correctamente la canalización, vuelve al primer cuaderno y comprueba que se han creado las tres tablas nuevas en la ubicación de almacenamiento especificada con el código siguiente:
 
-     ```sql
-    display(dbutils.fs.ls("dbfs:/pipelines/delta_lab"))
+     ```python
+    display(dbutils.fs.ls("dbfs:/pipelines/delta_lab/tables"))
      ```
 
 ## Ver los resultados como una visualización

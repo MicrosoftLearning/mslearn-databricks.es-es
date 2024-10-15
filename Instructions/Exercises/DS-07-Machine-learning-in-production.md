@@ -1,13 +1,13 @@
 ---
 lab:
-  title: "En desuso: uso de MLflow en Azure\_Databricks"
+  title: Administración de un modelo de Machine Learning con Azure Databricks
 ---
 
-# Uso de MLflow en Azure Databricks
+# Administración de un modelo de Machine Learning con Azure Databricks
 
-En este ejercicio, explorará el uso de MLflow para entrenar y servir modelos de Machine Learning en Azure Databricks.
+El entrenamiento de un modelo de Machine Mearning con Azure Databricks implica aprovechar una plataforma de análisis unificada que proporciona un entorno de colaboración para el procesamiento de datos, el entrenamiento del modelo y la implementación. Azure Databricks se integra con MLflow para administrar el ciclo de vida del aprendizaje automático, incluido el seguimiento de experimentos y el servicio de modelos.
 
-Este ejercicio debería tardar en completarse **45** minutos aproximadamente.
+Este ejercicio debería tardar aproximadamente **20** minutos en completarse.
 
 ## Antes de empezar
 
@@ -15,9 +15,9 @@ Necesitará una [suscripción de Azure](https://azure.microsoft.com/free) en la 
 
 ## Aprovisiona un área de trabajo de Azure Databricks.
 
-> **Nota**: Para este ejercicio, necesita un área de trabajo de Azure Databricks **Premium** en una región en la que se admita el *servicio de modelo*. Consulte las [Regiones de Azure Databricks](https://learn.microsoft.com/azure/databricks/resources/supported-regions) para obtener más información sobre sus funcionalidades regionales. Si ya tiene un área de trabajo de Azure Databricks *Premium* o *de prueba* en una región adecuada, puede omitir este procedimiento y usar el área de trabajo existente.
+> **Sugerencia**: si ya tienes un área de trabajo de Azure Databricks, puedes omitir este procedimiento y usar el área de trabajo existente.
 
-En este ejercicio se incluye un script para aprovisionar una nueva área de trabajo de Azure Databricks. El script intenta crear un recurso de área de trabajo de Azure Databricks de nivel *Premium* en una región en la que la suscripción de Azure tiene cuota suficiente para los núcleos de proceso necesarios en este ejercicio, y da por hecho que la cuenta de usuario tiene permisos suficientes en la suscripción para crear un recurso de área de trabajo de Azure Databricks. Si se produjese un error en el script debido a cuota o permisos insuficientes, intenta [crear un área de trabajo de Azure Databricks de forma interactiva en Azure Portal](https://learn.microsoft.com/azure/databricks/getting-started/#--create-an-azure-databricks-workspace).
+En este ejercicio, se incluye un script para aprovisionar una nueva área de trabajo de Azure Databricks. El script intenta crear un recurso de área de trabajo de Azure Databricks de nivel *Premium* en una región en la que la suscripción de Azure tiene cuota suficiente para los núcleos de proceso necesarios en este ejercicio, y da por hecho que la cuenta de usuario tiene permisos suficientes en la suscripción para crear un recurso de área de trabajo de Azure Databricks. Si se produjese un error en el script debido a cuota o permisos insuficientes, intenta [crear un área de trabajo de Azure Databricks de forma interactiva en Azure Portal](https://learn.microsoft.com/azure/databricks/getting-started/#--create-an-azure-databricks-workspace).
 
 1. En un explorador web, inicia sesión en [Azure Portal](https://portal.azure.com) en `https://portal.azure.com`.
 2. Usa el botón **[\>_]** a la derecha de la barra de búsqueda en la parte superior de la página para crear un nuevo Cloud Shell en Azure Portal, selecciona un entorno de ***PowerShell*** y crea almacenamiento si se te solicita. Cloud Shell proporciona una interfaz de línea de comandos en un panel situado en la parte inferior de Azure Portal, como se muestra a continuación:
@@ -42,7 +42,7 @@ En este ejercicio se incluye un script para aprovisionar una nueva área de trab
     ```
 
 6. Si se solicita, elige la suscripción que quieres usar (esto solo ocurrirá si tienes acceso a varias suscripciones de Azure).
-7. Espera a que se complete el script: normalmente puede tardar entre 5 y 10 minutos, pero en algunos casos puede tardar más. Mientras espera, revise el artículo [Guía de MLflow](https://learn.microsoft.com/azure/databricks/mlflow/) en la documentación de Azure Databricks.
+7. Espera a que se complete el script: normalmente puede tardar entre 5 y 10 minutos, pero en algunos casos puede tardar más. Mientras espera, revise el artículo [¿Qué es Databricks Machine Learning?](https://learn.microsoft.com/azure/databricks/machine-learning/) de la documentación de Azure Databricks.
 
 ## Crear un clúster
 
@@ -67,7 +67,7 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
         - *Incluye Scala > **2.11***
         - *Incluye Spark > **3.4***
     - **Utilizar la Aceleración de fotones**: <u>No</u> seleccionada
-    - **Tipo de nodo**: Standard_DS3_v2.
+    - **Tipo de nodo**: Standard_D4ds_v5
     - **Finaliza después de** *20* **minutos de inactividad**
 
 1. Espera a que se cree el clúster. Esto puede tardar un par de minutos.
@@ -79,7 +79,7 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 Va a ejecutar código que use la biblioteca MLLib de Spark para entrenar un modelo de Machine Learning, por lo que el primer paso es crear un cuaderno en el área de trabajo.
 
 1. En la barra lateral, usa el vínculo **(+) Nuevo** para crear un **cuaderno**.
-1. Cambie el nombre predeterminado del cuaderno (**Cuaderno sin título *[fecha]***) a **MLflow** y, en la lista desplegable **Conectar**, seleccione su clúster si aún no está seleccionado. Si el clúster no se está ejecutando, puede tardar un minuto en iniciarse.
+1. Cambie el nombre predeterminado del cuaderno (**Cuaderno sin título *[fecha]***) por **Machine Learning** y en la lista desplegable **Conectar**, seleccione su clúster si aún no está seleccionado. Si el clúster no se está ejecutando, puede tardar un minuto en iniciarse.
 
 ## Ingesta y preparación de datos
 
@@ -91,9 +91,9 @@ El escenario de este ejercicio se basa en observaciones de pingüinos en la Ant�
 
     ```bash
     %sh
-    rm -r /dbfs/mlflow_lab
-    mkdir /dbfs/mlflow_lab
-    wget -O /dbfs/mlflow_lab/penguins.csv https://raw.githubusercontent.com/MicrosoftLearning/mslearn-databricks/main/data/penguins.csv
+    rm -r /dbfs/ml_lab
+    mkdir /dbfs/ml_lab
+    wget -O /dbfs/ml_lab/penguins.csv https://raw.githubusercontent.com/MicrosoftLearning/mslearn-databricks/main/data/penguins.csv
     ```
 
 1. Use la opción de menú **&#9656; Ejecutar celda** situado a la izquierda de la celda para ejecutarla. A continuación, espera a que se complete el trabajo Spark ejecutado por el código.
@@ -104,18 +104,17 @@ El escenario de este ejercicio se basa en observaciones de pingüinos en la Ant�
     - Ver un ejemplo aleatorio de los datos
     - Dividir los datos en dos conjuntos: uno de entrenamiento y otro de prueba.
 
-
     ```python
    from pyspark.sql.types import *
    from pyspark.sql.functions import *
    
-   data = spark.read.format("csv").option("header", "true").load("/mlflow_lab/penguins.csv")
+   data = spark.read.format("csv").option("header", "true").load("/hyperopt_lab/penguins.csv")
    data = data.dropna().select(col("Island").astype("string"),
-                               col("CulmenLength").astype("float"),
-                               col("CulmenDepth").astype("float"),
-                               col("FlipperLength").astype("float"),
-                               col("BodyMass").astype("float"),
-                               col("Species").astype("int")
+                             col("CulmenLength").astype("float"),
+                             col("CulmenDepth").astype("float"),
+                             col("FlipperLength").astype("float"),
+                             col("BodyMass").astype("float"),
+                             col("Species").astype("int")
                              )
    display(data.sample(0.2))
    
@@ -124,145 +123,92 @@ El escenario de este ejercicio se basa en observaciones de pingüinos en la Ant�
    test = splits[1]
    print ("Training Rows:", train.count(), " Testing Rows:", test.count())
     ```
+    
+## Ejecución de una canalización para preprocesar los datos y entrenar un modelo de ML
 
-## Ejecutar un experimento de MLflow
+Antes de entrenar tu modelo, debes realizar los pasos de ingeniería de características y, después, ajustar un algoritmo a los datos. Para usar el modelo con algunos datos de prueba para generar predicciones, debes aplicar los mismos pasos de ingeniería de características a los datos de prueba. Una manera más eficaz de compilar y usar modelos es encapsular los transformadores usados para preparar los datos y el modelo usado para entrenarlos en una *canalización*.
 
-MLflow permite ejecutar experimentos que realizan un seguimiento del proceso de entrenamiento del modelo y las métricas de evaluación de registros. Esta capacidad para registrar detalles de las ejecuciones de entrenamiento del modelo puede ser extremadamente útil en el proceso iterativo de creación de un modelo de Machine Learning eficaz.
-
-Puede usar las mismas bibliotecas y técnicas que normalmente se usan para entrenar y evaluar un modelo (en este caso, usaremos la biblioteca MLLib de Spark), pero lo haremos en el contexto de un experimento de MLflow que incluya comandos adicionales para registrar métricas e información importantes durante el proceso.
-
-1. Agregue una nueva celda y escriba el código siguiente en ella:
+1. Use el código siguiente para crear una canalización que encapsula los pasos de preparación de datos y entrenamiento del modelo:
 
     ```python
-   import mlflow
-   import mlflow.spark
    from pyspark.ml import Pipeline
    from pyspark.ml.feature import StringIndexer, VectorAssembler, MinMaxScaler
    from pyspark.ml.classification import LogisticRegression
+   
+   catFeature = "Island"
+   numFeatures = ["CulmenLength", "CulmenDepth", "FlipperLength", "BodyMass"]
+   
+   # Define the feature engineering and model training algorithm steps
+   catIndexer = StringIndexer(inputCol=catFeature, outputCol=catFeature + "Idx")
+   numVector = VectorAssembler(inputCols=numFeatures, outputCol="numericFeatures")
+   numScaler = MinMaxScaler(inputCol = numVector.getOutputCol(), outputCol="normalizedFeatures")
+   featureVector = VectorAssembler(inputCols=["IslandIdx", "normalizedFeatures"], outputCol="Features")
+   algo = LogisticRegression(labelCol="Species", featuresCol="Features", maxIter=10, regParam=0.3)
+   
+   # Chain the steps as stages in a pipeline
+   pipeline = Pipeline(stages=[catIndexer, numVector, numScaler, featureVector, algo])
+   
+   # Use the pipeline to prepare data and fit the model algorithm
+   model = pipeline.fit(train)
+   print ("Model trained!")
+    ```
+
+    Dado que los pasos de ingeniería de características están ahora encapsulados en el modelo entrenado por la canalización, puede usar el modelo con los datos de prueba sin necesidad de aplicar cada transformación (serán aplicadas automáticamente por el modelo).
+
+1. Usa el código siguiente para aplicar la canalización a los datos de prueba y evaluar el modelo:
+
+    ```python
+   prediction = model.transform(test)
+   predicted = prediction.select("Features", "probability", col("prediction").astype("Int"), col("Species").alias("trueLabel"))
+   display(predicted)
+
+   # Generate evaluation metrics
    from pyspark.ml.evaluation import MulticlassClassificationEvaluator
-   import time
    
-   # Start an MLflow run
-   with mlflow.start_run():
-       catFeature = "Island"
-       numFeatures = ["CulmenLength", "CulmenDepth", "FlipperLength", "BodyMass"]
-     
-       # parameters
-       maxIterations = 5
-       regularization = 0.5
+   evaluator = MulticlassClassificationEvaluator(labelCol="Species", predictionCol="prediction")
    
-       # Define the feature engineering and model steps
-       catIndexer = StringIndexer(inputCol=catFeature, outputCol=catFeature + "Idx")
-       numVector = VectorAssembler(inputCols=numFeatures, outputCol="numericFeatures")
-       numScaler = MinMaxScaler(inputCol = numVector.getOutputCol(), outputCol="normalizedFeatures")
-       featureVector = VectorAssembler(inputCols=["IslandIdx", "normalizedFeatures"], outputCol="Features")
-       algo = LogisticRegression(labelCol="Species", featuresCol="Features", maxIter=maxIterations, regParam=regularization)
+   # Simple accuracy
+   accuracy = evaluator.evaluate(prediction, {evaluator.metricName:"accuracy"})
+   print("Accuracy:", accuracy)
    
-       # Chain the steps as stages in a pipeline
-       pipeline = Pipeline(stages=[catIndexer, numVector, numScaler, featureVector, algo])
+   # Class metrics
+   labels = [0,1,2]
+   print("\nIndividual class metrics:")
+   for label in sorted(labels):
+       print ("Class %s" % (label))
    
-       # Log training parameter values
-       print ("Training Logistic Regression model...")
-       mlflow.log_param('maxIter', algo.getMaxIter())
-       mlflow.log_param('regParam', algo.getRegParam())
-       model = pipeline.fit(train)
-      
-       # Evaluate the model and log metrics
-       prediction = model.transform(test)
-       metrics = ["accuracy", "weightedRecall", "weightedPrecision"]
-       for metric in metrics:
-           evaluator = MulticlassClassificationEvaluator(labelCol="Species", predictionCol="prediction", metricName=metric)
-           metricValue = evaluator.evaluate(prediction)
-           print("%s: %s" % (metric, metricValue))
-           mlflow.log_metric(metric, metricValue)
+       # Precision
+       precision = evaluator.evaluate(prediction, {evaluator.metricLabel:label,
+                                                       evaluator.metricName:"precisionByLabel"})
+       print("\tPrecision:", precision)
    
-           
-       # Log the model itself
-       unique_model_name = "classifier-" + str(time.time())
-       mlflow.spark.log_model(model, unique_model_name, mlflow.spark.get_default_conda_env())
-       modelpath = "/model/%s" % (unique_model_name)
-       mlflow.spark.save_model(model, modelpath)
-       
-       print("Experiment run complete.")
+       # Recall
+       recall = evaluator.evaluate(prediction, {evaluator.metricLabel:label,
+                                                evaluator.metricName:"recallByLabel"})
+       print("\tRecall:", recall)
+   
+       # F1 score
+       f1 = evaluator.evaluate(prediction, {evaluator.metricLabel:label,
+                                            evaluator.metricName:"fMeasureByLabel"})
+       print("\tF1 Score:", f1)
+   
+   # Weighed (overall) metrics
+   overallPrecision = evaluator.evaluate(prediction, {evaluator.metricName:"weightedPrecision"})
+   print("Overall Precision:", overallPrecision)
+   overallRecall = evaluator.evaluate(prediction, {evaluator.metricName:"weightedRecall"})
+   print("Overall Recall:", overallRecall)
+   overallF1 = evaluator.evaluate(prediction, {evaluator.metricName:"weightedFMeasure"})
+   print("Overall F1 Score:", overallF1) 
     ```
 
-1. Cuando finalice la ejecución del experimento, en la celda de código, si es necesario, use el botón de alternancia **&#9656;** para expandir los detalles de la **ejecución de MLflow**. Use el hipervínculo **experimento** que aparece allí para abrir la página MLflow que muestra las ejecuciones del experimento. A cada ejecución se le asigna un nombre único.
-1. Seleccione la ejecución más reciente y vea sus detalles. Tenga en cuenta que puede expandir secciones para ver los **Parámetros** y **Métricas** que se registraron y puede ver los detalles del modelo que se entrenó y guardó.
+## Registro e implementación del modelo
 
-    > **Sugerencia**: También puede usar el icono de **experimentos de MLflow** en el menú de la barra lateral de la derecha de este cuaderno para ver los detalles de las ejecuciones de experimentos.
-
-## Creación de una función
-
-En los proyectos de aprendizaje automático, los científicos de datos suelen probar modelos de entrenamiento con distintos parámetros, registrando los resultados cada vez. Para ello, es habitual crear una función que encapsula el proceso de entrenamiento y lo llama con los parámetros que desea probar.
-
-1. En una nueva celda, ejecute el código siguiente para crear una función basada en el código de entrenamiento que usó anteriormente:
-
-    ```python
-   def train_penguin_model(training_data, test_data, maxIterations, regularization):
-       import mlflow
-       import mlflow.spark
-       from pyspark.ml import Pipeline
-       from pyspark.ml.feature import StringIndexer, VectorAssembler, MinMaxScaler
-       from pyspark.ml.classification import LogisticRegression
-       from pyspark.ml.evaluation import MulticlassClassificationEvaluator
-       import time
-   
-       # Start an MLflow run
-       with mlflow.start_run():
-   
-           catFeature = "Island"
-           numFeatures = ["CulmenLength", "CulmenDepth", "FlipperLength", "BodyMass"]
-   
-           # Define the feature engineering and model steps
-           catIndexer = StringIndexer(inputCol=catFeature, outputCol=catFeature + "Idx")
-           numVector = VectorAssembler(inputCols=numFeatures, outputCol="numericFeatures")
-           numScaler = MinMaxScaler(inputCol = numVector.getOutputCol(), outputCol="normalizedFeatures")
-           featureVector = VectorAssembler(inputCols=["IslandIdx", "normalizedFeatures"], outputCol="Features")
-           algo = LogisticRegression(labelCol="Species", featuresCol="Features", maxIter=maxIterations, regParam=regularization)
-   
-           # Chain the steps as stages in a pipeline
-           pipeline = Pipeline(stages=[catIndexer, numVector, numScaler, featureVector, algo])
-   
-           # Log training parameter values
-           print ("Training Logistic Regression model...")
-           mlflow.log_param('maxIter', algo.getMaxIter())
-           mlflow.log_param('regParam', algo.getRegParam())
-           model = pipeline.fit(training_data)
-   
-           # Evaluate the model and log metrics
-           prediction = model.transform(test_data)
-           metrics = ["accuracy", "weightedRecall", "weightedPrecision"]
-           for metric in metrics:
-               evaluator = MulticlassClassificationEvaluator(labelCol="Species", predictionCol="prediction", metricName=metric)
-               metricValue = evaluator.evaluate(prediction)
-               print("%s: %s" % (metric, metricValue))
-               mlflow.log_metric(metric, metricValue)
-   
-   
-           # Log the model itself
-           unique_model_name = "classifier-" + str(time.time())
-           mlflow.spark.log_model(model, unique_model_name, mlflow.spark.get_default_conda_env())
-           modelpath = "/model/%s" % (unique_model_name)
-           mlflow.spark.save_model(model, modelpath)
-   
-           print("Experiment run complete.")
-    ```
-
-1. En una nueva celda, use el siguiente código para llamar a la función:
-
-    ```python
-   train_penguin_model(train, test, 10, 0.2)
-    ```
-
-1. Vea los detalles del experimento de MLflow para la segunda ejecución.
-
-## Registro e implementación de un modelo con MLflow
-
-Además de realizar un seguimiento de los detalles de las ejecuciones de experimentos de entrenamiento, puede usar MLflow para administrar los modelos de aprendizaje automático que ha entrenado. Ya ha registrado el modelo entrenado por cada ejecución de experimento. También puede *registrar* modelos e implementarlos para que se puedan utilizar en las aplicaciones cliente.
+Ya has registrado el modelo entrenado por cada ejecución de experimento cuando has ejecutado la canalización. También puede *registrar* modelos e implementarlos para que se puedan utilizar en las aplicaciones cliente.
 
 > **Nota**: El servicio de modelos solo se admite en áreas de trabajo de Azure Databricks *Premium* y está restringido a [determinadas regiones](https://learn.microsoft.com/azure/databricks/resources/supported-regions).
 
-1. Vea la página de detalles de la ejecución de experimento más reciente.
+1. Selecciona **Experimentos** en el panel de la izquierda.
+1. Selecciona el experimento generado con el nombre de tu cuaderno y consulta la página de detalles de la ejecución del experimento más reciente.
 1. Use el botón **Registrar modelo** para registrar el modelo que se registró en ese experimento y, cuando se le solicite, cree un nuevo modelo denominado **Pronosticador de pingüinos**.
 1. Cuando se haya registrado el modelo, vea la página **Modelos** (en la barra de navegación de la izquierda) y seleccione el modelo **Pronosticador de pingüinos**.
 1. En la página del modelo **Pronosticador de pingüinos**, use el botón **Usar modelo para la inferencia** para crear un nuevo punto de conexión en tiempo real con los siguientes valores:
