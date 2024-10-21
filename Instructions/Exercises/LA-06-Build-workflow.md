@@ -13,7 +13,7 @@ Se tardan aproximadamente **40** minutos en completar este laboratorio.
 
 > **Sugerencia**: si ya tienes un área de trabajo de Azure Databricks, puedes omitir este procedimiento y usar el área de trabajo existente.
 
-En este ejercicio, se incluye un script para aprovisionar una nueva área de trabajo de Azure Databricks. El script intenta crear un recurso de área de trabajo de Azure Databricks de nivel *Premium* en una región en la que la suscripción de Azure tiene cuota suficiente para los núcleos de proceso necesarios en este ejercicio, y da por hecho que la cuenta de usuario tiene permisos suficientes en la suscripción para crear un recurso de área de trabajo de Azure Databricks. Si se produjese un error en el script debido a cuota o permisos insuficientes, intente [crear un área de trabajo de Azure Databricks de forma interactiva en Azure Portal](https://learn.microsoft.com/azure/databricks/getting-started/#--create-an-azure-databricks-workspace).
+En este ejercicio, se incluye un script para aprovisionar una nueva área de trabajo de Azure Databricks. El script intenta crear un recurso de área de trabajo de Azure Databricks de nivel *Premium* en una región en la que la suscripción de Azure tiene cuota suficiente para los núcleos de proceso necesarios en este ejercicio, y da por hecho que la cuenta de usuario tiene permisos suficientes en la suscripción para crear un recurso de área de trabajo de Azure Databricks. Si se produjese un error en el script debido a cuota o permisos insuficientes, intenta [crear un área de trabajo de Azure Databricks de forma interactiva en Azure Portal](https://learn.microsoft.com/azure/databricks/getting-started/#--create-an-azure-databricks-workspace).
 
 1. En un explorador web, inicia sesión en [Azure Portal](https://portal.azure.com) en `https://portal.azure.com`.
 
@@ -21,9 +21,9 @@ En este ejercicio, se incluye un script para aprovisionar una nueva área de tra
 
     ![Azure Portal con un panel de Cloud Shell](./images/cloud-shell.png)
 
-    > **Nota**: Si creaste anteriormente un Cloud Shell que usa un entorno de *Bash*, usa el menú desplegable situado en la parte superior izquierda del panel de Cloud Shell para cambiarlo a ***PowerShell***.
+    > **Nota**: Si ha creado previamente un cloud shell que usa un entorno de *Bash*, use el menú desplegable de la parte superior izquierda del panel de cloud shell para cambiarlo a ***PowerShell***.
 
-3. Ten en cuenta que puedes cambiar el tamaño de Cloud Shell arrastrando la barra de separación en la parte superior del panel, o usando los iconos **&#8212;** , **&#9723;** y **X** en la parte superior derecha para minimizar, maximizar y cerrar el panel. Para obtener más información sobre el uso de Azure Cloud Shell, consulta la [documentación de Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
+3. Tenga en cuenta que puede cambiar el tamaño de Cloud Shell arrastrando la barra de separación en la parte superior del panel, o usando los iconos **&#8212;** , **&#9723;** y **X** en la parte superior derecha para minimizar, maximizar y cerrar el panel. Para obtener más información sobre el uso de Azure Cloud Shell, consulta la [documentación de Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
 4. En el panel de PowerShell, introduce los siguientes comandos para clonar este repositorio:
 
@@ -65,12 +65,12 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
     - **Modo de acceso**: usuario único (*con la cuenta de usuario seleccionada*)
     - **Versión de runtime de Databricks**: 13.3 LTS (Spark 3.4.1, Scala 2.12) o posterior
     - **Usar aceleración de Photon**: seleccionado
-    - **Tipo de nodo**: Standard_DS3_v2.
+    - **Tipo de nodo**: Standard_D4ds_v5
     - **Finaliza después de** *20* **minutos de inactividad**
 
 1. Espera a que se cree el clúster. Esto puede tardar un par de minutos.
 
-    > **Nota**: si el clúster no se inicia, es posible que la suscripción no tenga cuota suficiente en la región donde se aprovisiona el área de trabajo de Azure Databricks. Para más información consulta [El límite de núcleos de la CPU impide la creación de clústeres](https://docs.microsoft.com/azure/databricks/kb/clusters/azure-core-limit). Si esto sucede, puedes intentar eliminar el área de trabajo y crear una nueva en otra región. Puedes especificar una región como parámetro para el script de configuración de la siguiente manera: `./mslearn-databricks/setup.ps1 eastus`
+    > **Nota**: si el clúster no se inicia, es posible que la suscripción no tenga cuota suficiente en la región donde se aprovisiona el área de trabajo de Azure Databricks. Para obtener más información, consulta [El límite de núcleos de la CPU impide la creación de clústeres](https://docs.microsoft.com/azure/databricks/kb/clusters/azure-core-limit). Si esto sucede, puedes intentar eliminar el área de trabajo y crear una nueva en otra región. Puedes especificar una región como parámetro para el script de configuración de la siguiente manera: `./mslearn-databricks/setup.ps1 eastus`
         
 ## Creación de un cuaderno e ingesta de datos
 
@@ -89,7 +89,7 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
     wget -O /dbfs/workflow_lab/2021.csv https://github.com/MicrosoftLearning/mslearn-databricks/raw/main/data/2021_edited.csv
      ```
 
-4. Usa la opción del menú **&#9656; Ejecutar celda** situado a la izquierda de la celda para ejecutarla. A continuación, espere a que se complete el trabajo de Spark ejecutado por el código.
+4. Usa la opción del menú **&#9656; Ejecutar celda** situado a la izquierda de la celda para ejecutarla. A continuación, espera a que se complete el trabajo de Spark ejecutado por el código.
 
 ## Creación de una tarea de trabajo
 
@@ -97,7 +97,7 @@ Implementa el flujo de trabajo de procesamiento y análisis de datos mediante ta
 
 1. En la barra lateral, usa el vínculo **(+) Nuevo** para crear un **cuaderno**.
 
-2. Cambia el nombre predeterminado del cuaderno (**Cuaderno sin título *[fecha]***) a **tarea de ETL** y, en la lista desplegable **Conectar**, selecciona tu clúster si aún no está seleccionado. Si el clúster no se está ejecutando, puede tardar un minuto en iniciarse.
+2. Cambia el nombre por defecto del cuaderno (**Cuaderno sin título *[fecha]***) por `ETL task` y en la lista desplegable **Conectar**, selecciona tu clúster si aún no está seleccionado. Si el clúster no se está ejecutando, puede tardar un minuto en iniciarse.
 
 3. En la primera celda del cuaderno, escribe el código siguiente, que define un esquema para los datos y carga los conjuntos de datos en un dataframe:
 
@@ -127,7 +127,7 @@ Implementa el flujo de trabajo de procesamiento y análisis de datos mediante ta
     df = df.withColumn('Tax', col('UnitPrice') * 0.08)
     df = df.withColumn('Tax', col('Tax').cast("float"))
      ```
-> Nota: después de actualizar los valores de la columna **Tax**, su tipo de datos se establece en `float` de nuevo. Esto se debe a que su tipo de datos cambia a `double` después de realizar el cálculo. Dado que `double` tiene un uso de memoria mayor que `float`, es mejor para el rendimiento escribir la conversión de la columna a `float`.
+    > **Nota**: después de actualizar los valores de la columna **Tax**, su tipo de datos se establece en `float` de nuevo. Esto se debe a que su tipo de datos cambia a `double` después de realizar el cálculo. Dado que `double` tiene un uso de memoria mayor que `float`, es mejor para el rendimiento escribir la conversión de la columna a `float`.
 
 5. En la nueva celda de código, ejecuta el código siguiente para agregar y agrupar los datos de pedidos:
 
@@ -156,7 +156,7 @@ Azure Databricks administra la orquestación de tareas, la administración de cl
 
 2. En el panel Flujos de trabajo, selecciona **Crear trabajo**.
 
-3. Cambia el nombre de trabajo predeterminado (**Nuevo trabajo *[fecha]***) a **trabajo ETL**.
+3. Cambia el nombre de trabajo predeterminado (**Nuevo trabajo *[fecha]***) a `ETL job`
 
 4. Escribe un nombre para la tarea en el campo **Nombre de tarea**.
 

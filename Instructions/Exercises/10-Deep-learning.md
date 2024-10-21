@@ -1,6 +1,6 @@
 ---
 lab:
-  title: Entrenamiento de un modelo de aprendizaje profundo
+  title: 'En desuso: entrenamiento de un modelo de aprendizaje profundo'
 ---
 
 # Entrenamiento de un modelo de aprendizaje profundo

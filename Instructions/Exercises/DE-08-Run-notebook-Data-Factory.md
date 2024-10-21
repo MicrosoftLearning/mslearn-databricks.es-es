@@ -20,9 +20,9 @@ En este ejercicio, se incluye un script para aprovisionar una nueva área de tra
 
     ![Azure Portal con un panel de Cloud Shell](./images/cloud-shell.png)
 
-    > **Nota**: si creaste anteriormente un Cloud Shell que usa un entorno de *Bash*, usa el menú desplegable situado en la parte superior izquierda del panel de Cloud Shell para cambiarlo a ***PowerShell***.
+    > **Nota**: Si ha creado previamente un cloud shell que usa un entorno de *Bash*, use el menú desplegable de la parte superior izquierda del panel de cloud shell para cambiarlo a ***PowerShell***.
 
-3. Ten en cuenta que puedes cambiar el tamaño de Cloud Shell arrastrando la barra de separación en la parte superior del panel, o usando los iconos **&#8212;** , **&#9723;** y **X** en la parte superior derecha para minimizar, maximizar y cerrar el panel. Para obtener más información sobre el uso de Azure Cloud Shell, consulta la [documentación de Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
+3. Tenga en cuenta que puede cambiar el tamaño de Cloud Shell arrastrando la barra de separación en la parte superior del panel, o usando los iconos **&#8212;** , **&#9723;** y **X** en la parte superior derecha para minimizar, maximizar y cerrar el panel. Para obtener más información sobre el uso de Azure Cloud Shell, consulta la [documentación de Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
 4. En el panel de PowerShell, introduce los siguientes comandos para clonar este repositorio:
 
@@ -65,7 +65,7 @@ Puedes crear cuadernos en tu área de trabajo de Azure Databricks para ejecutar 
 
 1. Visualiza el portal del área de trabajo de Azure Databricks y observa que la barra lateral del lado izquierdo contiene iconos para las distintas tareas que puedes realizar.
 1. En la barra lateral, usa el vínculo **(+) Nuevo** para crear un **cuaderno**.
-1. Cambie el nombre predeterminado del cuaderno (**Cuaderno sin título *[fecha]***) por **Procesamiento de datos**.
+1. Cambia el nombre predeterminado del cuaderno (**Cuaderno sin título *[fecha]***) por `Process Data`
 1. En la primera celda del cuaderno, escriba (pero no ejecute) el código siguiente para configurar una variable para la carpeta donde este cuaderno guardará los datos.
 
     ```python
@@ -113,9 +113,9 @@ Para usar Azure Databricks desde una canalización de Azure Data Factory, necesi
 4. En la página **Administrar**, en la pestaña **Servicios vinculados**, selecciona **+ Nuevo** para agregar un nuevo servicio vinculado.
 5. En el panel **Nuevo servicio vinculado**, selecciona la pestaña **Procesar** en la parte superior. Después, selecciona **Azure Databricks**.
 6. Continúa y crea el servicio vinculado con la siguiente configuración:
-    - **Nombre**: AzureDatabricks
-    - **Descripción**: área de trabajo de Azure Databricks
-    - **Conectar mediante Integration Runtime**: AutoResolveInegrationRuntime
+    - **Nombre**: `AzureDatabricks`
+    - **Descripción**: `Azure Databricks workspace`
+    - **Conectar mediante Integration Runtime**: AutoResolveIntegrationRuntime
     - **Método de selección de cuenta**: desde la suscripción de Azure
     - **Suscripción de Azure**: *selecciona tu suscripción*
     - **Área de trabajo de Databricks**: *selecciona tu área de trabajo **databricksxxxxxxx***
@@ -137,11 +137,11 @@ Ahora que creaste un servicio vinculado, puedes usarlo en una canalización para
 
 1. En Azure Data Factory Studio, en el panel de navegación, selecciona **Autor**.
 2. En la página **Autor**, en el panel **Recursos Factory**, usa el icono **+** para agregar una **canalización**.
-3. En el panel **Propiedades** de la nueva canalización, cambia su nombre a **Procesar datos con Databricks**. Después, usa el botón **Propiedades** (que tiene un aspecto similar a **<sub>*</sub>**) situado en el extremo derecho de la barra de herramientas para ocultar el panel **Propiedades**.
+3. En el panel **Propiedades** de la nueva canalización, cambia su nombre a `Process Data with Databricks`. Después, usa el botón **Propiedades** (que tiene un aspecto similar a **<sub>*</sub>**) situado en el extremo derecho de la barra de herramientas para ocultar el panel **Propiedades**.
 4. En el panel **Actividades**, expande **Databricks** y arrastra una actividad de **Cuaderno** a la superficie del diseñador de canalizaciones.
 5. Con la nueva actividad **Notebook1** seleccionada, establece las siguientes propiedades en el panel inferior:
     - **General:**
-        - **Nombre**: procesar datos
+        - **Nombre**: `Process Data`
     - **Azure Databricks**:
         - **Servicio vinculado de Databricks**: *selecciona el servicio **AzureDatabricks** vinculado que creaste anteriormente*
     - **Configuración**:

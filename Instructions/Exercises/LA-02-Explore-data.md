@@ -11,7 +11,7 @@ Azure Databricks facilita el análisis exploratorio de datos (EDA), lo que permi
 
 Se integra con una variedad de herramientas y técnicas para EDA, incluidos métodos estadísticos y visualizaciones, para resumir las características de los datos e identificar cualquier problema subyacente.
 
-Este ejercicio debería tardar en completarse **45** minutos aproximadamente.
+Este ejercicio debería tardar en completarse **30** minutos aproximadamente.
 
 ## Aprovisiona un área de trabajo de Azure Databricks.
 
@@ -19,16 +19,16 @@ Este ejercicio debería tardar en completarse **45** minutos aproximadamente.
 
 En este ejercicio, se incluye un script para aprovisionar una nueva área de trabajo de Azure Databricks. El script intenta crear un recurso de área de trabajo de Azure Databricks de nivel *Premium* en una región en la que la suscripción de Azure tiene cuota suficiente para los núcleos de proceso necesarios en este ejercicio, y da por hecho que la cuenta de usuario tiene permisos suficientes en la suscripción para crear un recurso de área de trabajo de Azure Databricks. 
 
-Si se produjese un error en el script debido a cuota o permisos insuficientes, intente [crear un área de trabajo de Azure Databricks de forma interactiva en Azure Portal](https://learn.microsoft.com/azure/databricks/getting-started/#--create-an-azure-databricks-workspace).
+Si se produjese un error en el script debido a cuota o permisos insuficientes, intenta [crear un área de trabajo de Azure Databricks de forma interactiva en Azure Portal](https://learn.microsoft.com/azure/databricks/getting-started/#--create-an-azure-databricks-workspace).
 
 1. En un explorador web, inicia sesión en [Azure Portal](https://portal.azure.com) en `https://portal.azure.com`.
 2. Usa el botón **[\>_]** a la derecha de la barra de búsqueda en la parte superior de la página para crear un nuevo Cloud Shell en Azure Portal, selecciona un entorno de ***PowerShell*** y crea almacenamiento si se te solicita. Cloud Shell proporciona una interfaz de línea de comandos en un panel situado en la parte inferior de Azure Portal, como se muestra a continuación:
 
     ![Azure Portal con un panel de Cloud Shell](./images/cloud-shell.png)
 
-    > **Nota**: Si creaste anteriormente un Cloud Shell que usa un entorno de *Bash*, usa el menú desplegable situado en la parte superior izquierda del panel de Cloud Shell para cambiarlo a ***PowerShell***.
+    > **Nota**: Si ha creado previamente un cloud shell que usa un entorno de *Bash*, use el menú desplegable de la parte superior izquierda del panel de cloud shell para cambiarlo a ***PowerShell***.
 
-3. Ten en cuenta que puedes cambiar el tamaño de Cloud Shell arrastrando la barra de separación en la parte superior del panel, o usando los iconos **&#8212;** , **&#9723;** y **X** en la parte superior derecha para minimizar, maximizar y cerrar el panel. Para obtener más información sobre el uso de Azure Cloud Shell, consulta la [documentación de Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
+3. Tenga en cuenta que puede cambiar el tamaño de Cloud Shell arrastrando la barra de separación en la parte superior del panel, o usando los iconos **&#8212;** , **&#9723;** y **X** en la parte superior derecha para minimizar, maximizar y cerrar el panel. Para obtener más información sobre el uso de Azure Cloud Shell, consulta la [documentación de Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
 4. En el panel de PowerShell, introduce los siguientes comandos para clonar este repositorio:
 
@@ -68,22 +68,22 @@ En este ejercicio, crearás un clúster de *nodo único* para minimizar los recu
     - **Modo de acceso**: usuario único (*con la cuenta de usuario seleccionada*)
     - **Versión de runtime de Databricks**: 13.3 LTS (Spark 3.4.1, Scala 2.12) o posterior
     - **Usar aceleración de Photon**: seleccionado
-    - **Tipo de nodo**: Standard_DS3_v2.
+    - **Tipo de nodo**: Standard_D4ds_v5
     - **Finaliza después de** *20* **minutos de inactividad**
 
 1. Espera a que se cree el clúster. Esto puede tardar un par de minutos.
 
-> **Nota**: si el clúster no se inicia, es posible que la suscripción no tenga cuota suficiente en la región donde se aprovisiona el área de trabajo de Azure Databricks. Para más información consulta [El límite de núcleos de la CPU impide la creación de clústeres](https://docs.microsoft.com/azure/databricks/kb/clusters/azure-core-limit). Si esto sucede, puedes intentar eliminar el área de trabajo y crear una nueva en otra región. Puedes especificar una región como parámetro para el script de configuración de la siguiente manera: `./mslearn-databricks/setup.ps1 eastus`
+> **Nota**: si el clúster no se inicia, es posible que la suscripción no tenga cuota suficiente en la región donde se aprovisiona el área de trabajo de Azure Databricks. Para obtener más información, consulta [El límite de núcleos de la CPU impide la creación de clústeres](https://docs.microsoft.com/azure/databricks/kb/clusters/azure-core-limit). Si esto sucede, puedes intentar eliminar el área de trabajo y crear una nueva en otra región. Puedes especificar una región como parámetro para el script de configuración de la siguiente manera: `./mslearn-databricks/setup.ps1 eastus`
     
 ## Crear un cuaderno
 
 1. En la barra lateral, usa el vínculo **(+) Nuevo** para crear un **cuaderno**.
    
-1. Cambie el nombre predeterminado del cuaderno (**Cuaderno sin título *[fecha]***) a **Explorar datos con Spark** y en la lista desplegable**Conectar**, seleccione el clúster si aún no está seleccionado. Si el clúster no se está ejecutando, puede tardar un minuto en iniciarse.
+1. Cambia el nombre por defecto del cuaderno (**Cuaderno sin título *[fecha]***) por `Explore data with Spark` y en la lista desplegable **Conectar**, selecciona tu clúster si aún no está seleccionado. Si el clúster no se está ejecutando, puede tardar un minuto en iniciarse.
 
 ## Ingerir datos
 
-1. En la primera celda del cuaderno, escriba el siguiente código, que utiliza comandos del *shell* para descargar los archivos de datos de GitHub en el sistema de archivos utilizado por el clúster.
+1. En la primera celda del cuaderno, escribe el siguiente código, que utiliza comandos del *shell* para descargar los archivos de datos de GitHub en el sistema de archivos utilizado por el clúster.
 
     ```python
     %sh
@@ -94,7 +94,7 @@ En este ejercicio, crearás un clúster de *nodo único* para minimizar los recu
     wget -O /dbfs/spark_lab/2021.csv https://raw.githubusercontent.com/MicrosoftLearning/mslearn-databricks/main/data/2021.csv
     ```
 
-1. Use la opción del menú **&#9656; Ejecutar celda** situado a la izquierda de la celda para ejecutarla. A continuación, espere a que se complete el trabajo de Spark ejecutado por el código.
+1. Usa la opción del menú **&#9656; Ejecutar celda** situado a la izquierda de la celda para ejecutarla. A continuación, espere a que se complete el trabajo de Spark ejecutado por el código.
 
 ## Consulta de datos en archivos
 
@@ -178,7 +178,7 @@ En este ejercicio, crearás un clúster de *nodo único* para minimizar los recu
    df_spark.show()
     ```
 
-1. Agregue una nueva celda de código y úsela para ejecutar el código siguiente, que importa la biblioteca **matplotlb** y la usa para crear un gráfico:
+1. Agrega una nueva celda de código y úsala para ejecutar el código siguiente, que importa **matplotlb** y la usa para crear un gráfico:
 
     ```python
    from matplotlib import pyplot as plt
@@ -297,6 +297,6 @@ En este ejercicio, crearás un clúster de *nodo único* para minimizar los recu
 
 ## Limpiar
 
-En el portal de Azure Databricks, en la página **Proceso**, seleccione el clúster y **&#9632; Finalizar** para apagarlo.
+En el portal de Azure Databricks, en la página **Proceso**, selecciona el clúster y **&#9632; Finalizar** para apagarlo.
 
 Si has terminado de explorar Azure Databricks, puedes eliminar los recursos que has creado para evitar costes innecesarios de Azure y liberar capacidad en tu suscripción.
