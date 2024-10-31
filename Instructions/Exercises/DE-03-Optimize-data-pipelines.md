@@ -65,7 +65,7 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
     - **Modo de acceso**: usuario único (*con la cuenta de usuario seleccionada*)
     - **Versión de runtime de Databricks**: 13.3 LTS (Spark 3.4.1, Scala 2.12) o posterior
     - **Usar aceleración de Photon**: seleccionado
-    - **Tipo de nodo**: Standard_DS3_v2.
+    - **Tipo de nodo**: Standard_D4ds_v5
     - **Finaliza después de** *20* **minutos de inactividad**
 
 1. Espera a que se cree el clúster. Esto puede tardar un par de minutos.
