@@ -124,7 +124,7 @@ Para usar Azure Databricks desde una canalización de Azure Data Factory, necesi
     - **Tipo de autenticación**: token de acceso
     - **** Token de acceso: *pega el token de acceso.*
     - **Versión del clúster**: 13.3 LTS (Spark 3.4.1, Scala 2.12)
-    - **Tipo de nodo de clúster**: Standard_DS3_v2
+    - **Tipo de nodo de clúster**: Standard_D4ds_v5
     - **Versión de Python**: 3
     - **Opciones de trabajador**: fijas
     - **Trabajadores**: 1
