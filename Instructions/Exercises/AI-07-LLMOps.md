@@ -108,10 +108,10 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 
 3. Asigna un nombre al cuaderno y selecciona `Python` como lenguaje.
 
-4. En la primera celda de código, escribe y ejecuta el código siguiente para instalar las bibliotecas necesarias:
+4. En la primera celda de código, escribe y ejecuta el código siguiente para instalar la biblioteca de OpenAI:
    
      ```python
-    %pip install azure-ai-openai flask
+    %pip install openai
      ```
 
 5. Una vez completada la instalación, reinicia el kernel en una nueva celda:
@@ -122,80 +122,66 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 
 ## Registra el LLM mediante MLflow
 
+Las funcionalidades de seguimiento de LLM de MLflow te permiten registrar parámetros, métricas, predicciones y Artifacts. Los parámetros incluyen pares clave-valor que detallan las configuraciones de entrada, mientras que las métricas proporcionan medidas cuantitativas de rendimiento. Las predicciones abarcan las solicitudes de entrada y las respuestas del modelo, almacenadas como Artifacts para facilitar la recuperación. Este registro estructurado ayuda a mantener un registro detallado de cada interacción, lo que facilita un mejor análisis y optimización de las LLM.
+
+1. En una celda nueva, ejecuta el código siguiente con la información de acceso que copiaste al principio de este ejercicio para asignar variables de entorno persistentes para la autenticación al usar recursos de Azure OpenAI:
+
+     ```python
+    import os
+
+    os.environ["AZURE_OPENAI_API_KEY"] = "your_openai_api_key"
+    os.environ["AZURE_OPENAI_ENDPOINT"] = "your_openai_endpoint"
+    os.environ["AZURE_OPENAI_API_VERSION"] = "2023-03-15-preview"
+     ```
 1. En una nueva celda, ejecuta el código siguiente para inicializar el cliente de Azure OpenAI:
 
      ```python
-    from azure.ai.openai import OpenAIClient
+    import os
+    from openai import AzureOpenAI
 
-    client = OpenAIClient(api_key="<Your_API_Key>")
-    model = client.get_model("gpt-3.5-turbo")
+    client = AzureOpenAI(
+       azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT"),
+       api_key = os.getenv("AZURE_OPENAI_API_KEY"),
+       api_version = os.getenv("AZURE_OPENAI_API_VERSION")
+    )
      ```
 
-1. En una nueva celda, ejecuta el código siguiente para inicializar el seguimiento de MLflow:     
+1. En una nueva celda, ejecuta el código siguiente para inicializar el seguimiento de MLflow y registrar el modelo:     
 
      ```python
     import mlflow
+    from openai import AzureOpenAI
 
-    mlflow.set_tracking_uri("databricks")
-    mlflow.start_run()
-     ```
+    system_prompt = "Assistant is a large language model trained by OpenAI."
 
-1. En una nueva celda, ejecuta el código siguiente para registrar el modelo:
+    mlflow.openai.autolog()
 
-     ```python
-    mlflow.pyfunc.log_model("model", python_model=model)
+    with mlflow.start_run():
+
+        response = client.chat.completions.create(
+            model="gpt-35-turbo",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": "Tell me a joke about animals."},
+            ],
+        )
+
+        print(response.choices[0].message.content)
+        mlflow.log_param("completion_tokens", response.usage.completion_tokens)
     mlflow.end_run()
      ```
 
-## Implementación del modelo
-
-1. Crea un nuevo cuaderno y, en su primera celda, ejecuta el código siguiente para crear una API de REST para el modelo:
-
-     ```python
-    from flask import Flask, request, jsonify
-    import mlflow.pyfunc
-
-    app = Flask(__name__)
-
-    @app.route('/predict', methods=['POST'])
-    def predict():
-        data = request.json
-        model = mlflow.pyfunc.load_model("model")
-        prediction = model.predict(data["input"])
-        return jsonify(prediction)
-
-    if __name__ == '__main__':
-        app.run(host='0.0.0.0', port=5000)
-     ```
+La celda anterior iniciará un experimento en tu área de trabajo y registrará los seguimientos de cada iteración de finalización de chat, para realizar un seguimiento de las entradas, salidas y metadatos de cada ejecución.
 
 ## Supervisión del modelo
 
-1. En el primer cuaderno, crea una nueva celda y ejecuta el código siguiente para habilitar el registro automático de MLflow:
+1. En la barra lateral de la izquierda, selecciona **Experimentos** y selecciona el experimento asociado al cuaderno que usaste para este ejercicio. Selecciona la ejecución más reciente y comprueba en la página de información general que hay un parámetro registrado: `completion_tokens`. El comando `mlflow.openai.autolog()` registrará los seguimientos de cada ejecución de forma predeterminada, pero también puedes registrar parámetros adicionales con `mlflow.log_param()` que se pueden usar más adelante para supervisar el modelo.
 
-     ```python
-    mlflow.autolog()
-     ```
+1. Selecciona la pestaña **Seguimientos** y, a continuación, selecciona el último creado. Comprueba que el parámetro `completion_tokens` forma parte de la salida del seguimiento:
 
-1. En una nueva celda, ejecuta el código siguiente para realizar un seguimiento de las predicciones y los datos de entrada.
+   ![Interfaz de usuario de seguimiento de MLFlow](./images/trace-ui.png)  
 
-     ```python
-    mlflow.log_param("input", data["input"])
-    mlflow.log_metric("prediction", prediction)
-     ```
-
-1. En una nueva celda, ejecuta el código siguiente para supervisar el desfase de datos:
-
-     ```python
-    import pandas as pd
-    from evidently.dashboard import Dashboard
-    from evidently.tabs import DataDriftTab
-
-    report = Dashboard(tabs=[DataDriftTab()])
-    report.calculate(reference_data=historical_data, current_data=current_data)
-    report.show()
-     ```
-
-Una vez que empieces a supervisar el modelo, puedes configurar canalizaciones de reentrenamiento automatizadas basadas en la detección de desfase de datos.
+Una vez que empieces a supervisar el modelo, puedes comparar los seguimientos de diferentes ejecuciones para detectar el desfase de datos. Busca cambios significativos en las distribuciones de datos de entrada, las predicciones del modelo o las métricas de rendimiento a lo largo del tiempo. Puedes usar pruebas estadísticas o herramientas de visualización para ayudar en este análisis.
 
 ## Limpiar
 

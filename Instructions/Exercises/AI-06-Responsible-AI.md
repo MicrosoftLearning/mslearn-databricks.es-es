@@ -152,7 +152,15 @@ La IA responsable hace referencia al desarrollo, la implementación y el uso ét
 1. En una nueva celda, ejecuta el código siguiente para generar salidas para las entradas de ejemplo:
 
      ```python
-    system_prompt = "You are an advanced language model designed to assist with a variety of tasks. Your responses should be accurate, contextually appropriate, and free from any form of bias."
+    import os
+    from openai import AzureOpenAI
+
+    client = AzureOpenAI(
+        azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT"),
+        api_key = os.getenv("AZURE_OPENAI_API_KEY"),
+        api_version = os.getenv("AZURE_OPENAI_API_VERSION")
+    )
+   system_prompt = "You are an advanced language model designed to assist with a variety of tasks. Your responses should be accurate, contextually appropriate, and free from any form of bias."
 
     neutral_answers=[]
     loaded_answers=[]
