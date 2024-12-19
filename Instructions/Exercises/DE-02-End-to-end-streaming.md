@@ -9,6 +9,8 @@ La creación de una canalización de streaming de un extremo a otro con Delta L
 
 Este laboratorio se tarda aproximadamente **30** minutos en completarse.
 
+> **Nota**: la interfaz de usuario de Azure Databricks está sujeta a una mejora continua. Es posible que la interfaz de usuario haya cambiado desde que se escribieron las instrucciones de este ejercicio.
+
 ## Aprovisiona un área de trabajo de Azure Databricks.
 
 > **Sugerencia**: si ya tienes un área de trabajo de Azure Databricks, puedes omitir este procedimiento y usar el área de trabajo existente.
@@ -16,14 +18,13 @@ Este laboratorio se tarda aproximadamente **30** minutos en completarse.
 En este ejercicio, se incluye un script para aprovisionar una nueva área de trabajo de Azure Databricks. El script intenta crear un recurso de área de trabajo de Azure Databricks de nivel *Premium* en una región en la que la suscripción de Azure tiene cuota suficiente para los núcleos de proceso necesarios en este ejercicio, y da por hecho que la cuenta de usuario tiene permisos suficientes en la suscripción para crear un recurso de área de trabajo de Azure Databricks. Si se produjese un error en el script debido a cuota o permisos insuficientes, intenta [crear un área de trabajo de Azure Databricks de forma interactiva en Azure Portal](https://learn.microsoft.com/azure/databricks/getting-started/#--create-an-azure-databricks-workspace).
 
 1. En un explorador web, inicia sesión en [Azure Portal](https://portal.azure.com) en `https://portal.azure.com`.
-
-2. Usa el botón **[\>_]** a la derecha de la barra de búsqueda en la parte superior de la página para crear un nuevo Cloud Shell en Azure Portal, selecciona un entorno de ***PowerShell*** y crea almacenamiento si se te solicita. Cloud Shell proporciona una interfaz de línea de comandos en un panel situado en la parte inferior de Azure Portal, como se muestra a continuación:
+2. Usa el botón **[\>_]** situado a la derecha de la barra de búsqueda en la parte superior de la página para crear una nueva instancia de Cloud Shell en Azure Portal, para lo que deberás seleccionar un entorno de ***PowerShell***. Cloud Shell proporciona una interfaz de línea de comandos en un panel situado en la parte inferior de Azure Portal, como se muestra a continuación:
 
     ![Azure Portal con un panel de Cloud Shell](./images/cloud-shell.png)
 
-    > **Nota**: si creaste anteriormente un Cloud Shell que usa un entorno de *Bash*, usa el menú desplegable situado en la parte superior izquierda del panel de Cloud Shell para cambiarlo a ***PowerShell***.
+    > **Nota**: si has creado anteriormente una instancia de Cloud Shell que usa un entorno de *Bash*, cámbiala a ***PowerShell***.
 
-3. Ten en cuenta que puedes cambiar el tamaño de Cloud Shell arrastrando la barra de separación en la parte superior del panel, o usando los iconos **&#8212;** , **&#9723;** y **X** en la parte superior derecha para minimizar, maximizar y cerrar el panel. Para obtener más información sobre el uso de Azure Cloud Shell, consulta la [documentación de Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
+3. Ten en cuenta que puedes cambiar el tamaño de la instancia de Cloud Shell. Para ello, arrastra la barra de separación de la parte superior del panel o utiliza los iconos **&#8212;**, **&#10530;** y **X** de la parte superior derecha del panel para minimizar, maximizar y cerrar el panel. Para obtener más información sobre el uso de Azure Cloud Shell, consulta la [documentación de Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
 4. En el panel de PowerShell, introduce los siguientes comandos para clonar este repositorio:
 
@@ -54,9 +55,9 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 
 1. En la página **Información general** del área de trabajo, usa el botón **Inicio del área de trabajo** para abrir el área de trabajo de Azure Databricks en una nueva pestaña del explorador; inicia sesión si se solicita.
 
-    > **Sugerencia**: al usar el portal del área de trabajo de Databricks, se pueden mostrar varias sugerencias y notificaciones. Descártalas y sigue las instrucciones proporcionadas para completar las tareas de este ejercicio.
+    > **Sugerencia**: al usar el portal del área de trabajo de Databricks, se pueden mostrar varias sugerencias y notificaciones. Descarta estos elementos y sigue las instrucciones proporcionadas para completar las tareas de este ejercicio.
 
-1. En la barra lateral de la izquierda, selecciona la tarea **(+) Nuevo** y luego selecciona **Clúster**.
+1. En la barra lateral de la izquierda, selecciona la tarea **(+) Nuevo** y luego selecciona **Clúster** (es posible que debas buscar en el submenú **Más**).
 
 1. En la página **Nuevo clúster**, crea un clúster con la siguiente configuración:
     - **Nombre del clúster**: clúster del *Nombre de usuario*  (el nombre del clúster predeterminado)
@@ -75,6 +76,7 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 ## Creación de un cuaderno e ingesta de datos
 
 1. En la barra lateral, usa el vínculo **(+) Nuevo** para crear un **cuaderno**. En la lista desplegable **Conectar**, selecciona el clúster si aún no está seleccionado. Si el clúster no se está ejecutando, puede tardar un minuto en iniciarse.
+2. Cambia el nombre predeterminado del cuaderno (**Cuaderno sin título *[fecha]***) por **Delta Live Tables Ingestion**.
 
 3. En la primera celda del cuaderno, escribe el siguiente código, que utiliza comandos del *shell* para descargar los archivos de datos de GitHub en el sistema de archivos utilizado por el clúster.
 
@@ -131,20 +133,21 @@ Una canalización es la unidad principal utilizada para configurar y ejecutar fl
 1. Selecciona **Delta Live Tables** en la barra lateral izquierda y, luego, selecciona **Crear canalización**.
 
 2. En la página **Crear canalización**, crea una canalización con la siguiente configuración:
-    - **Nombre de canalización**: denomina la canalización
+    - **Nombre de la canalización**: `Ingestion Pipeline`
     - **Edición del producto**: avanzado
     - **Modo de canalización**: desencadenado
-    - **Código fuente**: déjalo en blanco
+    - **Código fuente**: *déjalo en blanco*
     - **Opciones de almacenamiento**: metastore de Hive
-    - **Ubicación de almacenamiento**: dbfs:/pipelines/device_stream
+    - **Ubicación de almacenamiento**: `dbfs:/pipelines/device_stream`
+    - **Esquema de destino**: `default`
 
-3. Seleccione **Crear**.
+3. Selecciona **Crear** para crear la canalización (que también creará un cuaderno en blanco para el código de canalización).
 
-4. Una vez creada la canalización, abre el vínculo al cuaderno en blanco en **Código fuente** en el panel derecho:
+4. Una vez creada la canalización, abre el vínculo al cuaderno en blanco en **Código fuente** en el panel derecho. Esto abre el cuaderno en una nueva pestaña del explorador:
 
     ![delta-live-table-pipeline](./images/delta-live-table-pipeline.png)
 
-5. En la primera celda del cuaderno, escribe el siguiente código para crear Delta Live Tables y transformar los datos:
+5. En la primera celda del cuaderno en blanco, escribe (pero no ejecutes) el siguiente código para crear Delta Live Tables y transformar los datos:
 
      ```python
     import dlt
@@ -170,12 +173,13 @@ Una canalización es la unidad principal utilizada para configurar y ejecutar fl
         )
      ```
 
-6. Seleccione **Inicio**.
+6. Cierra la pestaña del explorador que contiene el cuaderno (el contenido se guarda automáticamente) y vuelve a la canalización. Luego, seleccione **Iniciar**.
 
-7. Una vez ejecutada correctamente la canalización, vuelve al primer cuaderno y comprueba que se han creado las tablas nuevas en la ubicación de almacenamiento especificada con el código siguiente:
+7. Una vez completada correctamente la canalización, vuelve a **Delta Live Tables Ingestion** reciente que creaste primero y comprueba que las nuevas tablas se han creado en la ubicación de almacenamiento especificada mediante la ejecución del código siguiente en una nueva celda:
 
      ```sql
-    display(dbutils.fs.ls("dbfs:/pipelines/device_stream/tables"))
+    %sql
+    SHOW TABLES
      ```
 
 ## Ver los resultados como una visualización
@@ -185,8 +189,8 @@ Después de crear las tablas, es posible cargarlas en dataframes y visualizar lo
 1. En el primer cuaderno, agrega una nueva celda de código y ejecuta el código siguiente para cargar `transformed_iot_data` en un dataframe:
 
     ```python
-   df = spark.read.format("delta").load('/pipelines/device_stream/tables/transformed_iot_data')
-   display(df)
+    %sql
+    SELECT * FROM transformed_iot_data
     ```
 
 1. Encima de la tabla de resultados, selecciona **+** y luego **Visualización** para ver el editor de visualización y luego aplica las siguientes opciones:
@@ -195,8 +199,14 @@ Después de crear las tablas, es posible cargarlas en dataframes y visualizar lo
     - **** Columna Y: *agrega una nueva columna y selecciona***temperature_fahrenheit**. *Aplica la agregación***Suma****.
 
 1. Guarda la visualización y vuelve a ejecutar la celda de código para ver el gráfico resultante en el cuaderno.
+1. Agrega una nueva celda de código y escribe el código siguiente para detener la consula de streaming:
 
-## Limpiar
+    ```python
+    query.stop()
+    ```
+    
+
+## Limpieza
 
 En el portal de Azure Databricks, en la página **Proceso**, selecciona el clúster y **&#9632; Finalizar** para apagarlo.
 

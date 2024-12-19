@@ -9,6 +9,8 @@ Delta Live Tables es una plataforma para crear canalizaciones de procesamiento d
 
 Se tardan aproximadamente **40** minutos en completar este laboratorio.
 
+> **Nota**: la interfaz de usuario de Azure Databricks está sujeta a una mejora continua. Es posible que la interfaz de usuario haya cambiado desde que se escribieron las instrucciones de este ejercicio.
+
 ## Aprovisiona un área de trabajo de Azure Databricks.
 
 > **Sugerencia**: si ya tienes un área de trabajo de Azure Databricks, puedes omitir este procedimiento y usar el área de trabajo existente.
@@ -16,14 +18,13 @@ Se tardan aproximadamente **40** minutos en completar este laboratorio.
 En este ejercicio, se incluye un script para aprovisionar una nueva área de trabajo de Azure Databricks. El script intenta crear un recurso de área de trabajo de Azure Databricks de nivel *Premium* en una región en la que la suscripción de Azure tiene cuota suficiente para los núcleos de proceso necesarios en este ejercicio, y da por hecho que la cuenta de usuario tiene permisos suficientes en la suscripción para crear un recurso de área de trabajo de Azure Databricks. Si se produjese un error en el script debido a cuota o permisos insuficientes, intenta [crear un área de trabajo de Azure Databricks de forma interactiva en Azure Portal](https://learn.microsoft.com/azure/databricks/getting-started/#--create-an-azure-databricks-workspace).
 
 1. En un explorador web, inicia sesión en [Azure Portal](https://portal.azure.com) en `https://portal.azure.com`.
-
-2. Usa el botón **[\>_]** a la derecha de la barra de búsqueda en la parte superior de la página para crear un nuevo Cloud Shell en Azure Portal, selecciona un entorno de ***PowerShell*** y crea almacenamiento si se te solicita. Cloud Shell proporciona una interfaz de línea de comandos en un panel situado en la parte inferior de Azure Portal, como se muestra a continuación:
+2. Usa el botón **[\>_]** situado a la derecha de la barra de búsqueda en la parte superior de la página para crear una nueva instancia de Cloud Shell en Azure Portal, para lo que deberás seleccionar un entorno de ***PowerShell***. Cloud Shell proporciona una interfaz de línea de comandos en un panel situado en la parte inferior de Azure Portal, como se muestra a continuación:
 
     ![Azure Portal con un panel de Cloud Shell](./images/cloud-shell.png)
 
-    > **Nota**: Si ha creado previamente un cloud shell que usa un entorno de *Bash*, use el menú desplegable de la parte superior izquierda del panel de cloud shell para cambiarlo a ***PowerShell***.
+    > **Nota**: si has creado anteriormente una instancia de Cloud Shell que usa un entorno de *Bash*, cámbiala a ***PowerShell***.
 
-3. Tenga en cuenta que puede cambiar el tamaño de Cloud Shell arrastrando la barra de separación en la parte superior del panel, o usando los iconos **&#8212;** , **&#9723;** y **X** en la parte superior derecha para minimizar, maximizar y cerrar el panel. Para obtener más información sobre el uso de Azure Cloud Shell, consulta la [documentación de Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
+3. Ten en cuenta que puedes cambiar el tamaño de la instancia de Cloud Shell. Para ello, arrastra la barra de separación de la parte superior del panel o utiliza los iconos **&#8212;**, **&#10530;** y **X** de la parte superior derecha del panel para minimizar, maximizar y cerrar el panel. Para obtener más información sobre el uso de Azure Cloud Shell, consulta la [documentación de Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
 4. En el panel de PowerShell, introduce los siguientes comandos para clonar este repositorio:
 
@@ -40,7 +41,7 @@ En este ejercicio, se incluye un script para aprovisionar una nueva área de tra
 
 6. Si se solicita, elige la suscripción que quieres usar (esto solo ocurrirá si tienes acceso a varias suscripciones de Azure).
 
-7. Espera a que se complete el script: normalmente puede tardar entre 5 y 10 minutos, pero en algunos casos puede tardar más. Mientras esperas, revisa el artículo [Introducción a Delta Lake](https://docs.microsoft.com/azure/databricks/delta/delta-intro) en la documentación de Azure Databricks.
+7. Espera a que se complete el script: normalmente tarda unos 5 minutos, pero en algunos casos puede tardar más. Mientras esperas, revisa el artículo [Qué es Delta Live Tables](https://learn.microsoft.com/azure/databricks/delta-live-tables/) en la documentación de Azure Databricks.
 
 ## Crear un clúster
 
@@ -54,9 +55,9 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 
 1. En la página **Información general** del área de trabajo, usa el botón **Inicio del área de trabajo** para abrir el área de trabajo de Azure Databricks en una nueva pestaña del explorador; inicia sesión si se solicita.
 
-    > **Sugerencia**: al usar el portal del área de trabajo de Databricks, se pueden mostrar varias sugerencias y notificaciones. Descártalas y sigue las instrucciones proporcionadas para completar las tareas de este ejercicio.
+    > **Sugerencia**: al usar el portal del área de trabajo de Databricks, se pueden mostrar varias sugerencias y notificaciones. Descarta estos elementos y sigue las instrucciones proporcionadas para completar las tareas de este ejercicio.
 
-1. En la barra lateral de la izquierda, selecciona la tarea **(+) Nuevo** y luego selecciona **Clúster**.
+1. En la barra lateral de la izquierda, selecciona la tarea **(+) Nuevo** y luego selecciona **Clúster** (es posible que debas buscar en el submenú **Más**).
 
 1. En la página **Nuevo clúster**, crea un clúster con la siguiente configuración:
     - **Nombre del clúster**: clúster del *Nombre de usuario*  (el nombre del clúster predeterminado)
@@ -91,11 +92,11 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 
 ## Creación de una canalización de Delta Live Tables mediante SQL
 
-Crea un nuevo cuaderno y empieza a definir las tablas Delta Live Tables mediante scripts SQL.
+1. Crea un nuevo cuaderno y cámbiale el nombre por `Pipeline Notebook`.
 
 1. Junto al nombre del cuaderno, selecciona **Python** y cambia el lenguaje predeterminado a **SQL**.
 
-1. Coloca el código siguiente en la primera celda sin ejecutarlo. Todas las celdas se ejecutarán después de crear la canalización. Este código define una tabla Delta Live Table que se rellenará con los datos sin procesar descargados anteriormente:
+1. Escribe el código siguiente en la primera celda sin ejecutarlo. Todas las celdas se ejecutarán después de crear la canalización. Este código define una tabla Delta Live Table que se rellenará con los datos sin procesar descargados anteriormente:
 
      ```sql
     CREATE OR REFRESH LIVE TABLE raw_covid_data
@@ -110,7 +111,7 @@ Crea un nuevo cuaderno y empieza a definir las tablas Delta Live Tables mediante
     FROM read_files('dbfs:/delta_lab/covid_data.csv', format => 'csv', header => true)
      ```
 
-2. Agrega una nueva celda y usa el código siguiente para consultar, filtrar y dar formato a los datos de la tabla anterior antes del análisis.
+1. En la primera celda, utiliza el icono **+ Código** para agregar una nueva celda y especifica el código siguiente para consultar, filtrar y dar formato a los datos de la tabla anterior antes del análisis.
 
      ```sql
     CREATE OR REFRESH LIVE TABLE processed_covid_data(
@@ -127,7 +128,7 @@ Crea un nuevo cuaderno y empieza a definir las tablas Delta Live Tables mediante
     FROM live.raw_covid_data;
      ```
 
-3. En una nueva celda de código, coloca el código siguiente que creará una vista de datos enriquecida para su posterior análisis una vez que la canalización se ejecute correctamente.
+1. En una tercera nueva celda de código, especifica el código siguiente que creará una vista de datos enriquecida para su posterior análisis una vez que la canalización se ejecute correctamente.
 
      ```sql
     CREATE OR REFRESH LIVE TABLE aggregated_covid_data
@@ -142,33 +143,43 @@ Crea un nuevo cuaderno y empieza a definir las tablas Delta Live Tables mediante
     GROUP BY Report_Date;
      ```
      
-4. Selecciona **Delta Live Tables** en la barra lateral izquierda y luego selecciona **Crear canalización**.
+1. Selecciona **Delta Live Tables** en la barra lateral izquierda y, luego, selecciona **Crear canalización**.
 
-5. En la página **Crear canalización**, crea una canalización con la siguiente configuración:
-    - **Nombre de canalización**: denomina la canalización
+1. En la página **Crear canalización**, crea una canalización con la siguiente configuración:
+    - **Nombre de la canalización**: `Covid Pipeline`
     - **Edición del producto**: avanzado
     - **Modo de canalización**: desencadenado
-    - **Código fuente**: selecciona el cuaderno de SQL.
+    - **Código fuente**: *navega a tu cuaderno* Cuaderno de canalización *en la carpeta *Users/user@name**.
     - **Opciones de almacenamiento**: metastore de Hive
-    - **Ubicación de almacenamiento**: dbfs:/pipelines/delta_lab
+    - **Ubicación de almacenamiento**: `dbfs:/pipelines/delta_lab`
+    - **Esquema de destino**: *especifica*`default`
 
-6. Selecciona **Crear** y después **Guardar**.
+1. Selecciona **Crear** y después **Guardar**. A continuación, espera a que se ejecute la canalización (que puede tardar algún tiempo).
  
-7. Una vez ejecutada correctamente la canalización, vuelve al primer cuaderno y comprueba que se han creado las tres tablas nuevas en la ubicación de almacenamiento especificada con el código siguiente:
+1. Una vez que la canalización se haya ejecutado correctamente, vuelve al cuaderno *Crear una canalización con tablas Delta Live* reciente que creaste primero y ejecuta el código siguiente en una nueva celda para comprobar que los archivos de las 3 tablas nuevas se han creado en la ubicación de almacenamiento especificada:
 
      ```python
     display(dbutils.fs.ls("dbfs:/pipelines/delta_lab/tables"))
+     ```
+
+1. Agrega otra celda de código y ejecuta el código siguiente para comprobar que las tablas se han creado en la base de datos **predeterminada**:
+
+     ```sql
+    %sql
+
+    SHOW TABLES
      ```
 
 ## Ver los resultados como una visualización
 
 Después de crear las tablas, es posible cargarlas en dataframes y visualizar los datos.
 
-1. En el primer cuaderno, agrega una nueva celda de código y ejecuta el código siguiente para cargar `aggregated_covid_data` en un dataframe:
+1. En el cuaderno *Crear una canalización con tablas Delta Live*, agrega una nueva celda de código y ejecuta el código siguiente para cargar `aggregated_covid_data` en un dataframe:
 
-    ```python
-   df = spark.read.format("delta").load('/pipelines/delta_lab/tables/aggregated_covid_data')
-   display(df)
+    ```sql
+    %sql
+    
+    SELECT * FROM aggregated_covid_data
     ```
 
 1. Encima de la tabla de resultados, selecciona **+** y luego **Visualización** para ver el editor de visualización y luego aplica las siguientes opciones:
@@ -178,7 +189,7 @@ Después de crear las tablas, es posible cargarlas en dataframes y visualizar lo
 
 1. Guarda la visualización y vuelve a ejecutar la celda de código para ver el gráfico resultante en el cuaderno.
 
-## Limpiar
+## Limpieza
 
 En el portal de Azure Databricks, en la página **Proceso**, selecciona el clúster y **&#9632; Finalizar** para apagarlo.
 

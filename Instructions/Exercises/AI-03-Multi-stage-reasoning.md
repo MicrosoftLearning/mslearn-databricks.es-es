@@ -9,6 +9,8 @@ El razonamiento en varias fases es un enfoque de vanguardia en la IA que implica
 
 Este laboratorio se tarda aproximadamente **30** minutos en completarse.
 
+> **Nota**: la interfaz de usuario de Azure Databricks está sujeta a una mejora continua. Es posible que la interfaz de usuario haya cambiado desde que se escribieron las instrucciones de este ejercicio.
+
 ## Antes de empezar
 
 Necesitará una [suscripción de Azure](https://azure.microsoft.com/free) en la que tenga acceso de nivel administrativo.
@@ -268,7 +270,7 @@ Langchain es una herramienta versátil que permite la combinación de varias cad
 
 La primera cadena proporciona una respuesta a la entrada basada en el conjunto de datos de ejemplo proporcionado, mientras que la segunda cadena crea una publicación en redes sociales basada en la salida de la primera cadena. Este enfoque permite controlar tareas de procesamiento de texto más complejas encadenando varios pasos juntos.
 
-## Limpiar
+## Limpieza
 
 Cuando haya terminado de usar el recurso de Azure OpenAI, recuerde eliminar la implementación o todo el recurso en **Azure Portal**, en `https://portal.azure.com`.
 

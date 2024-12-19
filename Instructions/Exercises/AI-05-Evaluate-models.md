@@ -9,6 +9,8 @@ La evaluación de modelos de lenguaje grande (LLM) implica una serie de pasos pa
 
 Este laboratorio se tarda aproximadamente **20** minutos en completarse.
 
+> **Nota**: la interfaz de usuario de Azure Databricks está sujeta a una mejora continua. Es posible que la interfaz de usuario haya cambiado desde que se escribieron las instrucciones de este ejercicio.
+
 ## Antes de empezar
 
 Necesitará una [suscripción de Azure](https://azure.microsoft.com/free) en la que tenga acceso de nivel administrativo.
@@ -191,7 +193,7 @@ En MLflow 2.8.0 y versiones posteriores, `mlflow.evaluate()` admite la evaluaci�
      ```
 Una vez que la ejecución se haya realizado correctamente, generará un vínculo a la página del experimento, donde puede comprobar las métricas del modelo. Para `model_type="question-answering"`, las métricas predeterminadas son **toxicidad**, **ari_grade_level** y **flesch_kincaid_grade_level**.
 
-## Limpiar
+## Limpieza
 
 Cuando haya terminado de usar el recurso de Azure OpenAI, recuerde eliminar la implementación o todo el recurso en **Azure Portal**, en `https://portal.azure.com`.
 

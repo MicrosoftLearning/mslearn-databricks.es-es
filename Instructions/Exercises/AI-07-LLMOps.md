@@ -9,6 +9,8 @@ Azure Databricks proporciona una plataforma unificada que simplifica el ciclo de
 
 Este laboratorio se tarda aproximadamente **20** minutos en completarse.
 
+> **Nota**: la interfaz de usuario de Azure Databricks está sujeta a una mejora continua. Es posible que la interfaz de usuario haya cambiado desde que se escribieron las instrucciones de este ejercicio.
+
 ## Antes de empezar
 
 Necesitará una [suscripción de Azure](https://azure.microsoft.com/free) en la que tenga acceso de nivel administrativo.
@@ -183,7 +185,7 @@ La celda anterior iniciará un experimento en tu área de trabajo y registrará 
 
 Una vez que empieces a supervisar el modelo, puedes comparar los seguimientos de diferentes ejecuciones para detectar el desfase de datos. Busca cambios significativos en las distribuciones de datos de entrada, las predicciones del modelo o las métricas de rendimiento a lo largo del tiempo. Puedes usar pruebas estadísticas o herramientas de visualización para ayudar en este análisis.
 
-## Limpiar
+## Limpieza
 
 Cuando haya terminado de usar el recurso de Azure OpenAI, recuerde eliminar la implementación o todo el recurso en **Azure Portal**, en `https://portal.azure.com`.
 
