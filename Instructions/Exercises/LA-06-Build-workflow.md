@@ -9,6 +9,8 @@ Los flujos de trabajo de Azure Databricks proporcionan una plataforma sólida pa
 
 Se tardan aproximadamente **40** minutos en completar este laboratorio.
 
+> **Nota**: la interfaz de usuario de Azure Databricks está sujeta a una mejora continua. Es posible que la interfaz de usuario haya cambiado desde que se escribieron las instrucciones de este ejercicio.
+
 ## Aprovisiona un área de trabajo de Azure Databricks.
 
 > **Sugerencia**: si ya tienes un área de trabajo de Azure Databricks, puedes omitir este procedimiento y usar el área de trabajo existente.
@@ -16,14 +18,13 @@ Se tardan aproximadamente **40** minutos en completar este laboratorio.
 En este ejercicio, se incluye un script para aprovisionar una nueva área de trabajo de Azure Databricks. El script intenta crear un recurso de área de trabajo de Azure Databricks de nivel *Premium* en una región en la que la suscripción de Azure tiene cuota suficiente para los núcleos de proceso necesarios en este ejercicio, y da por hecho que la cuenta de usuario tiene permisos suficientes en la suscripción para crear un recurso de área de trabajo de Azure Databricks. Si se produjese un error en el script debido a cuota o permisos insuficientes, intenta [crear un área de trabajo de Azure Databricks de forma interactiva en Azure Portal](https://learn.microsoft.com/azure/databricks/getting-started/#--create-an-azure-databricks-workspace).
 
 1. En un explorador web, inicia sesión en [Azure Portal](https://portal.azure.com) en `https://portal.azure.com`.
-
-2. Usa el botón **[\>_]** a la derecha de la barra de búsqueda en la parte superior de la página para crear un nuevo Cloud Shell en Azure Portal, selecciona un entorno de ***PowerShell*** y crea almacenamiento si se te solicita. Cloud Shell proporciona una interfaz de línea de comandos en un panel situado en la parte inferior de Azure Portal, como se muestra a continuación:
+2. Usa el botón **[\>_]** situado a la derecha de la barra de búsqueda en la parte superior de la página para crear una nueva instancia de Cloud Shell en Azure Portal, para lo que deberás seleccionar un entorno de ***PowerShell***. Cloud Shell proporciona una interfaz de línea de comandos en un panel situado en la parte inferior de Azure Portal, como se muestra a continuación:
 
     ![Azure Portal con un panel de Cloud Shell](./images/cloud-shell.png)
 
-    > **Nota**: Si ha creado previamente un cloud shell que usa un entorno de *Bash*, use el menú desplegable de la parte superior izquierda del panel de cloud shell para cambiarlo a ***PowerShell***.
+    > **Nota**: si has creado anteriormente una instancia de Cloud Shell que usa un entorno de *Bash*, cámbiala a ***PowerShell***.
 
-3. Tenga en cuenta que puede cambiar el tamaño de Cloud Shell arrastrando la barra de separación en la parte superior del panel, o usando los iconos **&#8212;** , **&#9723;** y **X** en la parte superior derecha para minimizar, maximizar y cerrar el panel. Para obtener más información sobre el uso de Azure Cloud Shell, consulta la [documentación de Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
+3. Ten en cuenta que puedes cambiar el tamaño de la instancia de Cloud Shell. Para ello, arrastra la barra de separación de la parte superior del panel o utiliza los iconos **&#8212;**, **&#10530;** y **X** de la parte superior derecha del panel para minimizar, maximizar y cerrar el panel. Para obtener más información sobre el uso de Azure Cloud Shell, consulta la [documentación de Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
 4. En el panel de PowerShell, introduce los siguientes comandos para clonar este repositorio:
 
@@ -40,7 +41,7 @@ En este ejercicio, se incluye un script para aprovisionar una nueva área de tra
 
 6. Si se solicita, elige la suscripción que quieres usar (esto solo ocurrirá si tienes acceso a varias suscripciones de Azure).
 
-7. Espera a que se complete el script: normalmente puede tardar entre 5 y 10 minutos, pero en algunos casos puede tardar más. Mientras esperas, revisa el artículo [Introducción a Delta Lake](https://docs.microsoft.com/azure/databricks/delta/delta-intro) en la documentación de Azure Databricks.
+7. Espera a que se complete el script: normalmente tarda unos 5 minutos, pero en algunos casos puede tardar más. Mientras espera, revisa el artículo [Programación y orquestación de flujos de trabajo](https://learn.microsoft.com/azure/databricks/jobs/) en la documentación de Azure Databricks.
 
 ## Crear un clúster
 
@@ -54,9 +55,9 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 
 1. En la página **Información general** del área de trabajo, usa el botón **Inicio del área de trabajo** para abrir el área de trabajo de Azure Databricks en una nueva pestaña del explorador; inicia sesión si se solicita.
 
-    > **Sugerencia**: al usar el portal del área de trabajo de Databricks, se pueden mostrar varias sugerencias y notificaciones. Descártalas y sigue las instrucciones proporcionadas para completar las tareas de este ejercicio.
+    > **Sugerencia**: al usar el portal del área de trabajo de Databricks, se pueden mostrar varias sugerencias y notificaciones. Descarta estos elementos y sigue las instrucciones proporcionadas para completar las tareas de este ejercicio.
 
-1. En la barra lateral de la izquierda, selecciona la tarea **(+) Nuevo** y luego selecciona **Clúster**.
+1. En la barra lateral de la izquierda, selecciona la tarea **(+) Nuevo** y luego selecciona **Clúster** (es posible que debas buscar en el submenú **Más**).
 
 1. En la página **Nuevo clúster**, crea un clúster con la siguiente configuración:
     - **Nombre del clúster**: clúster del *Nombre de usuario*  (el nombre del clúster predeterminado)
@@ -99,7 +100,9 @@ Implementa el flujo de trabajo de procesamiento y análisis de datos mediante ta
 
 2. Cambia el nombre por defecto del cuaderno (**Cuaderno sin título *[fecha]***) por `ETL task` y en la lista desplegable **Conectar**, selecciona tu clúster si aún no está seleccionado. Si el clúster no se está ejecutando, puede tardar un minuto en iniciarse.
 
-3. En la primera celda del cuaderno, escribe el código siguiente, que define un esquema para los datos y carga los conjuntos de datos en un dataframe:
+    Asegúrate de que el idioma predeterminado para el cuaderno se ha establecido en **Python**.
+
+3. En la primera celda del cuaderno, escribe y ejecuta el código siguiente, que define un esquema para los datos y carga los conjuntos de datos en un dataframe:
 
     ```python
    from pyspark.sql.types import *
@@ -119,7 +122,7 @@ Implementa el flujo de trabajo de procesamiento y análisis de datos mediante ta
    display(df.limit(100))
     ```
 
-4. Debajo de la celda de código existente, usa el icono **+** para agregar una nueva celda de código. A continuación, en la nueva celda, escribe y ejecuta el código siguiente para quitar filas duplicadas y reemplazar las entradas `null` por los valores correctos:
+4. Debajo de la celda de código existente, usa el icono **+ Código** para agregar una nueva celda de código. A continuación, en la nueva celda, escribe y ejecuta el código siguiente para quitar filas duplicadas y reemplazar las entradas `null` por los valores correctos:
 
      ```python
     from pyspark.sql.functions import col
@@ -136,18 +139,6 @@ Implementa el flujo de trabajo de procesamiento y análisis de datos mediante ta
    display(yearlySales)
     ```
 
-6. Encima de la tabla de resultados, selecciona **+** y luego **Visualización** para ver el editor de visualización y luego aplica las siguientes opciones:
-
-   Pestaña **General**:
-    - **Tipo de visualización**: barra
-    - **Columna X**: año
-    - **Columna Y**: *agrega una nueva columna y selecciona***Cantidad**. *Aplica la agregación***Suma****.
-   
-   Pestaña **eje X**:
-    - **Escala**: categórica
-
-8. Selecciona **Guardar**.
-
 ## Compilación del flujo de trabajo
 
 Azure Databricks administra la orquestación de tareas, la administración de clústeres, la supervisión y la generación de informes de errores en todos los trabajos. Puedes ejecutar los trabajos inmediatamente, periódicamente a través de un sistema de programación fácil de usar, siempre que los nuevos archivos lleguen a una ubicación externa o de forma continua para asegurarse de que una instancia del trabajo siempre se está ejecutando.
@@ -158,25 +149,24 @@ Azure Databricks administra la orquestación de tareas, la administración de cl
 
 3. Cambia el nombre de trabajo predeterminado (**Nuevo trabajo *[fecha]***) a `ETL job`
 
-4. Escribe un nombre para la tarea en el campo **Nombre de tarea**.
+4. Configura el trabajo con la siguiente configuración:
+    - **Nombre de la tarea**: `Run ETL task notebook`
+    - **Tipo**: Cuaderno
+    - **Origen**: Área de trabajo
+    - **Ruta**: *selecciona tu* *cuaderno* de tareas ETL
+    - **Clúster**: *Seleccione el clúster*
 
-5. En el menú desplegable **Tipo**, selecciona **Cuaderno**.
+5. Selecciona **Crear tarea**.
 
-6. En el campo **Ruta de acceso**, selecciona el cuaderno de **tareas ETL**.
+6. Selecciona **Ejecutar ahora**.
 
-7. Selecciona **Crear tarea**.
+7. Después de que el trabajo empiece a ejecutarse, puedes supervisar su ejecución mediante la selección de **Ejecuciones de trabajo** en la barra lateral izquierda.
 
-8. Selecciona **Ejecutar ahora**.
+8. Una vez que la ejecución del trabajo se realice correctamente, puedes seleccionarla y comprobar su salida.
 
-9. Una vez que el trabajo empiece a ejecutarse, puedes supervisar su ejecución seleccionando **Ejecuciones de trabajo** en la barra lateral izquierda.
+Además, puedes ejecutar trabajos de forma desencadenada, por ejemplo, ejecutando un flujo de trabajo según una programación. Para programar una ejecución de trabajo periódica, puedes abrir la tarea de trabajo y agregar un desencadenador.
 
-10. Una vez que la ejecución del trabajo se realice correctamente, puedes seleccionarla y comprobar su salida.
-
-Además, puedes ejecutar trabajos de forma desencadenada, por ejemplo, ejecutando un flujo de trabajo según una programación. Para programar una ejecución de trabajo periódica, puedes abrir la tarea de trabajo y seleccionar **Agregar desencadenador** en el panel derecho.
-
-   ![Panel de tareas flujo de trabajo](./images/workflow-schedule.png)
-    
-## Limpiar
+## Limpieza
 
 En el portal de Azure Databricks, en la página **Proceso**, selecciona el clúster y **&#9632; Finalizar** para apagarlo.
 

@@ -9,6 +9,8 @@ La integración de modelos de lenguaje grande (LLM) en Azure Databricks y Azure 
 
 Este laboratorio se tarda aproximadamente **20** minutos en completarse.
 
+> **Nota**: la interfaz de usuario de Azure Databricks está sujeta a una mejora continua. Es posible que la interfaz de usuario haya cambiado desde que se escribieron las instrucciones de este ejercicio.
+
 ## Antes de empezar
 
 Necesitará una [suscripción de Azure](https://azure.microsoft.com/free) en la que tenga acceso de nivel administrativo.
@@ -204,7 +206,7 @@ La IA responsable hace referencia al desarrollo, la implementación y el uso ét
 
 Si se detecta un sesgo, hay técnicas de mitigación como volver a realizar el muestreo, volver a ponderar o modificar los datos de entrenamiento que se pueden aplicar antes de volver a evaluar el modelo para asegurarse de que se ha reducido el sesgo.
 
-## Limpiar
+## Limpieza
 
 Cuando haya terminado de usar el recurso de Azure OpenAI, recuerde eliminar la implementación o todo el recurso en **Azure Portal**, en `https://portal.azure.com`.
 

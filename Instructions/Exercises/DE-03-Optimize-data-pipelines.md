@@ -9,6 +9,8 @@ La optimización de canalizaciones de datos en Azure Databricks puede mejorar s
 
 Este laboratorio se tarda aproximadamente **30** minutos en completarse.
 
+> **Nota**: la interfaz de usuario de Azure Databricks está sujeta a una mejora continua. Es posible que la interfaz de usuario haya cambiado desde que se escribieron las instrucciones de este ejercicio.
+
 ## Aprovisiona un área de trabajo de Azure Databricks.
 
 > **Sugerencia**: si ya tienes un área de trabajo de Azure Databricks, puedes omitir este procedimiento y usar el área de trabajo existente.
@@ -16,14 +18,13 @@ Este laboratorio se tarda aproximadamente **30** minutos en completarse.
 En este ejercicio, se incluye un script para aprovisionar una nueva área de trabajo de Azure Databricks. El script intenta crear un recurso de área de trabajo de Azure Databricks de nivel *Premium* en una región en la que la suscripción de Azure tiene cuota suficiente para los núcleos de proceso necesarios en este ejercicio, y da por hecho que la cuenta de usuario tiene permisos suficientes en la suscripción para crear un recurso de área de trabajo de Azure Databricks. Si se produjese un error en el script debido a cuota o permisos insuficientes, intenta [crear un área de trabajo de Azure Databricks de forma interactiva en Azure Portal](https://learn.microsoft.com/azure/databricks/getting-started/#--create-an-azure-databricks-workspace).
 
 1. En un explorador web, inicia sesión en [Azure Portal](https://portal.azure.com) en `https://portal.azure.com`.
-
-2. Usa el botón **[\>_]** a la derecha de la barra de búsqueda en la parte superior de la página para crear un nuevo Cloud Shell en Azure Portal, selecciona un entorno de ***PowerShell*** y crea almacenamiento si se te solicita. Cloud Shell proporciona una interfaz de línea de comandos en un panel situado en la parte inferior de Azure Portal, como se muestra a continuación:
+2. Usa el botón **[\>_]** situado a la derecha de la barra de búsqueda en la parte superior de la página para crear una nueva instancia de Cloud Shell en Azure Portal, para lo que deberás seleccionar un entorno de ***PowerShell***. Cloud Shell proporciona una interfaz de línea de comandos en un panel situado en la parte inferior de Azure Portal, como se muestra a continuación:
 
     ![Azure Portal con un panel de Cloud Shell](./images/cloud-shell.png)
 
-    > **Nota**: si creaste anteriormente un Cloud Shell que usa un entorno de *Bash*, usa el menú desplegable situado en la parte superior izquierda del panel de Cloud Shell para cambiarlo a ***PowerShell***.
+    > **Nota**: si has creado anteriormente una instancia de Cloud Shell que usa un entorno de *Bash*, cámbiala a ***PowerShell***.
 
-3. Ten en cuenta que puedes cambiar el tamaño de Cloud Shell arrastrando la barra de separación en la parte superior del panel, o usando los iconos **&#8212;** , **&#9723;** y **X** en la parte superior derecha para minimizar, maximizar y cerrar el panel. Para obtener más información sobre el uso de Azure Cloud Shell, consulta la [documentación de Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
+3. Ten en cuenta que puedes cambiar el tamaño de la instancia de Cloud Shell. Para ello, arrastra la barra de separación de la parte superior del panel o utiliza los iconos **&#8212;**, **&#10530;** y **X** de la parte superior derecha del panel para minimizar, maximizar y cerrar el panel. Para obtener más información sobre el uso de Azure Cloud Shell, consulta la [documentación de Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
 4. En el panel de PowerShell, introduce los siguientes comandos para clonar este repositorio:
 
@@ -54,9 +55,9 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 
 1. En la página **Información general** del área de trabajo, usa el botón **Inicio del área de trabajo** para abrir el área de trabajo de Azure Databricks en una nueva pestaña del explorador; inicia sesión si se solicita.
 
-    > **Sugerencia**: al usar el portal del área de trabajo de Databricks, se pueden mostrar varias sugerencias y notificaciones. Descártalas y sigue las instrucciones proporcionadas para completar las tareas de este ejercicio.
+    > **Sugerencia**: al usar el portal del área de trabajo de Databricks, se pueden mostrar varias sugerencias y notificaciones. Descarta estos elementos y sigue las instrucciones proporcionadas para completar las tareas de este ejercicio.
 
-1. En la barra lateral de la izquierda, selecciona la tarea **(+) Nuevo** y luego selecciona **Clúster**.
+1. En la barra lateral de la izquierda, selecciona la tarea **(+) Nuevo** y luego selecciona **Clúster** (es posible que debas buscar en el submenú **Más**).
 
 1. En la página **Nuevo clúster**, crea un clúster con la siguiente configuración:
     - **Nombre del clúster**: clúster del *Nombre de usuario*  (el nombre del clúster predeterminado)
@@ -74,7 +75,7 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 
 ## Creación de un cuaderno e ingesta de datos
 
-1. En la barra lateral, usa el vínculo **(+) Nuevo** para crear un **cuaderno**. En la lista desplegable **Conectar**, selecciona el clúster si aún no está seleccionado. Si el clúster no se está ejecutando, puede tardar un minuto en iniciarse.
+1. En la barra lateral, usa el vínculo **(+) Nuevo** para crear un **Cuaderno** y cambia el nombre predeterminado del cuaderno (**Cuaderno sin título *[fecha]***) por **Optimize Data Ingestion**. En la lista desplegable **Conectar**, selecciona el clúster si aún no está seleccionado. Si el clúster no se está ejecutando, puede tardar un minuto en iniciarse.
 
 2. En la primera celda del cuaderno, escribe el siguiente código, que utiliza comandos del *shell* para descargar los archivos de datos de GitHub en el sistema de archivos utilizado por el clúster.
 
@@ -85,7 +86,7 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
     wget -O /dbfs/nyc_taxi_trips/yellow_tripdata_2021-01.parquet https://github.com/MicrosoftLearning/mslearn-databricks/raw/main/data/yellow_tripdata_2021-01.parquet
      ```
 
-3. En una nueva celda, ejecuta el código siguiente para cargar el conjunto de datos en un dataframe:
+3. En la salida de la primera celda, usa el icono **+ Código** para agregar una nueva celda y ejecuta el código siguiente en ella para cargar el conjunto de datos en un dataframe:
    
      ```python
     # Load the dataset into a DataFrame
@@ -125,17 +126,13 @@ El cargador automático proporciona un origen de streaming estructurado denomina
     wget -O /dbfs/nyc_taxi_trips/yellow_tripdata_2021-02_edited.parquet https://github.com/MicrosoftLearning/mslearn-databricks/raw/main/data/yellow_tripdata_2021-02_edited.parquet
      ```
    
-El nuevo archivo tiene una nueva columna, por lo que la secuencia se detiene con un error `UnknownFieldException`. Antes de que la secuencia genere este error, Auto Loader realiza la inferencia de esquemas en el microlote de datos más reciente y actualiza la ubicación del esquema con el esquema más reciente combinando las columnas nuevas al final del esquema. Los tipos de datos de las columnas existentes permanecen sin cambios.
+    El nuevo archivo tiene una nueva columna, por lo que la secuencia se detiene con un error `UnknownFieldException`. Antes de que la secuencia genere este error, Auto Loader realiza la inferencia de esquemas en el microlote de datos más reciente y actualiza la ubicación del esquema con el esquema más reciente combinando las columnas nuevas al final del esquema. Los tipos de datos de las columnas existentes permanecen sin cambios.
 
-3. Vuelve a ejecutar la celda de código de streaming y comprueba que se agregaron dos columnas nuevas a la tabla:
-
-   ![Tabla Delta con nuevas columnas](./images/autoloader-new-columns.png)
-   
-> Nota: La columna `_rescued_data` contiene los datos que no se analizan debido a la falta de coincidencia de tipos, a la falta de coincidencia entre mayúsculas y minúsculas, o a la ausencia de una columna en el esquema.
+3. Vuelve a ejecutar la celda de código de streaming y comprueba que se agregaron dos columnas nuevas (**new_column** y *_rescued_data**) a la tabla. La columna **_rescued_data** contiene los datos que no se analizan debido al error de coincidencia de tipos, a la falta de coincidencia entre mayúsculas y minúsculas, o a la ausencia de una columna en el esquema.
 
 4. Selecciona **Interrumpir** para detener el streaming de datos.
    
-Los datos de streaming se escriben en tablas Delta. Delta Lake proporciona un conjunto de mejoras para los archivos Parquet tradicionales, incluidas las transacciones ACID, la evolución de esquemas y el viaje en el tiempo, y unifica el procesamiento de datos por lotes y streaming, por lo que resulta una solución eficaz para administrar cargas de trabajo de macrodatos.
+    Los datos de streaming se escriben en tablas Delta. Delta Lake proporciona un conjunto de mejoras para los archivos Parquet tradicionales, incluidas las transacciones ACID, la evolución de esquemas y el viaje en el tiempo, y unifica el procesamiento de datos por lotes y streaming, por lo que resulta una solución eficaz para administrar cargas de trabajo de macrodatos.
 
 ## Optimización de la transformación de datos
 
@@ -181,7 +178,7 @@ La compactación consolida archivos más pequeños en archivos más grandes, lo 
 
 Esta técnica buscará la información relacionada en el mismo conjunto de archivos, lo que mejorará el rendimiento de las consultas.
 
-## Limpiar
+## Limpieza
 
 En el portal de Azure Databricks, en la página **Proceso**, selecciona el clúster y **&#9632; Finalizar** para apagarlo.
 

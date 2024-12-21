@@ -9,6 +9,8 @@ Con Azure Databricks, los usuarios ahora pueden sacar provecho de la eficacia de
 
 Este laboratorio se tarda en completar **60** minutos aproximadamente.
 
+> **Nota**: la interfaz de usuario de Azure Databricks está sujeta a una mejora continua. Es posible que la interfaz de usuario haya cambiado desde que se escribieron las instrucciones de este ejercicio.
+
 ## Antes de empezar
 
 Necesitará una [suscripción de Azure](https://azure.microsoft.com/free) en la que tenga acceso de nivel administrativo.
@@ -332,7 +334,7 @@ Ahora que tienes un modelo optimizado, puedes implementarlo como modelo personal
     print(response.choices[0].message.content)
      ```
  
-## Limpiar
+## Limpieza
 
 Cuando haya terminado de usar el recurso de Azure OpenAI, recuerde eliminar la implementación o todo el recurso en **Azure Portal**, en `https://portal.azure.com`.
 

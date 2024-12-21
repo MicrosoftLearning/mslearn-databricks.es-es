@@ -5,13 +5,13 @@ lab:
 
 # Transformación de datos de Azure Databricks con Apache Spark
 
-Azure Databricks es una versión basada en Microsoft Azure de la conocida plataforma de código abierto Databricks. 
-
-Azure Databricks se basa en Apache Spark y ofrece una solución altamente escalable para tareas de ingeniería y análisis de datos que implican trabajar con datos en archivos.
+Azure Databricks es una versión basada en Microsoft Azure de la conocida plataforma de código abierto Databricks. Azure Databricks se basa en Apache Spark y ofrece una solución altamente escalable para tareas de ingeniería y análisis de datos que implican trabajar con datos en archivos.
 
 Las tareas comunes de transformación de datos en Azure Databricks incluyen limpieza de datos, realización de agregaciones y conversión de tipos. Estas transformaciones son esenciales para preparar los datos para el análisis y forman parte del proceso más amplio de ETL (extracción, transformación, carga).
 
 Este ejercicio debería tardar en completarse **30** minutos aproximadamente.
+
+> **Nota**: la interfaz de usuario de Azure Databricks está sujeta a una mejora continua. Es posible que la interfaz de usuario haya cambiado desde que se escribieron las instrucciones de este ejercicio.
 
 ## Aprovisiona un área de trabajo de Azure Databricks.
 
@@ -20,13 +20,13 @@ Este ejercicio debería tardar en completarse **30** minutos aproximadamente.
 En este ejercicio, se incluye un script para aprovisionar una nueva área de trabajo de Azure Databricks. El script intenta crear un recurso de área de trabajo de Azure Databricks de nivel *Premium* en una región en la que la suscripción de Azure tiene cuota suficiente para los núcleos de proceso necesarios en este ejercicio, y da por hecho que la cuenta de usuario tiene permisos suficientes en la suscripción para crear un recurso de área de trabajo de Azure Databricks. Si se produjese un error en el script debido a cuota o permisos insuficientes, intenta [crear un área de trabajo de Azure Databricks de forma interactiva en Azure Portal](https://learn.microsoft.com/azure/databricks/getting-started/#--create-an-azure-databricks-workspace).
 
 1. En un explorador web, inicia sesión en [Azure Portal](https://portal.azure.com) en `https://portal.azure.com`.
-2. Usa el botón **[\>_]** a la derecha de la barra de búsqueda en la parte superior de la página para crear un nuevo Cloud Shell en Azure Portal, selecciona un entorno de ***PowerShell*** y crea almacenamiento si se te solicita. Cloud Shell proporciona una interfaz de línea de comandos en un panel situado en la parte inferior de Azure Portal, como se muestra a continuación:
+2. Usa el botón **[\>_]** situado a la derecha de la barra de búsqueda en la parte superior de la página para crear una nueva instancia de Cloud Shell en Azure Portal, para lo que deberás seleccionar un entorno de ***PowerShell***. Cloud Shell proporciona una interfaz de línea de comandos en un panel situado en la parte inferior de Azure Portal, como se muestra a continuación:
 
     ![Azure Portal con un panel de Cloud Shell](./images/cloud-shell.png)
 
-    > **Nota**: Si ha creado previamente un cloud shell que usa un entorno de *Bash*, use el menú desplegable de la parte superior izquierda del panel de cloud shell para cambiarlo a ***PowerShell***.
+    > **Nota**: si has creado anteriormente una instancia de Cloud Shell que usa un entorno de *Bash*, cámbiala a ***PowerShell***.
 
-3. Tenga en cuenta que puede cambiar el tamaño de Cloud Shell arrastrando la barra de separación en la parte superior del panel, o usando los iconos **&#8212;** , **&#9723;** y **X** en la parte superior derecha para minimizar, maximizar y cerrar el panel. Para obtener más información sobre el uso de Azure Cloud Shell, consulta la [documentación de Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
+3. Ten en cuenta que puedes cambiar el tamaño de la instancia de Cloud Shell. Para ello, arrastra la barra de separación de la parte superior del panel o utiliza los iconos **&#8212;**, **&#10530;** y **X** de la parte superior derecha del panel para minimizar, maximizar y cerrar el panel. Para obtener más información sobre el uso de Azure Cloud Shell, consulta la [documentación de Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
 
 4. En el panel de PowerShell, introduce los siguientes comandos para clonar este repositorio:
 
@@ -54,9 +54,9 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 2. Selecciona el recurso Azure Databricks Service (llamado **databricks-*xxxxxxx*** si usaste el script de instalación para crearlo).
 3. En la página **Información general** del área de trabajo, usa el botón **Inicio del área de trabajo** para abrir el área de trabajo de Azure Databricks en una nueva pestaña del explorador; inicia sesión si se solicita.
 
-    > **Sugerencia**: al usar el portal del área de trabajo de Databricks, se pueden mostrar varias sugerencias y notificaciones. Descártalas y sigue las instrucciones proporcionadas para completar las tareas de este ejercicio.
+    > **Sugerencia**: al usar el portal del área de trabajo de Databricks, se pueden mostrar varias sugerencias y notificaciones. Descarta estos elementos y sigue las instrucciones proporcionadas para completar las tareas de este ejercicio.
 
-4. En la barra lateral de la izquierda, selecciona la tarea **(+) Nuevo** y luego selecciona **Clúster**.
+4. En la barra lateral de la izquierda, selecciona la tarea **(+) Nuevo** y luego selecciona **Clúster** (es posible que debas buscar en el submenú **Más**).
 5. En la página **Nuevo clúster**, crea un clúster con la siguiente configuración:
     - **Nombre del clúster**: clúster del *Nombre de usuario*  (el nombre del clúster predeterminado)
     - **Directiva**: Unrestricted (Sin restricciones)
@@ -91,7 +91,7 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
      ```
 
 2. Usa la opción del menú **&#9656; Ejecutar celda** situado a la izquierda de la celda para ejecutarla. A continuación, espera a que se complete el trabajo de Spark ejecutado por el código.
-3. Agrega una nueva celda de código y úsala para ejecutar el código siguiente, que define un esquema para los datos:
+3. Debajo de la salida, utiliza el icono **+ Código** para agregar una nueva celda de código y úsala para ejecutar el código siguiente, que define un esquema para los datos:
 
     ```python
    from pyspark.sql.types import *
@@ -115,15 +115,14 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 
 Observa que este conjunto de datos tiene algunas filas y `null` valores duplicados en la columna **Tax**. Por lo tanto, se requiere un paso de limpieza antes de realizar cualquier procesamiento y análisis adicionales con los datos.
 
-![Tabla con datos que se van a limpiar.](./images/data-cleaning.png)
-
-1. Debajo de la celda de código existente, usa el icono **+** para agregar una nueva celda de código. A continuación, en la nueva celda, escribe y ejecuta el código siguiente para quitar filas duplicadas de la tabla y reemplazar las entradas `null` por los valores correctos:
+1. Añada una celda de código nueva. A continuación, en la nueva celda, escribe y ejecuta el código siguiente para quitar filas duplicadas de la tabla y reemplazar las entradas `null` por los valores correctos:
 
     ```python
     from pyspark.sql.functions import col
     df = df.dropDuplicates()
     df = df.withColumn('Tax', col('UnitPrice') * 0.08)
     df = df.withColumn('Tax', col('Tax').cast("float"))
+    display(df.limit(100))
     ```
 
 Observa que después de actualizar los valores de la columna **Tax**, su tipo de datos se establece en `float` de nuevo. Esto se debe a que su tipo de datos cambia a `double` después de realizar el cálculo. Dado que `double` tiene un uso de memoria mayor que `float`, es mejor para el rendimiento escribir la conversión de la columna a `float`.
@@ -212,7 +211,7 @@ Esta línea de código creará una vista temporal que se puede usar directamente
     
 > **Nota**: para más información sobre Spark SQL y los objetos DataFrame, consulta la [documentación de Spark SQL](https://spark.apache.org/docs/2.2.0/sql-programming-guide.html).
 
-## Limpiar
+## Limpieza
 
 En el portal de Azure Databricks, en la página **Proceso**, selecciona el clúster y **&#9632; Finalizar** para apagarlo.
 
