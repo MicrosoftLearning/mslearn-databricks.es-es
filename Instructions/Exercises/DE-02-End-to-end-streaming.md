@@ -41,7 +41,7 @@ En este ejercicio, se incluye un script para aprovisionar una nueva área de tra
 
 6. Si se solicita, elige la suscripción que quieres usar (esto solo ocurrirá si tienes acceso a varias suscripciones de Azure).
 
-7. Espera a que se complete el script: normalmente puede tardar entre 5 y 10 minutos, pero en algunos casos puede tardar más. Mientras esperas, revisa el artículo [Introducción a Delta Lake](https://docs.microsoft.com/azure/databricks/delta/delta-intro) en la documentación de Azure Databricks.
+7. Espera a que se complete el script: normalmente tarda unos 5 minutos, pero en algunos casos puede tardar más. Mientras esperas, revisa el artículo [Ingesta incremental y de streaming](https://learn.microsoft.com/azure/databricks/ingestion/streaming) en la documentación de Azure Databricks.
 
 ## Crear un clúster
 

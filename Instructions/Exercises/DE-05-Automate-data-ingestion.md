@@ -41,7 +41,7 @@ En este ejercicio, se incluye un script para aprovisionar una nueva área de tra
 
 6. Si se solicita, elige la suscripción que quieres usar (esto solo ocurrirá si tienes acceso a varias suscripciones de Azure).
 
-7. Espera a que se complete el script: normalmente puede tardar entre 5 y 10 minutos, pero en algunos casos puede tardar más. Mientras esperas, revisa el artículo [Introducción a Delta Lake](https://docs.microsoft.com/azure/databricks/delta/delta-intro) en la documentación de Azure Databricks.
+7. Espera a que se complete el script: normalmente tarda unos 5 minutos, pero en algunos casos puede tardar más. Mientras esperas, revisa el artículo [Programación y organización de flujos de trabajo](https://learn.microsoft.com/azure/databricks/jobs/) en la documentación de Azure Databricks.
 
 ## Crear un clúster
 
@@ -55,9 +55,9 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 
 1. En la página **Información general** del área de trabajo, usa el botón **Inicio del área de trabajo** para abrir el área de trabajo de Azure Databricks en una nueva pestaña del explorador; inicia sesión si se solicita.
 
-    > **Sugerencia**: al usar el portal del área de trabajo de Databricks, se pueden mostrar varias sugerencias y notificaciones. Descártalas y sigue las instrucciones proporcionadas para completar las tareas de este ejercicio.
+    > **Sugerencia**: al usar el portal del área de trabajo de Databricks, se pueden mostrar varias sugerencias y notificaciones. Descarta estos elementos y sigue las instrucciones proporcionadas para completar las tareas de este ejercicio.
 
-1. En la barra lateral de la izquierda, selecciona la tarea **(+) Nuevo** y luego selecciona **Clúster**.
+1. En la barra lateral de la izquierda, selecciona la tarea **(+) Nuevo** y luego selecciona **Clúster** (es posible que debas buscar en el submenú **Más**).
 
 1. En la página **Nuevo clúster**, crea un clúster con la siguiente configuración:
     - **Nombre del clúster**: clúster del *Nombre de usuario*  (el nombre del clúster predeterminado)
@@ -73,9 +73,9 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 
     > **Nota**: si el clúster no se inicia, es posible que la suscripción no tenga cuota suficiente en la región donde se aprovisiona el área de trabajo de Azure Databricks. Para obtener más información, consulta [El límite de núcleos de la CPU impide la creación de clústeres](https://docs.microsoft.com/azure/databricks/kb/clusters/azure-core-limit). Si esto sucede, puedes intentar eliminar el área de trabajo y crear una nueva en otra región. Puedes especificar una región como parámetro para el script de configuración de la siguiente manera: `./mslearn-databricks/setup.ps1 eastus`
 
-## Creación de un cuaderno e ingesta de datos
+## Creación de un cuaderno y obtención de datos de origen
 
-1. En la barra lateral, usa el vínculo **(+) Nuevo** para crear un **cuaderno**. En la lista desplegable **Conectar**, selecciona el clúster si aún no está seleccionado. Si el clúster no se está ejecutando, puede tardar un minuto en iniciarse.
+1. En la barra lateral, usa el vínculo **(+) Nuevo** para crear un **Cuaderno** y cambiar el nombre predeterminado del cuaderno (**Bloc de notas sin título *[fecha]***) a **Procesamiento de datos**. A continuación, en la lista desplegable **Conectar**, selecciona el clúster si aún no está seleccionado. Si el clúster no se está ejecutando, puede tardar un minuto en iniciarse.
 
 2. En la primera celda del cuaderno, escribe el siguiente código, que utiliza comandos del *shell* para descargar los archivos de datos de GitHub en el sistema de archivos utilizado por el clúster.
 
@@ -90,17 +90,15 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 
 ## Automatización del procesamiento de datos con trabajos de Azure Databricks
 
-1. Crea un cuaderno y asígnale el nombre *Procesamiento de datos* para facilitar la identificación más adelante. Se usará como tarea para automatizar el flujo de trabajo de ingesta y procesamiento de datos en un trabajo de Databricks.
-
-2. En la primera celda del cuaderno, ejecuta el código siguiente para cargar el conjunto de datos en un dataframe:
+1. Reemplaza el código del primer cuaderno por el código siguiente. A continuación, ejecútalo para cargar los datos en un DataFrame:
 
      ```python
     # Load the sample dataset into a DataFrame
     df = spark.read.csv('/FileStore/*.csv', header=True, inferSchema=True)
     df.show()
      ```
-     
-3. En una nueva celda, escribe el código siguiente para agregar datos de ventas por categoría de producto:
+
+1. Mueve el mouse debajo de la celda de código existente y usa el icono **+ Código** que aparece para agregar una nueva celda de código. A continuación, en una nueva celda, escribe el código siguiente para agregar datos de ventas por categoría de producto:
 
      ```python
     from pyspark.sql.functions import col, sum
@@ -110,21 +108,28 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
     sales_by_category.show()
      ```
 
-4. En la barra lateral, usa el vínculo **(+) Nuevo** para crear un **trabajo**.
+1. En la barra lateral, usa el vínculo **(+) Nuevo** para crear un **trabajo**.
 
-5. Asigna un nombre a la tarea y especifica el cuaderno que creaste como origen de la tarea en el campo **Ruta de acceso**.
+1. Cambia el nombre de trabajo predeterminado (**Nuevo trabajo *[fecha]***) a `Automated job`
 
-6. Selecciona **Crear tarea**.
+1. Configura la tarea sin nombre en el trabajo con los valores siguientes:
+    - **Nombre de tarea**: `Run notebook`
+    - **Tipo**: Cuaderno
+    - **Origen**: Área de trabajo
+    - **Ruta**: *selecciona tu* *cuaderno* de procesamiento de datos
+    - **Clúster**: *Seleccione el clúster*
 
-7. En el panel derecho, en **Programación**, puedes seleccionar **Agregar desencadenador** y configurar una programación para ejecutar el trabajo (por ejemplo, diaria, semanal). Sin embargo, en este ejercicio, lo ejecutaremos manualmente.
+1. Selecciona **Crear tarea**.
 
-8. Selecciona **Ejecutar ahora**.
+1. Selecciona **Ejecutar ahora**
 
-9. Selecciona la pestaña **Ejecuciones** en el panel Trabajo y supervisa la ejecución del trabajo.
+    **Sugerencia**: en el panel derecho, en **Programación**, puedes seleccionar **Agregar desencadenador** y configurar una programación para ejecutar el trabajo (por ejemplo, diaria, semanal). Sin embargo, en este ejercicio, lo ejecutaremos manualmente.
 
-10. Una vez que la ejecución del trabajo se haya llevado a cabo correctamente, puedes seleccionarlo en la lista Ejecuciones y comprobar su salida.
+1. Selecciona la pestaña **Ejecuciones** en el panel Trabajo y supervisa la ejecución del trabajo.
 
-Has configurado y automatizado correctamente la ingesta y el procesamiento de datos mediante trabajos de Azure Databricks. Ahora puedes escalar esta solución para controlar canalizaciones de datos más complejas e integrarlas con otros servicios de Azure para obtener una arquitectura de procesamiento de datos sólida.
+1. Después de que la ejecución del trabajo se haya llevado a cabo correctamente, puedes seleccionarlo en la lista **Ejecuciones** y comprobar su salida.
+
+    Has configurado y automatizado correctamente la ingesta y el procesamiento de datos mediante trabajos de Azure Databricks. Ahora puedes escalar esta solución para controlar canalizaciones de datos más complejas e integrarlas con otros servicios de Azure para obtener una arquitectura de procesamiento de datos sólida.
 
 ## Limpieza
 

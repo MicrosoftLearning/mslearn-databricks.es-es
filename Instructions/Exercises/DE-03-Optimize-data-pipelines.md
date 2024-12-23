@@ -41,7 +41,7 @@ En este ejercicio, se incluye un script para aprovisionar una nueva área de tra
 
 6. Si se solicita, elige la suscripción que quieres usar (esto solo ocurrirá si tienes acceso a varias suscripciones de Azure).
 
-7. Espera a que se complete el script: normalmente puede tardar entre 5 y 10 minutos, pero en algunos casos puede tardar más. Mientras esperas, revisa el artículo [Introducción a Delta Lake](https://docs.microsoft.com/azure/databricks/delta/delta-intro) en la documentación de Azure Databricks.
+7. Espera a que se complete el script: normalmente tarda unos 5 minutos, pero en algunos casos puede tardar más. Mientras esperas, revisa los artículos [¿Qué es el cargador automático?](https://learn.microsoft.com/azure/databricks/ingestion/cloud-object-storage/auto-loader/) y [Optimización del diseño del archivo de datos](https://learn.microsoft.com/azure/databricks/delta/optimize) en la documentación de Azure Databricks.
 
 ## Crear un clúster
 
@@ -75,7 +75,7 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 
 ## Creación de un cuaderno e ingesta de datos
 
-1. En la barra lateral, usa el vínculo **(+) Nuevo** para crear un **Cuaderno** y cambia el nombre predeterminado del cuaderno (**Cuaderno sin título *[fecha]***) por **Optimize Data Ingestion**. En la lista desplegable **Conectar**, selecciona el clúster si aún no está seleccionado. Si el clúster no se está ejecutando, puede tardar un minuto en iniciarse.
+1. En la barra lateral, usa el vínculo **(+) Nuevo** para crear un **Cuaderno** y cambia el nombre predeterminado del cuaderno (**Cuaderno sin título *[fecha]***) por **Optimize Data Ingestion**. A continuación, en la lista desplegable **Conectar**, selecciona el clúster si aún no está seleccionado. Si el clúster no se está ejecutando, puede tardar un minuto en iniciarse.
 
 2. En la primera celda del cuaderno, escribe el siguiente código, que utiliza comandos del *shell* para descargar los archivos de datos de GitHub en el sistema de archivos utilizado por el clúster.
 
@@ -86,7 +86,7 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
     wget -O /dbfs/nyc_taxi_trips/yellow_tripdata_2021-01.parquet https://github.com/MicrosoftLearning/mslearn-databricks/raw/main/data/yellow_tripdata_2021-01.parquet
      ```
 
-3. En la salida de la primera celda, usa el icono **+ Código** para agregar una nueva celda y ejecuta el código siguiente en ella para cargar el conjunto de datos en un dataframe:
+3. En la salida de la primera celda, usa el icono **+ Código** para agregar una nueva celda y ejecuta el código siguiente en ella para cargar el conjunto de datos en un DataFrame:
    
      ```python
     # Load the dataset into a DataFrame
