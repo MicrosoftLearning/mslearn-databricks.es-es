@@ -395,7 +395,7 @@ Hasta ahora ha entrenado un modelo de clasificación mediante el algoritmo de re
 
     Esta vez, la canalización incluye las mismas etapas de preparación de características que antes, pero usa un algoritmo de *Árbol de decisión* para entrenar el modelo.
     
-   1. Ejecute el código siguiente para usar la nueva canalización con los datos de prueba:
+1. Ejecute el código siguiente para usar la nueva canalización con los datos de prueba:
 
     ```python
    # Get predictions

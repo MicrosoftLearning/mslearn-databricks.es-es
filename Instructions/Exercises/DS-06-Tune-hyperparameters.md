@@ -5,7 +5,7 @@ lab:
 
 # Optimización de hiperparámetros para el aprendizaje automático en Azure Databricks
 
-En este ejercicio, usará la biblioteca **Hyperopt** para optimizar los hiperparámetros para el entrenamiento del modelo de Machine Learning en Azure Databricks.
+En este ejercicio, usarás la biblioteca **Optuna** para optimizar los hiperparámetros para el entrenamiento del modelo de Machine Learning en Azure Databricks.
 
 Este ejercicio debería tardar en completarse **30** minutos aproximadamente.
 
@@ -93,9 +93,9 @@ El escenario de este ejercicio se basa en observaciones de pingüinos en la Ant�
 
     ```bash
     %sh
-    rm -r /dbfs/hyperopt_lab
-    mkdir /dbfs/hyperopt_lab
-    wget -O /dbfs/hyperopt_lab/penguins.csv https://raw.githubusercontent.com/MicrosoftLearning/mslearn-databricks/main/data/penguins.csv
+    rm -r /dbfs/hyperparam_tune_lab
+    mkdir /dbfs/hyperparam_tune_lab
+    wget -O /dbfs/hyperparam_tune_lab/penguins.csv https://raw.githubusercontent.com/MicrosoftLearning/mslearn-databricks/main/data/penguins.csv
     ```
 
 1. Use la opción de menú **&#9656; Ejecutar celda** situado a la izquierda de la celda para ejecutarla. A continuación, espera a que se complete el trabajo Spark ejecutado por el código.
@@ -110,7 +110,7 @@ El escenario de este ejercicio se basa en observaciones de pingüinos en la Ant�
    from pyspark.sql.types import *
    from pyspark.sql.functions import *
    
-   data = spark.read.format("csv").option("header", "true").load("/hyperopt_lab/penguins.csv")
+   data = spark.read.format("csv").option("header", "true").load("/hyperparam_tune_lab/penguins.csv")
    data = data.dropna().select(col("Island").astype("string"),
                              col("CulmenLength").astype("float"),
                              col("CulmenDepth").astype("float"),
@@ -130,105 +130,75 @@ El escenario de este ejercicio se basa en observaciones de pingüinos en la Ant�
 
 Para entrenar un modelo de Machine Learning, ajuste las características a un algoritmo que calcule la etiqueta más probable. Los algoritmos toman los datos de entrenamiento como parámetro e intentan calcular una relación matemática entre las características y las etiquetas. Además de los datos, la mayoría de los algoritmos usan uno o varios *hiperparámetros* para influir en la forma en que se calcula la relación. Determinar los valores óptimos de hiperparámetros es una parte importante del proceso de entrenamiento del modelo iterativo.
 
-Para ayudarle a determinar los valores óptimos de hiperparámetros, Azure Databricks incluye compatibilidad con **Hyperopt**, una biblioteca que le permite probar varios valores de hiperparámetros y encontrar la mejor combinación para los datos.
+Para ayudarte a determinar los valores óptimos de hiperparámetros, Azure Databricks incluye compatibilidad con [**Optuna**](https://optuna.readthedocs.io/en/stable/index.html), una biblioteca que te permite probar varios valores de hiperparámetros y encontrar la mejor combinación para los datos.
 
-El primer paso para usar Hyperopt es crear una función que:
+El primer paso para usar Optuna es crear una función que:
 
 - Entrene un modelo mediante uno o varios valores de hiperparámetros que se pasan a la función como parámetros.
 - Calcule una métrica de rendimiento que se puede usar para medir la *pérdida* (cuánto se aleja el modelo del rendimiento de predicción perfecto).
 - Devuelva el valor de pérdida para que se pueda optimizar (minimizar) iterativamente mediante la prueba de valores de hiperparámetros diferentes.
 
-1. Agregue una nueva celda y use el código siguiente para crear una función que use los datos de los pingüinos para crear un modelo de clasificación que prediga la especie de un pingüino en función de su ubicación y medidas:
+1. Agrega una nueva celda y usa el código siguiente para crear una función que define el rango de los valores que se usan para los hiperámetros y usa los datos de los pingüinos para entrenar un modelo de clasificación que prediga la especie de un pingüino en función de su ubicación y medidas:
 
     ```python
-   from hyperopt import STATUS_OK
-   import mlflow
+   import optuna
+   import mlflow # if you wish to log your experiments
    from pyspark.ml import Pipeline
    from pyspark.ml.feature import StringIndexer, VectorAssembler, MinMaxScaler
    from pyspark.ml.classification import DecisionTreeClassifier
    from pyspark.ml.evaluation import MulticlassClassificationEvaluator
    
-   def objective(params):
-       # Train a model using the provided hyperparameter value
-       catFeature = "Island"
-       numFeatures = ["CulmenLength", "CulmenDepth", "FlipperLength", "BodyMass"]
-       catIndexer = StringIndexer(inputCol=catFeature, outputCol=catFeature + "Idx")
-       numVector = VectorAssembler(inputCols=numFeatures, outputCol="numericFeatures")
-       numScaler = MinMaxScaler(inputCol = numVector.getOutputCol(), outputCol="normalizedFeatures")
-       featureVector = VectorAssembler(inputCols=["IslandIdx", "normalizedFeatures"], outputCol="Features")
-       mlAlgo = DecisionTreeClassifier(labelCol="Species",    
-                                       featuresCol="Features",
-                                       maxDepth=params['MaxDepth'], maxBins=params['MaxBins'])
-       pipeline = Pipeline(stages=[catIndexer, numVector, numScaler, featureVector, mlAlgo])
+   def objective(trial):
+       # Suggest hyperparameter values (maxDepth and maxBins):
+       max_depth = trial.suggest_int("MaxDepth", 0, 9)
+       max_bins = trial.suggest_categorical("MaxBins", [10, 20, 30])
+
+       # Define pipeline components
+       cat_feature = "Island"
+       num_features = ["CulmenLength", "CulmenDepth", "FlipperLength", "BodyMass"]
+       catIndexer = StringIndexer(inputCol=cat_feature, outputCol=cat_feature + "Idx")
+       numVector = VectorAssembler(inputCols=num_features, outputCol="numericFeatures")
+       numScaler = MinMaxScaler(inputCol=numVector.getOutputCol(), outputCol="normalizedFeatures")
+       featureVector = VectorAssembler(inputCols=[cat_feature + "Idx", "normalizedFeatures"], outputCol="Features")
+
+       dt = DecisionTreeClassifier(
+           labelCol="Species",
+           featuresCol="Features",
+           maxDepth=max_depth,
+           maxBins=max_bins
+       )
+
+       pipeline = Pipeline(stages=[catIndexer, numVector, numScaler, featureVector, dt])
        model = pipeline.fit(train)
-       
-       # Evaluate the model to get the target metric
-       prediction = model.transform(test)
-       eval = MulticlassClassificationEvaluator(labelCol="Species", predictionCol="prediction", metricName="accuracy")
-       accuracy = eval.evaluate(prediction)
-       
-       # Hyperopt tries to minimize the objective function, so you must return the negative accuracy.
-       return {'loss': -accuracy, 'status': STATUS_OK}
+
+       # Evaluate the model using accuracy.
+       predictions = model.transform(test)
+       evaluator = MulticlassClassificationEvaluator(
+           labelCol="Species",
+           predictionCol="prediction",
+           metricName="accuracy"
+       )
+       accuracy = evaluator.evaluate(predictions)
+
+       # Since Optuna minimizes the objective, return negative accuracy.
+       return -accuracy
     ```
 
-1. Agregue una nueva celda y use el código siguiente para:
-    - Definir un espacio de búsqueda que especifique el intervalo de valores que se va a usar para uno o varios hiperparámetros (consulte [Definición de un espacio de búsqueda](http://hyperopt.github.io/hyperopt/getting-started/search_spaces/) en la documentación de Hyperopt para más información).
-    - Especifique el algoritmo de Hyperopt que desea usar (consulte [Algoritmos](http://hyperopt.github.io/hyperopt/#algorithms) en la documentación de Hyperopt para más información).
-    - Use la función **hyperopt.fmin** para llamar a la función de entrenamiento repetidamente e intentar minimizar la pérdida.
+1. Agrega una nueva celda y usa el código siguiente para ejecutar el experimento de optimización:
 
     ```python
-   from hyperopt import fmin, tpe, hp
-   
-   # Define a search space for two hyperparameters (maxDepth and maxBins)
-   search_space = {
-       'MaxDepth': hp.randint('MaxDepth', 10),
-       'MaxBins': hp.choice('MaxBins', [10, 20, 30])
-   }
-   
-   # Specify an algorithm for the hyperparameter optimization process
-   algo=tpe.suggest
-   
-   # Call the training function iteratively to find the optimal hyperparameter values
-   argmin = fmin(
-     fn=objective,
-     space=search_space,
-     algo=algo,
-     max_evals=6)
-   
-   print("Best param values: ", argmin)
+   # Optimization run with 5 trials:
+   study = optuna.create_study()
+   study.optimize(objective, n_trials=5)
+
+   print("Best param values from the optimization run:")
+   print(study.best_params)
     ```
 
-1. Observe que el código ejecuta iterativamente la función de entrenamiento 6 veces (en función de la configuración de **max_evals**). MLflow registra cada ejecución y puede usar el botón de alternancia **&#9656;** para expandir la salida de la **ejecución de MLflow** en la celda de código y seleccionar el hipervínculo **experimento** para verlas. A cada ejecución se le asigna un nombre aleatorio y puede ver cada uno de ellos en el visor de ejecución de MLflow para consultar los detalles de los parámetros y las métricas que se registraron.
-1. Cuando finalicen todas las ejecuciones, observe que el código muestra los detalles de los mejores valores de hiperparámetros que se encontraron (es decir, la combinación que dio lugar a la menor pérdida). En este caso, el parámetro **MaxBins** se define como una opción de una lista de tres valores posibles (10, 20 y 30): el mejor valor indica el elemento de base cero de la lista (por lo que 0=10, 1=20 y 2=30). El parámetro **MaxDepth** se define como un entero aleatorio entre 0 y 10, y se muestra el valor entero que dio el mejor resultado. Para más información sobre cómo especificar ámbitos de valor de hiperparámetros para espacios de búsqueda, consulte [Expresiones de parámetros](http://hyperopt.github.io/hyperopt/getting-started/search_spaces/#parameter-expressions) en la documentación de Hyperopt.
+1. Observa que el código ejecuta iterativamente la función de entrenamiento 5 veces al tratar de minimizar la pérdida (en función de la configuración de **n_trials**). MLflow registra cada prueba y puedes usar la tecla de alternancia **&#9656;** para expandir la salida de la **ejecución de MLflow** en la celda de código y seleccionar el hipervínculo **experimento** para verlas. A cada ejecución se le asigna un nombre aleatorio y puede ver cada uno de ellos en el visor de ejecución de MLflow para consultar los detalles de los parámetros y las métricas que se registraron.
+1. Cuando finalicen todas las ejecuciones, observe que el código muestra los detalles de los mejores valores de hiperparámetros que se encontraron (es decir, la combinación que dio lugar a la menor pérdida). En este caso, el parámetro **MaxBins** se define como una opción de una lista de tres valores posibles (10, 20 y 30): el mejor valor indica el elemento de base cero de la lista (por lo que 0=10, 1=20 y 2=30). El parámetro **MaxDepth** se define como un entero aleatorio entre 0 y 10, y se muestra el valor entero que dio el mejor resultado. 
 
-## Uso de la clase Trials para registrar los detalles de la ejecución
-
-Además de usar las ejecuciones del experimento de MLflow para registrar los detalles de cada iteración, también puede usar la clase**hyperopt.Trials** para registrar y ver los detalles de cada ejecución.
-
-1. Agregue una nueva celda y use el código siguiente para ver los detalles de cada ejecución registrada por la clase **Trials**:
-
-    ```python
-   from hyperopt import Trials
-   
-   # Create a Trials object to track each run
-   trial_runs = Trials()
-   
-   argmin = fmin(
-     fn=objective,
-     space=search_space,
-     algo=algo,
-     max_evals=3,
-     trials=trial_runs)
-   
-   print("Best param values: ", argmin)
-   
-   # Get details from each trial run
-   print ("trials:")
-   for trial in trial_runs.trials:
-       print ("\n", trial)
-    ```
-
-## Limpiar
+## Limpieza
 
 En el portal de Azure Databricks, en la página **Proceso**, selecciona el clúster y **&#9632; Finalizar** para apagarlo.
 
