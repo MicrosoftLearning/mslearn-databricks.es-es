@@ -7,7 +7,7 @@ lab:
 
 AutoML es una característica de Azure Databricks que prueba varios algoritmos y parámetros con sus datos para entrenar un modelo de Machine Learning óptimo.
 
-Este ejercicio debería tardar en completarse **30** minutos aproximadamente.
+Este ejercicio debería tardar en completarse **45** minutos aproximadamente.
 
 > **Nota**: la interfaz de usuario de Azure Databricks está sujeta a una mejora continua. Es posible que la interfaz de usuario haya cambiado desde que se escribieron las instrucciones de este ejercicio.
 
@@ -81,15 +81,15 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 Para entrenar un modelo de Machine Learning mediante AutoML, debe cargar los datos de entrenamiento. En este ejercicio, entrenará un modelo para clasificar un pingüino como una de tres especies en función de observaciones, incluidas sus medidas corporales y su ubicación. Cargará los datos de entrenamiento que incluyen la etiqueta de especie en una tabla de un almacenamiento de datos de Azure Databricks.
 
 1. En el portal de Azure Databricks de su área de trabajo, en la barra lateral, en **SQL**, seleccione**SQL Warehouses**.
-1. Observa que el área de trabajo ya incluye una instancia de Almacén de SQL denominada **Almacén de inicio**.
+1. Observa que el área de trabajo ya incluye una instancia de Almacén de SQL denominada **Almacén de inicio sin servidor**.
 1. En el menú **Acciones** (**⁝**) del Almacén de SQL, selecciona **Editar**. Después, establece la propiedad **Tamaño del clúster** en **2X-Small** y guarda los cambios.
 1. Usa el botón **Iniciar** para iniciar el Almacén de SQL (que puede tardar un par de minutos).
 
-> **Nota**: si el Almacén de SQL no se inicia, es posible que la suscripción no tenga cuota suficiente en la región donde se aprovisiona el área de trabajo de Azure Databricks. Para más información, consulta [Cuota necesaria de vCPU de Azure](https://docs.microsoft.com/azure/databricks/sql/admin/sql-endpoints#required-azure-vcpu-quota). Si esto sucede, puedes intentar pedir un aumento de cuota, tal como se detalla en el mensaje de error cuando el almacenamiento no se inicia. Como alternativa, puedes intentar eliminar el área de trabajo y crear una nueva en otra región. Puedes especificar una región como parámetro para el script de configuración de la siguiente manera: `./mslearn-databricks/setup.ps1 eastus`
+    > **Nota**: si el Almacén de SQL no se inicia, es posible que la suscripción no tenga cuota suficiente en la región donde se aprovisiona el área de trabajo de Azure Databricks. Para más información, consulta [Cuota necesaria de vCPU de Azure](https://docs.microsoft.com/azure/databricks/sql/admin/sql-endpoints#required-azure-vcpu-quota). Si esto sucede, puedes intentar pedir un aumento de cuota, tal como se detalla en el mensaje de error cuando el almacenamiento no se inicia. Como alternativa, puedes intentar eliminar el área de trabajo y crear una nueva en otra región. Puedes especificar una región como parámetro para el script de configuración de la siguiente manera: `./mslearn-databricks/setup.ps1 eastus`
 
 1. Descargue el archivo [**penguins.csv**](https://raw.githubusercontent.com/MicrosoftLearning/mslearn-databricks/main/data/penguins.csv) de `https://raw.githubusercontent.com/MicrosoftLearning/mslearn-databricks/main/data/penguins.csv` en el equipo local y guárdelo como **penguins.csv**.
-1. En el portal del área de trabajo de Azure Databricks, en la barra lateral, seleccione **(+) Nuevo** y, a continuación, seleccione **Carga de archivos** y cargue el archivo **penguins.csv** que descargó en el equipo.
-1. En la página **Carga de datos**, seleccione el esquema **predeterminado** y defina el nombre de la tabla como **pingüinos**. Después, selecciona **Crear tabla** en la esquina inferior izquierda de la página.
+1. En el portal del área de trabajo de Azure Databricks, en la barra lateral, selecciona **Nuevo (+)** y después selecciona **Agregar o cargar datos**. En la página **Agregar datos**, selecciona **Crear o modificar tabla** y carga el archivo **penguins.csv** que descargaste en el equipo.
+1. En la página **Crear o modificar una tabla desde la página de carga de archivos**, selecciona el esquema **predeterminado** y establece el nombre de tabla como **penguins**. Después selecciona **Crear tabla**.
 1. Cuando la tabla esté creada, revisa sus detalles.
 
 ## Crear un experimento de AutoML
@@ -97,10 +97,9 @@ Para entrenar un modelo de Machine Learning mediante AutoML, debe cargar los dat
 Ahora que tiene algunos datos, puede usarlos con AutoML para entrenar un modelo.
 
 1. En la barra lateral de la izquierda, seleccione **Experimentos**.
-1. En la página **Experimentos**, seleccione **Crear experimento de AutoML**.
-1. Configure el experimento de AutoML con los siguientes valores:
+1. En la página **Experimentos**, busca el icono **Clasificación** y selecciona **Iniciar entrenamiento**.
+1. Configura el experimento de AutoML con la siguiente configuración:
     - **Clúster**: *Seleccione el clúster*
-    - **Tipo de problema de ML**: Clasificación
     - **Conjunto de datos de entrenamiento de entrada**: *Examinar la base de datos **predeterminada** y seleccionar la tabla **pingüinos***
     - **Destino de predicción**: Especie
     - **Nombre del experimento**: Clasificación de pingüinos
@@ -112,7 +111,7 @@ Ahora que tiene algunos datos, puede usarlos con AutoML para entrenar un modelo.
         - **Etiqueta positiva**: *Déjelo en blanco*
         - **Ubicación del almacenamiento de datos intermedia**: Artefacto de MLflow
 1. Use el botón **Iniciar AutoML** para iniciar el experimento. Cierre los cuadros de diálogo de información que se muestran.
-1. Espere a que se complete el experimento. Puede usar el botón **Actualizar** de la derecha para ver los detalles de las ejecuciones generadas.
+1. Espere a que se complete el experimento. Puedes ver los detalles de las ejecuciones que se generan en la pestaña **Ejecuciones**.
 1. Después de cinco minutos, el experimento finalizará. La actualización de las ejecuciones mostrará la ejecución que dio lugar al modelo de mejor rendimiento (en función de la métrica de *precisión* seleccionada) en la parte superior de la lista.
 
 ## Implementar el modelo de mejor rendimiento
