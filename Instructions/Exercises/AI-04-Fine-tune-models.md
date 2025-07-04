@@ -17,23 +17,23 @@ Necesitará una [suscripción de Azure](https://azure.microsoft.com/free) en la 
 
 ## Aprovisionamiento de un recurso de Azure OpenAI
 
-Si aún no tiene uno, aprovisione un recurso de Azure OpenAI en la suscripción de Azure.
+Si aún no tienes uno, aprovisiona un recurso de Azure OpenAI en la suscripción a Azure.
 
-1. Inicie sesión en **Azure Portal** en `https://portal.azure.com`.
-2. Cree un recurso de **Azure OpenAI** con la siguiente configuración:
-    - **Suscripción**: *Selección de una suscripción de Azure aprobada para acceder al servicio Azure OpenAI*
-    - **Grupo de recursos**: *elija o cree un grupo de recursos*
-    - **Región**: *Elija de forma **aleatoria** cualquiera de las siguientes regiones*\*
+1. Inicia sesión en **Azure Portal** en `https://portal.azure.com`.
+2. Crea un recurso de **Azure OpenAI** con la siguiente configuración:
+    - **Suscripción**: *selecciona una suscripción a Azure aprobada para acceder al servicio Azure OpenAI*
+    - **Grupo de recursos**: *elige o crea un grupo de recursos*
+    - **Región**: *elige de forma **aleatoria** cualquiera de las siguientes regiones*\*
         - Este de EE. UU. 2
         - Centro-Norte de EE. UU
         - Centro de Suecia
         - Oeste de Suiza
-    - **Nombre**: *nombre único que prefiera*
+    - **Nombre**: *nombre único que prefieras*
     - **Plan de tarifa**: estándar S0
 
-> \* Los recursos de Azure OpenAI están restringidos por cuotas regionales. Las regiones enumeradas incluyen la cuota predeterminada para los tipos de modelo usados en este ejercicio. Elegir aleatoriamente una región reduce el riesgo de que una sola región alcance su límite de cuota en escenarios en los que se comparte una suscripción con otros usuarios. En caso de que se alcance un límite de cuota más adelante en el ejercicio, es posible que tenga que crear otro recurso en otra región.
+> \* Los recursos de Azure OpenAI están restringidos por cuotas regionales. Las regiones enumeradas incluyen la cuota predeterminada para los tipos de modelo usados en este ejercicio. Elegir aleatoriamente una región reduce el riesgo de que una sola región alcance su límite de cuota en escenarios en los que se comparte una suscripción con otros usuarios. En caso de que se alcance un límite de cuota más adelante en el ejercicio, es posible que tengas que crear otro recurso en otra región.
 
-3. Espere a que la implementación finalice. A continuación, vaya al recurso de Azure OpenAI implementado en Azure Portal.
+3. Espera a que la implementación finalice. Luego, ve al recurso de Azure OpenAI implementado en Azure Portal.
 
 4. En el panel de la izquierda, en **Administración de recursos**, selecciona **Claves y puntos de conexión**.
 
@@ -45,7 +45,7 @@ Si aún no tiene uno, aprovisione un recurso de Azure OpenAI en la suscripción 
 
 Azure proporciona un portal basado en web denominado **Azure AI Studio** que puedes usar para implementar, administrar y explorar modelos. Para iniciar la exploración de Azure OpenAI, usa Azure AI Studio para implementar un modelo.
 
-> **Nota**: a medida que usas Azure AI Studio, es posible que se muestren cuadros de mensaje que sugieren tareas que se van a realizar. Puede cerrarlos y seguir los pasos descritos en este ejercicio.
+> **Nota**: a medida que usas Azure AI Studio, es posible que se muestren cuadros de mensaje que sugieren tareas que se van a realizar. Puedes cerrarlos y seguir los pasos descritos en este ejercicio.
 
 1. En Azure Portal, en la página **Información general** del recurso de Azure OpenAI, desplázate hacia abajo hasta la sección **Comenzar** y selecciona el botón para ir a **Inteligencia artificial de Azure Studio**.
    
@@ -58,18 +58,18 @@ Azure proporciona un portal basado en web denominado **Azure AI Studio** que pue
     - **Filtro de contenido**: valor predeterminado
     - **Habilitación de la cuota dinámica**: deshabilitada
     
-> \* Un límite de velocidad de 5000 tokens por minuto es más que adecuado para completar este ejercicio, al tiempo que deja capacidad para otras personas que usan la misma suscripción.
+> \* Un límite de velocidad de 5000 tokens por minuto es más que adecuado para completar este ejercicio, al tiempo que dejas capacidad para otras personas que usan la misma suscripción.
 
 ## Aprovisiona un área de trabajo de Azure Databricks.
 
 > **Sugerencia**: si ya tienes un área de trabajo de Azure Databricks, puedes omitir este procedimiento y usar el área de trabajo existente.
 
-1. Inicie sesión en **Azure Portal** en `https://portal.azure.com`.
+1. Inicia sesión en **Azure Portal** en `https://portal.azure.com`.
 2. Crea un recurso de **Azure Databricks** con la siguiente configuración:
     - **Suscripción**: *selecciona la misma suscripción a Azure que usaste para crear tu recurso de Azure OpenAI*
     - **Grupo de recursos**: *el mismo grupo de recursos donde creaste tu recurso de Azure OpenAI*
     - **Región**: *la misma región donde creaste tu recurso de Azure OpenAI*
-    - **Nombre**: *nombre único que prefiera*
+    - **Nombre**: *nombre único que prefieras*
     - **Plan de tarifa**: *Premium* o *Prueba*
 
 3. Selecciona **Revisar y crear** y espera a que se complete la implementación. Después, ve al recurso e inicia el espacio de trabajo.
@@ -142,7 +142,7 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
     os.environ["TEMP_AUTH_TOKEN"] = "your_access_token"
      ```
      
-## Valida los recuentos de tokens
+## Validar los recuentos de tokens
 
 Tanto `training_set.jsonl` como `validation_set.jsonl` se componen de diferentes ejemplos de conversación entre `user` y `assistant` que servirán como puntos de datos para el entrenamiento y la validación del modelo optimizado. Los ejemplos individuales deben permanecer bajo el límite de tokens de entrada del modelo `gpt-35-turbo`, que es de 4096 tokens.
 
@@ -336,7 +336,7 @@ Ahora que tienes un modelo optimizado, puedes implementarlo como modelo personal
  
 ## Limpieza
 
-Cuando haya terminado de usar el recurso de Azure OpenAI, recuerde eliminar la implementación o todo el recurso en **Azure Portal**, en `https://portal.azure.com`.
+Cuando hayas terminado de usar el recurso de Azure OpenAI, recuerda eliminar la implementación o todo el recurso en **Azure Portal**, en `https://portal.azure.com`.
 
 En el portal de Azure Databricks, en la página **Proceso**, selecciona el clúster y **&#9632; Finalizar** para apagarlo.
 
