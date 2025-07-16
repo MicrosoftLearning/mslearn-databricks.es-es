@@ -107,6 +107,26 @@ Para usar Azure Databricks desde una canalización de Azure Data Factory, necesi
 1. Selecciona **Generar nuevo token** y genera un nuevo token con el comentario *Data Factory* y una duración en blanco (para que el token no expire). Ten cuidado para **copiar el token cuando aparezca <u>antes</u> de seleccionar *Listo***.
 1. Pega el token copiado en un archivo de texto para tenerlo a mano para más adelante en este ejercicio.
 
+## Usar una canalización para ejecutar el cuaderno de Azure Databricks
+
+Ahora que creaste un servicio vinculado, puedes usarlo en una canalización para ejecutar el cuaderno que visualizaste anteriormente.
+
+### Crear una canalización
+
+1. En Azure Data Factory Studio, en el panel de navegación, selecciona **Autor**.
+2. En la página **Autor**, en el panel **Recursos Factory**, usa el icono **+** para agregar una **canalización**.
+3. En el panel **Propiedades** de la nueva canalización, cambia su nombre a `Process Data with Databricks`. Después, usa el botón **Propiedades** (que tiene un aspecto similar a **<sub>*</sub>**) situado en el extremo derecho de la barra de herramientas para ocultar el panel **Propiedades**.
+4. En el panel **Actividades**, expande **Databricks** y arrastra una actividad de **Cuaderno** a la superficie del diseñador de canalizaciones.
+5. Con la nueva actividad **Notebook1** seleccionada, establece las siguientes propiedades en el panel inferior:
+    - **General:**
+        - **Nombre**: `Process Data`
+    - **Azure Databricks**:
+        - **Servicio vinculado de Databricks**: *selecciona el servicio **AzureDatabricks** vinculado que creaste anteriormente*
+    - **Configuración**:
+        - **Ruta de acceso del cuaderno**: *Vaya a la carpeta **Usuarios/su_nombre_de_usuario** y seleccione el *cuaderno **Procesamiento de datos**.
+        - **Parámetros base**: *Agregue un nuevo parámetro llamado `folder` con el valor `product_data`*.
+6. Usa el botón **Validar** encima de la superficie del diseñador de canalizaciones para validar la canalización. Después, usa el botón **Publicar todo** para publicarlo (guardarlo).
+
 ### Crear un servicio vinculado en Azure Data Factory
 
 1. Vuelva a Azure Portal y, en el grupo de recursos **msl-*xxxxxxx***, seleccione el recurso **adf*xxxxxxx*** de Azure Data Factory.
@@ -130,26 +150,6 @@ Para usar Azure Databricks desde una canalización de Azure Data Factory, necesi
     - **Versión de Python**: 3
     - **Opciones de trabajador**: fijas
     - **Trabajadores**: 1
-
-## Usar una canalización para ejecutar el cuaderno de Azure Databricks
-
-Ahora que creaste un servicio vinculado, puedes usarlo en una canalización para ejecutar el cuaderno que visualizaste anteriormente.
-
-### Crear una canalización
-
-1. En Azure Data Factory Studio, en el panel de navegación, selecciona **Autor**.
-2. En la página **Autor**, en el panel **Recursos Factory**, usa el icono **+** para agregar una **canalización**.
-3. En el panel **Propiedades** de la nueva canalización, cambia su nombre a `Process Data with Databricks`. Después, usa el botón **Propiedades** (que tiene un aspecto similar a **<sub>*</sub>**) situado en el extremo derecho de la barra de herramientas para ocultar el panel **Propiedades**.
-4. En el panel **Actividades**, expande **Databricks** y arrastra una actividad de **Cuaderno** a la superficie del diseñador de canalizaciones.
-5. Con la nueva actividad **Notebook1** seleccionada, establece las siguientes propiedades en el panel inferior:
-    - **General:**
-        - **Nombre**: `Process Data`
-    - **Azure Databricks**:
-        - **Servicio vinculado de Databricks**: *selecciona el servicio **AzureDatabricks** vinculado que creaste anteriormente*
-    - **Configuración**:
-        - **Ruta de acceso del cuaderno**: *Vaya a la carpeta **Usuarios/su_nombre_de_usuario** y seleccione el *cuaderno **Procesamiento de datos**.
-        - **Parámetros base**: *Agregue un nuevo parámetro llamado `folder` con el valor `product_data`*.
-6. Usa el botón **Validar** encima de la superficie del diseñador de canalizaciones para validar la canalización. Después, usa el botón **Publicar todo** para publicarlo (guardarlo).
 
 ### Ejecución de la canalización
 

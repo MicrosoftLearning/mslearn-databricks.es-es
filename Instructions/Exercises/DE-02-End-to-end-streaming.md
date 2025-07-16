@@ -84,7 +84,7 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
     %sh
     rm -r /dbfs/device_stream
     mkdir /dbfs/device_stream
-    wget -O /dbfs/device_stream/device_data.csv https://github.com/MicrosoftLearning/mslearn-databricks/raw/main/data/device_data.csv
+    !wget -O /dbfs/device_stream/device_data.csv https://github.com/MicrosoftLearning/mslearn-databricks/raw/main/data/device_data.csv
      ```
 
 4. Usa la opción del menú **&#9656; Ejecutar celda** situado a la izquierda de la celda para ejecutarla. A continuación, espera a que se complete el trabajo de Spark ejecutado por el código.
