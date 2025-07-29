@@ -45,15 +45,15 @@ En este ejercicio, se incluye un script para aprovisionar una nueva área de tra
 
 6. Si se solicita, elige la suscripción que quieres usar (esto solo ocurrirá si tienes acceso a varias suscripciones de Azure).
 
-7. Espera a que se complete el script: normalmente puede tardar entre 5 y 10 minutos, pero en algunos casos puede tardar más. Mientras esperas, revisa el artículo [Introducción a Delta Lake](https://docs.microsoft.com/azure/databricks/delta/delta-intro) en la documentación de Azure Databricks.
+7. Espera a que se complete el script: normalmente tarda unos 5 minutos, pero en algunos casos puede tardar más.
 
 ## Crear un clúster
 
 Azure Databricks es una plataforma de procesamiento distribuido que usa clústeres* de Apache Spark *para procesar datos en paralelo en varios nodos. Cada clúster consta de un nodo de controlador para coordinar el trabajo y nodos de trabajo para hacer tareas de procesamiento. En este ejercicio, crearás un clúster de *nodo único* para minimizar los recursos de proceso usados en el entorno de laboratorio (en los que se pueden restringir los recursos). En un entorno de producción, normalmente crearías un clúster con varios nodos de trabajo.
 
-> **Sugerencia**: Si ya dispone de un clúster con una versión de runtime 13.3 LTS **<u>ML</u>** o superior en su área de trabajo de Azure Databricks, puede utilizarlo para completar este ejercicio y omitir este procedimiento.
+> **Sugerencia**: Si ya dispones de un clúster con una versión de runtime 15.4 LTS **<u>ML</u>** o superior en su área de trabajo de Azure Databricks, puedes utilizarlo para completar este ejercicio y omitir este procedimiento.
 
-1. En Azure Portal, vaya al grupo de recursos **msl-*xxxxxxx*** que se creó con el script (o al grupo de recursos que contiene el área de trabajo de Azure Databricks existente)
+1. En Azure Portal, ve al grupo de recursos **msl-*xxxxxxx*** que se creó con el script (o al grupo de recursos que contiene el área de trabajo de Azure Databricks existente)
 1. Selecciona el recurso Azure Databricks Service (llamado **databricks-*xxxxxxx*** si usaste el script de instalación para crearlo).
 1. En la página **Información general** del área de trabajo, usa el botón **Inicio del área de trabajo** para abrir el área de trabajo de Azure Databricks en una nueva pestaña del explorador; inicia sesión si se solicita.
 
@@ -63,15 +63,11 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 1. En la página **Nuevo clúster**, crea un clúster con la siguiente configuración:
     - **Nombre del clúster**: clúster del *Nombre de usuario*  (el nombre del clúster predeterminado)
     - **Directiva**: Unrestricted (Sin restricciones)
-    - **Modo de clúster** de un solo nodo
-    - **Modo de acceso**: usuario único (*con la cuenta de usuario seleccionada*)
-    - **Versión de runtime de Databricks**: *Seleccione la edición de **<u>ML</u>** de la última versión no beta más reciente del runtime (**No** una versión de runtime estándar) que:*
-        - ***No** usa una GPU*
-        - *Incluye Scala > **2.11***
-        - *Incluye Spark > **3.4***
+    - **Aprendizaje automático**: Habilitado
+    - **Databricks Runtime**: 15.4 LTS
     - **Utilizar la Aceleración de fotones**: <u>No</u> seleccionada
-    - **Tipo de nodo**: Standard_D4ds_v5
-    - **Finaliza después de** *20* **minutos de inactividad**
+    - **Tipo de trabajo**: Standard_D4ds_v5
+    - **Nodo único**: Activado
 
 1. Espera a que se cree el clúster. Esto puede tardar un par de minutos.
 
@@ -83,7 +79,7 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 
 2. Selecciona **Instalar nueva**.
 
-3. Selecciona **PyPi** como origen de la biblioteca y escribe `transformers==4.44.0` en el campo **Paquete**.
+3. Selecciona **PyPi** como origen de la biblioteca y escribe `transformers==4.53.0` en el campo **Paquete**.
 
 4. Seleccione **Instalar**.
 
@@ -93,26 +89,29 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 
 2. Selecciona **Crear** y, después, selecciona **Cuaderno**.
 
-3. Asigna un nombre al cuaderno y selecciona `Python` como lenguaje.
+3. Asigna un nombre al cuaderno y comprueba que `Python` está seleccionado como lenguaje.
 
-4. En la primera celda de código, escribe y ejecuta el código siguiente:
+4. En el menú desplegable **Conectar**, selecciona el recurso de proceso que creaste anteriormente.
 
-     ```python
-    from transformers import pipeline
+5. En la primera celda de código, escribe y ejecuta el código siguiente:
 
-    # Load the summarization model
-    summarizer = pipeline("summarization")
+    ```python
+   from transformers import pipeline
 
-    # Load the sentiment analysis model
-    sentiment_analyzer = pipeline("sentiment-analysis")
+   # Load the summarization model with PyTorch weights
+   summarizer = pipeline("summarization", model="facebook/bart-large-cnn", framework="pt")
 
-    # Load the translation model
-    translator = pipeline("translation_en_to_fr")
+   # Load the sentiment analysis model
+   sentiment_analyzer = pipeline("sentiment-analysis", model="distilbert/distilbert-base-uncased-finetuned-sst-2-english", revision="714eb0f")
 
-    # Load a general purpose model for zero-shot classification and few-shot learning
-    classifier = pipeline("zero-shot-classification")
-     ```
-Esto cargará todos los modelos necesarios para las tareas de NLP presentadas en este ejercicio.
+   # Load the translation model
+   translator = pipeline("translation_en_to_fr", model="google-t5/t5-base", revision="a9723ea")
+
+   # Load a general purpose model for zero-shot classification and few-shot learning
+   classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli", revision="d7645e1") 
+    ```
+     
+    Esto cargará todos los modelos necesarios para las tareas de NLP presentadas en este ejercicio.
 
 ### Resumir texto
 

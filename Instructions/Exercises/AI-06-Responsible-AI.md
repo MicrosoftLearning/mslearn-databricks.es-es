@@ -17,23 +17,23 @@ Necesitará una [suscripción de Azure](https://azure.microsoft.com/free) en la 
 
 ## Aprovisionamiento de un recurso de Azure OpenAI
 
-Si aún no tiene uno, aprovisione un recurso de Azure OpenAI en la suscripción de Azure.
+Si aún no tienes uno, aprovisiona un recurso de Azure OpenAI en la suscripción a Azure.
 
-1. Inicie sesión en **Azure Portal** en `https://portal.azure.com`.
-2. Cree un recurso de **Azure OpenAI** con la siguiente configuración:
-    - **Suscripción**: *Selección de una suscripción de Azure aprobada para acceder al servicio Azure OpenAI*
-    - **Grupo de recursos**: *elija o cree un grupo de recursos*
-    - **Región**: *Elija de forma **aleatoria** cualquiera de las siguientes regiones*\*
+1. Inicia sesión en **Azure Portal** en `https://portal.azure.com`.
+2. Crea un recurso de **Azure OpenAI** con la siguiente configuración:
+    - **Suscripción**: *selecciona una suscripción a Azure aprobada para acceder al servicio Azure OpenAI*
+    - **Grupo de recursos**: *elige o crea un grupo de recursos*
+    - **Región**: *elige de forma **aleatoria** cualquiera de las siguientes regiones*\*
         - Este de EE. UU. 2
         - Centro-Norte de EE. UU
         - Centro de Suecia
         - Oeste de Suiza
-    - **Nombre**: *nombre único que prefiera*
+    - **Nombre**: *nombre único que prefieras*
     - **Plan de tarifa**: estándar S0
 
-> \* Los recursos de Azure OpenAI están restringidos por cuotas regionales. Las regiones enumeradas incluyen la cuota predeterminada para los tipos de modelo usados en este ejercicio. Elegir aleatoriamente una región reduce el riesgo de que una sola región alcance su límite de cuota en escenarios en los que se comparte una suscripción con otros usuarios. En caso de que se alcance un límite de cuota más adelante en el ejercicio, es posible que tenga que crear otro recurso en otra región.
+> \* Los recursos de Azure OpenAI están restringidos por cuotas regionales. Las regiones enumeradas incluyen la cuota predeterminada para los tipos de modelo usados en este ejercicio. Elegir aleatoriamente una región reduce el riesgo de que una sola región alcance su límite de cuota en escenarios en los que se comparte una suscripción con otros usuarios. En caso de que se alcance un límite de cuota más adelante en el ejercicio, es posible que tengas que crear otro recurso en otra región.
 
-3. Espere a que la implementación finalice. A continuación, vaya al recurso de Azure OpenAI implementado en Azure Portal.
+3. Espera a que la implementación finalice. Luego, ve al recurso de Azure OpenAI implementado en Azure Portal.
 
 4. En el panel de la izquierda, en **Administración de recursos**, selecciona **Claves y puntos de conexión**.
 
@@ -41,33 +41,32 @@ Si aún no tiene uno, aprovisione un recurso de Azure OpenAI en la suscripción 
 
 ## Implementación del modelo necesario
 
-Azure proporciona un portal basado en web denominado **Azure AI Studio** que puedes usar para implementar, administrar y explorar modelos. Para iniciar la exploración de Azure OpenAI, usa Azure AI Studio para implementar un modelo.
+Azure proporciona un portal basado en web denominado **Fundición de IA de Azure**, que puedes usar para implementar, administrar y explorar modelos. Comenzarás la exploración de Azure OpenAI mediante la Fundición de IA de Azure para implementar un modelo.
 
-> **Nota**: a medida que usas Azure AI Studio, es posible que se muestren cuadros de mensaje que sugieren tareas que se van a realizar. Puede cerrarlos y seguir los pasos descritos en este ejercicio.
+> **Nota**: A medida que usas la Fundición de IA de Azure, es posible que se muestren cuadros de mensaje que sugieren tareas para que las realices. Puedes cerrarlos y seguir los pasos descritos en este ejercicio.
 
-1. En Azure Portal, en la página **Información general** del recurso de Azure OpenAI, desplázate hacia abajo hasta la sección **Comenzar** y selecciona el botón para ir a **Inteligencia artificial de Azure Studio**.
+1. En Azure Portal, en la página **Información general** del recurso de Azure OpenAI, desplázate hacia abajo hasta la sección **Introducción** y selecciona el botón para ir a la **Fundición de IA de Azure**.
    
-1. En Azure AI Studio, en el panel de la izquierda, selecciona la página **Implementaciones** y consulta las implementaciones de modelos existentes. Si aún no tienes una, crea una nueva implementación del modelo **gpt-35-turbo** con la siguiente configuración:
-    - **Nombre de implementación**: *gpt-35-turbo*
-    - **Modelo**: gpt-35-turbo
-    - **Versión del modelo**: Valor predeterminado
-    - **Tipo de implementación**: Estándar
-    - **Límite de velocidad de tokens por minuto**: 5000\*
+1. En la Fundición de IA de Azure, en el panel de la izquierda, selecciona la página **Implementaciones** y visualiza las implementaciones de modelos existentes. Si aún no tienes una, crea una nueva implementación del modelo **gpt-4o** con la siguiente configuración:
+    - **Nombre de implementación**: *gpt-4o*
+    - **Tipo de implementación**: estándar
+    - **Versión del modelo**: *usa la versión predeterminada*
+    - **Límite de velocidad de tokens por minuto**: 10 000\*
     - **Filtro de contenido**: valor predeterminado
     - **Habilitación de la cuota dinámica**: deshabilitada
     
-> \* Un límite de velocidad de 5000 tokens por minuto es más que adecuado para completar este ejercicio, al tiempo que deja capacidad para otras personas que usan la misma suscripción.
+> \* Un límite de velocidad de 10 000 tokens por minuto es más que adecuado para completar este ejercicio, al tiempo que deja capacidad para otras personas que usan la misma suscripción.
 
 ## Aprovisiona un área de trabajo de Azure Databricks.
 
 > **Sugerencia**: si ya tienes un área de trabajo de Azure Databricks, puedes omitir este procedimiento y usar el área de trabajo existente.
 
-1. Inicie sesión en **Azure Portal** en `https://portal.azure.com`.
+1. Inicia sesión en **Azure Portal** en `https://portal.azure.com`.
 2. Crea un recurso de **Azure Databricks** con la siguiente configuración:
     - **Suscripción**: *selecciona la misma suscripción a Azure que usaste para crear tu recurso de Azure OpenAI*
     - **Grupo de recursos**: *el mismo grupo de recursos donde creaste tu recurso de Azure OpenAI*
     - **Región**: *la misma región donde creaste tu recurso de Azure OpenAI*
-    - **Nombre**: *nombre único que prefiera*
+    - **Nombre**: *nombre único que prefieras*
     - **Plan de tarifa**: *Premium* o *Prueba*
 
 3. Selecciona **Revisar y crear** y espera a que se complete la implementación. Después, ve al recurso e inicia el espacio de trabajo.
@@ -76,7 +75,7 @@ Azure proporciona un portal basado en web denominado **Azure AI Studio** que pue
 
 Azure Databricks es una plataforma de procesamiento distribuido que usa clústeres* de Apache Spark *para procesar datos en paralelo en varios nodos. Cada clúster consta de un nodo de controlador para coordinar el trabajo y nodos de trabajo para hacer tareas de procesamiento. En este ejercicio, crearás un clúster de *nodo único* para minimizar los recursos de proceso usados en el entorno de laboratorio (en los que se pueden restringir los recursos). En un entorno de producción, normalmente crearías un clúster con varios nodos de trabajo.
 
-> **Sugerencia**: Si ya dispone de un clúster con una versión de runtime 13.3 LTS **<u>ML</u>** o superior en su área de trabajo de Azure Databricks, puede utilizarlo para completar este ejercicio y omitir este procedimiento.
+> **Sugerencia**: Si ya dispones de un clúster con una versión de runtime 15.4 LTS **<u>ML</u>** o superior en su área de trabajo de Azure Databricks, puedes utilizarlo para completar este ejercicio y omitir este procedimiento.
 
 1. En Azure Portal, ve al grupo de recursos donde se creó el espacio de trabajo de Azure Databricks.
 2. Selecciona tu recurso del servicio Azure Databricks.
@@ -88,27 +87,15 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 5. En la página **Nuevo clúster**, crea un clúster con la siguiente configuración:
     - **Nombre del clúster**: clúster del *Nombre de usuario*  (el nombre del clúster predeterminado)
     - **Directiva**: Unrestricted (Sin restricciones)
-    - **Modo de clúster** de un solo nodo
-    - **Modo de acceso**: usuario único (*con la cuenta de usuario seleccionada*)
-    - **Versión de runtime de Databricks**: *Seleccione la edición de **<u>ML</u>** de la última versión no beta más reciente del runtime (**No** una versión de runtime estándar) que:*
-        - ***No** usa una GPU*
-        - *Incluye Scala > **2.11***
-        - *Incluye Spark > **3.4***
+    - **Aprendizaje automático**: Habilitado
+    - **Databricks Runtime**: 15.4 LTS
     - **Utilizar la Aceleración de fotones**: <u>No</u> seleccionada
-    - **Tipo de nodo**: Standard_D4ds_v5
-    - **Finaliza después de** *20* **minutos de inactividad**
+    - **Tipo de trabajo**: Standard_D4ds_v5
+    - **Nodo único**: Activado
 
 6. Espera a que se cree el clúster. Esto puede tardar un par de minutos.
 
 > **Nota**: si el clúster no se inicia, es posible que la suscripción no tenga cuota suficiente en la región donde se aprovisiona el área de trabajo de Azure Databricks. Para obtener más información, consulta [El límite de núcleos de la CPU impide la creación de clústeres](https://docs.microsoft.com/azure/databricks/kb/clusters/azure-core-limit). Si esto sucede, puedes intentar eliminar el área de trabajo y crear una nueva en otra región.
-
-## Instalación de bibliotecas necesarias
-
-1. En la página del clúster, selecciona la pestaña **Bibliotecas**.
-
-2. Selecciona **Instalar nueva**.
-
-3. Selecciona **PyPI** como origen de la biblioteca e instala `openai==1.42.0`.
 
 ## Creación un nuevo cuaderno
 
@@ -169,7 +156,7 @@ La IA responsable hace referencia al desarrollo, la implementación y el uso ét
 
     for row in neutral_input:
         completion = client.chat.completions.create(
-            model="gpt-35-turbo",
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": row},
@@ -180,7 +167,7 @@ La IA responsable hace referencia al desarrollo, la implementación y el uso ét
 
     for row in loaded_input:
         completion = client.chat.completions.create(
-            model="gpt-35-turbo",
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": row},
@@ -208,7 +195,7 @@ Si se detecta un sesgo, hay técnicas de mitigación como volver a realizar el m
 
 ## Limpieza
 
-Cuando haya terminado de usar el recurso de Azure OpenAI, recuerde eliminar la implementación o todo el recurso en **Azure Portal**, en `https://portal.azure.com`.
+Cuando hayas terminado de usar el recurso de Azure OpenAI, recuerda eliminar la implementación o todo el recurso en **Azure Portal**, en `https://portal.azure.com`.
 
 En el portal de Azure Databricks, en la página **Proceso**, selecciona el clúster y **&#9632; Finalizar** para apagarlo.
 
