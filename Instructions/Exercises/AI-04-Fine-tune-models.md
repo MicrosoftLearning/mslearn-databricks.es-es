@@ -9,7 +9,7 @@ Con Azure Databricks, los usuarios ahora pueden sacar provecho de la eficacia de
 
 Este laboratorio se tarda en completar **60** minutos aproximadamente.
 
-> **Nota**: la interfaz de usuario de Azure Databricks está sujeta a una mejora continua. Es posible que la interfaz de usuario haya cambiado desde que se escribieron las instrucciones de este ejercicio.
+> **NOTA**: La interfaz de usuario de Azure Databricks está sujeta a una mejora continua. Es posible que la interfaz de usuario haya cambiado desde que se escribieron las instrucciones de este ejercicio.
 
 ## Antes de empezar
 
@@ -41,13 +41,13 @@ Si aún no tienes uno, aprovisiona un recurso de Azure OpenAI en la suscripción
 
 6. Inicia Cloud Shell y ejecuta `az account get-access-token` para obtener un token de autorización temporal para las pruebas de API. Mantenlo con el punto de conexión y la clave copiados anteriormente.
 
-    >**Nota**: Solo tienes que copiar el valor del campo `accessToken` y **no** toda la salida JSON.
+    >**NOTA**: Solo tienes que copiar el valor del campo `accessToken` y **no** toda la salida JSON.
 
 ## Implementación del modelo necesario
 
 Azure proporciona un portal basado en web denominado **Fundición de IA de Azure**, que puedes usar para implementar, administrar y explorar modelos. Comenzarás la exploración de Azure OpenAI mediante la Fundición de IA de Azure para implementar un modelo.
 
-> **Nota**: A medida que usas la Fundición de IA de Azure, es posible que se muestren cuadros de mensaje que sugieren tareas para que las realices. Puedes cerrarlos y seguir los pasos descritos en este ejercicio.
+> **NOTA**: A medida que usas la Fundición de IA de Azure, es posible que se muestren cuadros de mensaje que sugieren tareas para que las realices. Puedes cerrarlos y seguir los pasos descritos en este ejercicio.
 
 1. En Azure Portal, en la página **Información general** del recurso de Azure OpenAI, desplázate hacia abajo hasta la sección **Introducción** y selecciona el botón para ir a la **Fundición de IA de Azure**.
    
@@ -79,7 +79,7 @@ Azure proporciona un portal basado en web denominado **Fundición de IA de Azure
 
 Azure Databricks es una plataforma de procesamiento distribuido que usa clústeres* de Apache Spark *para procesar datos en paralelo en varios nodos. Cada clúster consta de un nodo de controlador para coordinar el trabajo y nodos de trabajo para hacer tareas de procesamiento. En este ejercicio, crearás un clúster de *nodo único* para minimizar los recursos de proceso usados en el entorno de laboratorio (en los que se pueden restringir los recursos). En un entorno de producción, normalmente crearías un clúster con varios nodos de trabajo.
 
-> **Sugerencia**: Si ya dispones de un clúster con una versión de runtime 15.4 LTS **<u>ML</u>** o superior en su área de trabajo de Azure Databricks, puedes utilizarlo para completar este ejercicio y omitir este procedimiento.
+> **Sugerencia**: Si ya dispone de un clúster con una versión de runtime 16.4 LTS **<u>ML</u>** o superior en el área de trabajo de Azure Databricks, puede utilizarlo para completar este ejercicio y omitir este procedimiento.
 
 1. En Azure Portal, ve al grupo de recursos donde se creó el espacio de trabajo de Azure Databricks.
 2. Selecciona tu recurso del servicio Azure Databricks.
@@ -92,37 +92,27 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
     - **Nombre del clúster**: clúster del *Nombre de usuario*  (el nombre del clúster predeterminado)
     - **Directiva**: Unrestricted (Sin restricciones)
     - **Aprendizaje automático**: Habilitado
-    - **Databricks Runtime**: 15.4 LTS
+    - **Databricks Runtime**: 16.4 LTS
     - **Utilizar la Aceleración de fotones**: <u>No</u> seleccionada
     - **Tipo de trabajo**: Standard_D4ds_v5
     - **Nodo único**: Activado
 
 6. Espera a que se cree el clúster. Esto puede tardar un par de minutos.
 
-> **Nota**: si el clúster no se inicia, es posible que la suscripción no tenga cuota suficiente en la región donde se aprovisiona el área de trabajo de Azure Databricks. Para obtener más información, consulta [El límite de núcleos de la CPU impide la creación de clústeres](https://docs.microsoft.com/azure/databricks/kb/clusters/azure-core-limit). Si esto sucede, puedes intentar eliminar el área de trabajo y crear una nueva en otra región.
+> **NOTA**: Si el clúster no se inicia, es posible que la suscripción no tenga cuota suficiente en la región donde se aprovisiona el área de trabajo de Azure Databricks. Para obtener más información, consulta [El límite de núcleos de la CPU impide la creación de clústeres](https://docs.microsoft.com/azure/databricks/kb/clusters/azure-core-limit). Si esto sucede, puedes intentar eliminar el área de trabajo y crear una nueva en otra región.
 
 ## Creación de un cuaderno nuevo e ingesta de datos
 
 1. En la barra lateral, usa el vínculo **(+) Nuevo** para crear un **cuaderno**. En la lista desplegable **Conectar**, selecciona el clúster si aún no está seleccionado. Si el clúster no se está ejecutando, puede tardar un minuto en iniciarse.
+1. En una nueva pestaña del explorador, descargue el [conjunto de datos de entrenamiento](https://github.com/MicrosoftLearning/mslearn-databricks/raw/main/data/training_set.jsonl) en `https://github.com/MicrosoftLearning/mslearn-databricks/raw/main/data/training_set.jsonl` y el [conjunto de datos de validación](https://github.com/MicrosoftLearning/mslearn-databricks/raw/main/data/validation_set.jsonl) en `https://github.com/MicrosoftLearning/mslearn-databricks/raw/main/data/validation_set.jsonl` que se usarán en este ejercicio.
 
-1. En la primera celda del cuaderno, escribe la siguiente consulta SQL para crear un volumen que se usará para almacenar los datos de este ejercicio en tu catálogo predeterminado:
+> **Nota**: es posible que el dispositivo guarde el archivo de forma predeterminada como un archivo .txt. En el campo **Guardar como tipo**, seleccione **Todos los archivos ** y quite el sufijo .txt para asegurarse de que el archivo se va a guardar como JSONL.
 
-    ```python
-   %sql 
-   CREATE VOLUME <catalog_name>.default.fine_tuning;
-    ```
-
-1. Reemplaza `<catalog_name>` por el nombre de tu catálogo predeterminado. Para comprobar su nombre, selecciona **Catálogo** en la barra lateral.
-1. Usa la opción del menú **&#9656; Ejecutar celda** situado a la izquierda de la celda para ejecutarla. A continuación, espera a que se complete el trabajo de Spark ejecutado por el código.
-1. En una nueva celda, ejecuta el código siguiente que usa un comando de *shell* para descargar datos de GitHub en el catálogo de Unity.
-
-    ```python
-   %sh
-   wget -O /Volumes/<catalog_name>/default/fine_tuning/training_set.jsonl https://github.com/MicrosoftLearning/mslearn-databricks/raw/main/data/training_set.jsonl
-   wget -O /Volumes/<catalog_name>/default/fine_tuning/validation_set.jsonl https://github.com/MicrosoftLearning/mslearn-databricks/raw/main/data/validation_set.jsonl
-    ```
-
-3. En una celda nueva, ejecuta el código siguiente con la información de acceso que copiaste al principio de este ejercicio para asignar variables de entorno persistentes para la autenticación al usar recursos de Azure OpenAI:
+1. De nuevo en la pestaña Área de trabajo de Databricks, con el cuaderno abierto, seleccione el explorador **Catálogo (CTRL + Alt + C)** y el icono ➕ para **Agregar datos**.
+1. En la página **Agregar datos**, seleccione **Cargar archivos en DBFS**.
+1. En la página **DBFS**, asigne el nombre `fine_tuning` al directorio de destino y cargue los archivos .jsonl que ha guardado antes.
+1. En la barra lateral, seleccione **Área de trabajo** y vuelva a abrir el cuaderno.
+1. En la primera celda del cuaderno, escriba el código siguiente con la información de acceso que ha copiado al principio de este ejercicio para asignar variables de entorno persistentes para la autenticación al usar recursos de Azure OpenAI:
 
     ```python
    import os
@@ -131,6 +121,8 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
    os.environ["AZURE_OPENAI_ENDPOINT"] = "your_openai_endpoint"
    os.environ["TEMP_AUTH_TOKEN"] = "your_access_token"
     ```
+
+1. Usa la opción del menú **&#9656; Ejecutar celda** situado a la izquierda de la celda para ejecutarla. A continuación, espera a que se complete el trabajo de Spark ejecutado por el código.
      
 ## Validar los recuentos de tokens
 
@@ -169,7 +161,7 @@ Tanto `training_set.jsonl` como `validation_set.jsonl` se componen de diferentes
        print(f"min / max: {min(values)}, {max(values)}")
        print(f"mean / median: {np.mean(values)}, {np.median(values)}")
 
-   files = ['/Volumes/<catalog_name>/default/fine_tuning/training_set.jsonl', '/Volumes/<catalog_name>/default/fine_tuning/validation_set.jsonl']
+   files = ['/dbfs/FileStore/tables/fine_tuning/training_set.jsonl', '/dbfs/FileStore/tables/fine_tuning/validation_set.jsonl']
 
    for file in files:
        print(f"File: {file}")
@@ -207,8 +199,8 @@ Antes de empezar a optimizar el modelo, debes inicializar un cliente de OpenAI y
       api_version = "2024-05-01-preview"  # This API version or later is required to access seed/events/checkpoint features
     )
 
-    training_file_name = '/Volumes/<catalog_name>/default/fine_tuning/training_set.jsonl'
-    validation_file_name = '/Volumes/<catalog_name>/default/fine_tuning/validation_set.jsonl'
+    training_file_name = '/dbfs/FileStore/tables/fine_tuning/training_set.jsonl'
+    validation_file_name = '/dbfs/FileStore/tables/fine_tuning/validation_set.jsonl'
 
     training_response = client.files.create(
         file = open(training_file_name, "rb"), purpose="fine-tune"
@@ -250,7 +242,7 @@ El parámetro `seed` controla la reproducibilidad del trabajo de optimización. 
    print("Status:", response.status)
     ```
 
->**Nota**: También puedes supervisar el estado del trabajo en la Fundición de IA; para ello, selecciona **Ajuste preciso** en la barra lateral izquierda.
+    >**NOTA**: También puedes supervisar el estado del trabajo en la Fundición de IA; para ello, selecciona **Ajuste preciso** en la barra lateral izquierda.
 
 3. Una vez que el estado del trabajo cambie a `succeeded`, ejecuta el código siguiente para obtener los resultados finales:
 
@@ -260,12 +252,14 @@ El parámetro `seed` controla la reproducibilidad del trabajo de optimización. 
    print(response.model_dump_json(indent=2))
    fine_tuned_model = response.fine_tuned_model
     ```
-   
-## Implementación de un modelo con ajuste preciso
+
+    >**NOTA**: El ajuste preciso de un modelo puede tardar más de 60 minutos, por lo que puede finalizar el ejercicio en este momento y considerar la implementación del modelo como una tarea opcional en caso de que tenga tiempo.
+
+## [OPCIONAL] Implementación del modelo ajustado
 
 Ahora que tienes un modelo optimizado, puedes implementarlo como modelo personalizado y usarlo como cualquier otro modelo implementado en el sitio de prueba de **Chat** de la Fundición de IA de Azure o a través de la API de finalización de chat.
 
-1. En una nueva celda, ejecuta el código siguiente para implementar el modelo optimizado:
+1. En una nueva celda, ejecute el código siguiente para implementar el modelo ajustado y reemplace los marcadores de posición `<YOUR_SUBSCRIPTION_ID>`, `<YOUR_RESOURCE_GROUP_NAME>` y `<YOUR_AZURE_OPENAI_RESOURCE_NAME>`:
    
     ```python
    import json
@@ -285,7 +279,7 @@ Ahora que tienes un modelo optimizado, puedes implementarlo como modelo personal
        "properties": {
            "model": {
                "format": "OpenAI",
-               "name": "<YOUR_FINE_TUNED_MODEL>",
+               "name": "gpt-4o-ft",
                "version": "1"
            }
        }
@@ -303,6 +297,8 @@ Ahora que tienes un modelo optimizado, puedes implementarlo como modelo personal
    print(r.json())
     ```
 
+> **NOTA**: Puede encontrar el identificador de suscripción en la página Información general del área de trabajo de Databricks o el recurso OpenAI en Azure Portal.
+
 2. En una nueva celda, ejecuta el código siguiente para usar el modelo personalizado en una llamada de finalización de chat:
    
     ```python
@@ -316,7 +312,7 @@ Ahora que tienes un modelo optimizado, puedes implementarlo como modelo personal
    )
 
    response = client.chat.completions.create(
-       model = "gpt-4o-ft", # model = "Custom deployment name you chose for your fine-tuning model"
+       model = "gpt-4o-ft",
        messages = [
            {"role": "system", "content": "You are a helpful assistant."},
            {"role": "user", "content": "Does Azure OpenAI support customer managed keys?"},

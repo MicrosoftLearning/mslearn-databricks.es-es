@@ -41,22 +41,21 @@ Si aún no tienes uno, aprovisiona un recurso de Azure OpenAI en la suscripción
 
 ## Implementación del modelo necesario
 
-Azure proporciona un portal basado en web denominado **Azure AI Studio** que puedes usar para implementar, administrar y explorar modelos. Para iniciar la exploración de Azure OpenAI, usa Azure AI Studio para implementar un modelo.
+Azure proporciona un portal basado en web denominado **Fundición de IA de Azure**, que puedes usar para implementar, administrar y explorar modelos. Comenzarás la exploración de Azure OpenAI mediante la Fundición de IA de Azure para implementar un modelo.
 
-> **Nota**: a medida que usas Azure AI Studio, es posible que se muestren cuadros de mensaje que sugieren tareas que se van a realizar. Puedes cerrarlos y seguir los pasos descritos en este ejercicio.
+> **Nota**: A medida que usas la Fundición de IA de Azure, es posible que se muestren cuadros de mensaje que sugieren tareas para que las realices. Puedes cerrarlos y seguir los pasos descritos en este ejercicio.
 
-1. En Azure Portal, en la página **Información general** del recurso de Azure OpenAI, desplázate hacia abajo hasta la sección **Comenzar** y selecciona el botón para ir a **Inteligencia artificial de Azure Studio**.
+1. En Azure Portal, en la página **Información general** del recurso de Azure OpenAI, desplázate hacia abajo hasta la sección **Introducción** y selecciona el botón para ir a la **Fundición de IA de Azure**.
    
-1. En Azure AI Studio, en el panel de la izquierda, selecciona la página **Implementaciones** y consulta las implementaciones de modelos existentes. Si aún no tienes una, crea una nueva implementación del modelo **gpt-35-turbo** con la siguiente configuración:
-    - **Nombre de implementación**: *gpt-35-turbo*
-    - **Modelo**: gpt-35-turbo
-    - **Versión del modelo**: Valor predeterminado
-    - **Tipo de implementación**: Estándar
-    - **Límite de velocidad de tokens por minuto**: 5000\*
+1. En la Fundición de IA de Azure, en el panel de la izquierda, selecciona la página **Implementaciones** y visualiza las implementaciones de modelos existentes. Si aún no tienes una, crea una nueva implementación del modelo **gpt-4o** con la siguiente configuración:
+    - **Nombre de implementación**: *gpt-4o*
+    - **Tipo de implementación**: estándar
+    - **Versión del modelo**: *usa la versión predeterminada*
+    - **Límite de velocidad de tokens por minuto**: 10 000\*
     - **Filtro de contenido**: valor predeterminado
     - **Habilitación de la cuota dinámica**: deshabilitada
     
-> \* Un límite de velocidad de 5000 tokens por minuto es más que adecuado para completar este ejercicio, al tiempo que dejas capacidad para otras personas que usan la misma suscripción.
+> \* Un límite de velocidad de 10 000 tokens por minuto es más que adecuado para completar este ejercicio, al tiempo que deja capacidad para otras personas que usan la misma suscripción.
 
 ## Aprovisiona un área de trabajo de Azure Databricks.
 
@@ -76,7 +75,7 @@ Azure proporciona un portal basado en web denominado **Azure AI Studio** que pue
 
 Azure Databricks es una plataforma de procesamiento distribuido que usa clústeres* de Apache Spark *para procesar datos en paralelo en varios nodos. Cada clúster consta de un nodo de controlador para coordinar el trabajo y nodos de trabajo para hacer tareas de procesamiento. En este ejercicio, crearás un clúster de *nodo único* para minimizar los recursos de proceso usados en el entorno de laboratorio (en los que se pueden restringir los recursos). En un entorno de producción, normalmente crearías un clúster con varios nodos de trabajo.
 
-> **Sugerencia**: Si ya dispone de un clúster con una versión de runtime 13.3 LTS **<u>ML</u>** o superior en su área de trabajo de Azure Databricks, puede utilizarlo para completar este ejercicio y omitir este procedimiento.
+> **Sugerencia**: Si ya dispone de un clúster con una versión de runtime 16.4 LTS **<u>ML</u>** o superior en el área de trabajo de Azure Databricks, puede utilizarlo para completar este ejercicio y omitir este procedimiento.
 
 1. En Azure Portal, ve al grupo de recursos donde se creó el espacio de trabajo de Azure Databricks.
 2. Selecciona tu recurso del servicio Azure Databricks.
@@ -88,39 +87,15 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 5. En la página **Nuevo clúster**, crea un clúster con la siguiente configuración:
     - **Nombre del clúster**: clúster del *Nombre de usuario*  (el nombre del clúster predeterminado)
     - **Directiva**: Unrestricted (Sin restricciones)
-    - **Modo de clúster** de un solo nodo
-    - **Modo de acceso**: usuario único (*con la cuenta de usuario seleccionada*)
-    - **Versión de runtime de Databricks**: *Seleccione la edición de **<u>ML</u>** de la última versión no beta más reciente del runtime (**No** una versión de runtime estándar) que:*
-        - ***No** usa una GPU*
-        - *Incluye Scala > **2.11***
-        - *Incluye Spark > **3.4***
+    - **Aprendizaje automático**: Habilitado
+    - **Databricks Runtime**: 16.4 LTS
     - **Utilizar la Aceleración de fotones**: <u>No</u> seleccionada
-    - **Tipo de nodo**: Standard_D4ds_v5
-    - **Finaliza después de** *20* **minutos de inactividad**
+    - **Tipo de trabajo**: Standard_D4ds_v5
+    - **Nodo único**: Activado
 
 6. Espera a que se cree el clúster. Esto puede tardar un par de minutos.
 
 > **Nota**: si el clúster no se inicia, es posible que la suscripción no tenga cuota suficiente en la región donde se aprovisiona el área de trabajo de Azure Databricks. Para obtener más información, consulta [El límite de núcleos de la CPU impide la creación de clústeres](https://docs.microsoft.com/azure/databricks/kb/clusters/azure-core-limit). Si esto sucede, puedes intentar eliminar el área de trabajo y crear una nueva en otra región.
-
-## Instalación de bibliotecas necesarias
-
-1. En el área de trabajo de Databricks, ve a la sección **Área de trabajo**.
-
-2. Selecciona **Crear** y, después, selecciona **Cuaderno**.
-
-3. Asigna un nombre al cuaderno y selecciona `Python` como lenguaje.
-
-4. En la primera celda de código, escribe y ejecuta el código siguiente para instalar la biblioteca de OpenAI:
-   
-     ```python
-    %pip install openai
-     ```
-
-5. Una vez completada la instalación, reinicia el kernel en una nueva celda:
-
-     ```python
-    %restart_python
-     ```
 
 ## Registra el LLM mediante MLflow
 
@@ -133,7 +108,7 @@ Las funcionalidades de seguimiento de LLM de MLflow te permiten registrar parám
 
     os.environ["AZURE_OPENAI_API_KEY"] = "your_openai_api_key"
     os.environ["AZURE_OPENAI_ENDPOINT"] = "your_openai_endpoint"
-    os.environ["AZURE_OPENAI_API_VERSION"] = "2023-03-15-preview"
+    os.environ["AZURE_OPENAI_API_VERSION"] = "2024-05-01-preview"
      ```
 1. En una nueva celda, ejecuta el código siguiente para inicializar el cliente de Azure OpenAI:
 
@@ -161,7 +136,7 @@ Las funcionalidades de seguimiento de LLM de MLflow te permiten registrar parám
     with mlflow.start_run():
 
         response = client.chat.completions.create(
-            model="gpt-35-turbo",
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": "Tell me a joke about animals."},
@@ -177,13 +152,11 @@ La celda anterior iniciará un experimento en tu área de trabajo y registrará 
 
 ## Supervisión del modelo
 
-1. En la barra lateral de la izquierda, selecciona **Experimentos** y selecciona el experimento asociado al cuaderno que usaste para este ejercicio. Selecciona la ejecución más reciente y comprueba en la página de información general que hay un parámetro registrado: `completion_tokens`. El comando `mlflow.openai.autolog()` registrará los seguimientos de cada ejecución de forma predeterminada, pero también puedes registrar parámetros adicionales con `mlflow.log_param()` que se pueden usar más adelante para supervisar el modelo.
-
-1. Selecciona la pestaña **Seguimientos** y, a continuación, selecciona el último creado. Comprueba que el parámetro `completion_tokens` forma parte de la salida del seguimiento:
+Después de ejecutar la última celda, la interfaz de usuario de seguimiento de MLflow se mostrará automáticamente junto con la salida de la celda. También puede verlo si selecciona **Experimentos** en la barra lateral de la izquierda y, después, abre la ejecución del experimento del cuaderno:
 
    ![Interfaz de usuario de seguimiento de MLFlow](./images/trace-ui.png)  
 
-Una vez que empieces a supervisar el modelo, puedes comparar los seguimientos de diferentes ejecuciones para detectar el desfase de datos. Busca cambios significativos en las distribuciones de datos de entrada, las predicciones del modelo o las métricas de rendimiento a lo largo del tiempo. Puedes usar pruebas estadísticas o herramientas de visualización para ayudar en este análisis.
+El comando `mlflow.openai.autolog()` registrará los seguimientos de cada ejecución de forma predeterminada, pero también puedes registrar parámetros adicionales con `mlflow.log_param()` que se pueden usar más adelante para supervisar el modelo. Una vez que empieces a supervisar el modelo, puedes comparar los seguimientos de diferentes ejecuciones para detectar el desfase de datos. Busca cambios significativos en las distribuciones de datos de entrada, las predicciones del modelo o las métricas de rendimiento a lo largo del tiempo. También puede usar pruebas estadísticas o herramientas de visualización para ayudarle en este análisis.
 
 ## Limpieza
 
