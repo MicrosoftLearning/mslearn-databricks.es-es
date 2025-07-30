@@ -118,7 +118,7 @@ Ahora que tiene algunos datos, puede usarlos con AutoML para entrenar un modelo.
 
 Después de ejecutar un experimento de AutoML, puede explorar el modelo de mejor rendimiento que se generó.
 
-1. En la página del experimento de **Clasificación de pingüinos**, seleccione **Ver cuaderno para el mejor modelo** para abrir el cuaderno usado para entrenar al modelo en una nueva pestaña del explorador.
+1. En la página del experimento **Clasificación de pingüinos**, selecciona **Ver cuaderno para el mejor modelo** para abrir el cuaderno usado para entrenar al modelo en una nueva pestaña del explorador.
 1. Desplácese por las celdas del cuaderno y observe el código que se usó para entrenar al modelo.
 1. Cierre la pestaña del explorador que contiene el cuaderno para volver a la página del experimento de **Clasificación de pingüinos**.
 1. En la lista de ejecuciones, seleccione el nombre de la primera ejecución (la que produjo el mejor modelo) para abrirla.
