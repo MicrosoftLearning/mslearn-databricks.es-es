@@ -75,37 +75,22 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 
 ## Instalación de bibliotecas necesarias
 
-1. En la página del clúster, selecciona la pestaña **Bibliotecas**.
-
-2. Selecciona **Instalar nueva**.
-
-3. Selecciona **PyPi** como origen de la biblioteca y escribe `transformers==4.53.0` en el campo **Paquete**.
-
-4. Seleccione **Instalar**.
-
-5. Repite los pasos anteriores para instalar `databricks-vectorsearch==0.56`.
-   
-## Creación de un cuaderno e ingesta de datos
-
 1. En la barra lateral, usa el vínculo **(+) Nuevo** para crear un **cuaderno**. En la lista desplegable **Conectar**, selecciona el clúster si aún no está seleccionado. Si el clúster no se está ejecutando, puede tardar un minuto en iniciarse.
-
-1. En la primera celda del cuaderno, escribe la siguiente consulta SQL para crear un volumen que se usará para almacenar los datos de este ejercicio en tu catálogo predeterminado:
-
+1. En la primera celda de código, escribe y ejecuta el código siguiente para instalar las bibliotecas necesarias:
+   
     ```python
-   %sql 
-   CREATE VOLUME <catalog_name>.default.RAG_lab;
+   %pip install faiss-cpu
+   dbutils.library.restartPython()
     ```
+   
+## Ingerir datos
 
-1. Reemplaza `<catalog_name>` por el nombre del área de trabajo, ya que Azure Databricks crea automáticamente un catálogo predeterminado con ese nombre.
-1. Usa la opción del menú **&#9656; Ejecutar celda** situado a la izquierda de la celda para ejecutarla. A continuación, espera a que se complete el trabajo de Spark ejecutado por el código.
-1. En una nueva celda, ejecuta el código siguiente que usa un comando de *shell* para descargar datos de GitHub en el catálogo de Unity.
-
-    ```python
-   %sh
-   wget -O /Volumes/<catalog_name>/default/RAG_lab/enwiki-latest-pages-articles.xml https://github.com/MicrosoftLearning/mslearn-databricks/raw/main/data/enwiki-latest-pages-articles.xml
-    ```
-
-1. En una nueva celda, ejecuta el siguiente código para crear un marco de datos a partir de los datos sin procesar:
+1. En una nueva pestaña del explorador, descargue el [archivo de ejemplo](https://github.com/MicrosoftLearning/mslearn-databricks/raw/main/data/enwiki-latest-pages-articles.xml) que se usará como datos en este ejercicio: `https://github.com/MicrosoftLearning/mslearn-databricks/raw/main/data/enwiki-latest-pages-articles.xml`
+1. De nuevo en la pestaña Área de trabajo de Databricks, con el cuaderno abierto, seleccione el explorador **Catálogo (CTRL + Alt + C)** y el icono ➕ para **Agregar datos**.
+1. En la página **Agregar datos**, seleccione **Cargar archivos en DBFS**.
+1. En la página **DBFS**, asigne el nombre `RAG_lab` al directorio de destino y cargue el archivo .xml que ha guardado antes.
+1. En la barra lateral, seleccione **Área de trabajo** y vuelva a abrir el cuaderno.
+1. En una nueva celda de código, ejecuta el siguiente código para crear un marco de datos a partir de los datos sin procesar:
 
     ```python
    from pyspark.sql import SparkSession
@@ -118,7 +103,7 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
    # Read the XML file
    raw_df = spark.read.format("xml") \
        .option("rowTag", "page") \
-       .load("/Volumes/<catalog_name>/default/RAG_lab/enwiki-latest-pages-articles.xml")
+       .load("/FileStore/tables/RAG_lab/enwiki_latest_pages_articles.xml")
 
    # Show the DataFrame
    raw_df.show(5)
@@ -127,67 +112,61 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
    raw_df.printSchema()
     ```
 
-1. En una nueva celda, ejecuta el código siguiente, reemplazando `<catalog_name>` por el nombre del catálogo de Unity, para limpiar y preprocesar los datos para extraer los campos de texto pertinentes:
+1. Usa la opción del menú **&#9656; Ejecutar celda** situado a la izquierda de la celda para ejecutarla. A continuación, espera a que se complete el trabajo de Spark ejecutado por el código.
+1. En una nueva celda, ejecute el código siguiente para limpiar y preprocesar los datos a fin de extraer los campos de texto pertinentes:
 
     ```python
    from pyspark.sql.functions import col
 
    clean_df = raw_df.select(col("title"), col("revision.text._VALUE").alias("text"))
    clean_df = clean_df.na.drop()
-   clean_df.write.format("delta").mode("overwrite").saveAsTable("<catalog_name>.default.wiki_pages")
    clean_df.show(5)
     ```
 
-    Si abres el explorador del **catálogo (CTRL + Alt + C)** y actualizas su panel, verás la tabla Delta creada en el catálogo de Unity predeterminado.
-
 ## Generación de incrustaciones e implementación del vector de búsqueda
 
-El vector de búsqueda Mosaic AI de Databricks es una solución de base de datos vectorial integrada en la plataforma de Azure Databricks. Optimiza el almacenamiento y la recuperación de incrustaciones mediante el algoritmo Pequeño mundo navegable jerárquico (HNSW). Permite búsquedas de vecino más próximo eficaces y su capacidad de búsqueda de similitud de palabras clave híbrida proporciona resultados más relevantes mediante la combinación de técnicas de búsqueda basadas en vectores y basadas en palabras clave.
+FAISS (Facebook AI Similarity Search) es una biblioteca de bases de datos vectoriales de código abierto desarrollada por Meta AI, diseñada para una búsqueda eficaz de similitud y agrupación en clústeres de vectores densos. FAISS permite búsquedas de vecino más próximo rápidas y escalables, y se puede integrar con sistemas de búsqueda híbridos para combinar la similitud basada en vectores con técnicas tradicionales basadas en palabras clave, lo que mejora la relevancia de los resultados de la búsqueda.
 
-1. En una nueva celda, ejecuta la siguiente consulta SQL para habilitar la característica Cambio de fuente de distribución de datos en la tabla de origen antes de crear un índice de sincronización delta.
+1. En una nueva celda, ejecute el código siguiente para cargar el modelo `all-MiniLM-L6-v2` entrenado previamente y convertir texto en inserciones:
 
     ```python
-   %sql
-   ALTER TABLE <catalog_name>.default.wiki_pages SET TBLPROPERTIES (delta.enableChangeDataFeed = true)
+   from sentence_transformers import SentenceTransformer
+   import numpy as np
+    
+   # Load pre-trained model
+   model = SentenceTransformer('all-MiniLM-L6-v2')
+    
+   # Function to convert text to embeddings
+   def text_to_embedding(text):
+       embeddings = model.encode([text])
+       return embeddings[0]
+    
+   # Convert the DataFrame to a Pandas DataFrame
+   pandas_df = clean_df.toPandas()
+    
+   # Apply the function to get embeddings
+   pandas_df['embedding'] = pandas_df['text'].apply(text_to_embedding)
+   embeddings = np.vstack(pandas_df['embedding'].values)
     ```
 
-2. En una nueva celda, ejecuta el código siguiente para crear el índice de vector de búsqueda.
+1. En una nueva celda, ejecute el código siguiente para crear y consultar el índice de FAISS:
 
     ```python
-   from databricks.vector_search.client import VectorSearchClient
-
-   client = VectorSearchClient()
-
-   client.create_endpoint(
-       name="vector_search_endpoint",
-       endpoint_type="STANDARD"
-   )
-
-   index = client.create_delta_sync_index(
-     endpoint_name="vector_search_endpoint",
-     source_table_name="<catalog_name>.default.wiki_pages",
-     index_name="<catalog_name>.default.wiki_index",
-     pipeline_type="TRIGGERED",
-     primary_key="title",
-     embedding_source_column="text",
-     embedding_model_endpoint_name="databricks-gte-large-en"
-    )
-    ```
-     
-Si abres el explorador del **catálogo (CTRL + Alt + C)** y actualizas su panel, verás el índice creado en el catálogo de Unity predeterminado.
-
-> **Nota:** Antes de ejecutar la celda de código siguiente, comprueba que el índice se ha creado correctamente. Para ello, haz clic con el botón derecho en el índice en el panel del catálogo y selecciona **Abrir en el explorador de catálogo**. Espera hasta que el estado del índice sea **En línea**.
-
-3. En una nueva celda, ejecuta el código siguiente para buscar documentos pertinentes basados en un vector de consulta.
-
-    ```python
-   results_dict=index.similarity_search(
-       query_text="Anthropology fields",
-       columns=["title", "text"],
-       num_results=1
-   )
-
-   display(results_dict)
+   import faiss
+    
+   # Create a FAISS index
+   d = embeddings.shape[1]  # dimension
+   index = faiss.IndexFlatL2(d)  # L2 distance
+   index.add(embeddings)  # add vectors to the index
+    
+   # Perform a search
+   query_embedding = text_to_embedding("Anthropology fields")
+   k = 1  # number of nearest neighbors
+   distances, indices = index.search(np.array([query_embedding]), k)
+    
+   # Get the results
+   results = pandas_df.iloc[indices[0]]
+   display(results)
     ```
 
 Comprueba que la salida encuentra la página Wiki correspondiente relacionada con la solicitud de consulta.
@@ -199,29 +178,26 @@ Ahora podemos mejorar las capacidades de los modelos de lenguaje de grande propo
 1. En una nueva celda, ejecuta el siguiente código para combinar los datos recuperados con la consulta del usuario y así crear una solicitud enriquecida para el LLM.
 
     ```python
-   # Convert the dictionary to a DataFrame
-   results = spark.createDataFrame([results_dict['result']['data_array'][0]])
-
    from transformers import pipeline
-
+    
    # Load the summarization model
    summarizer = pipeline("summarization", model="facebook/bart-large-cnn", framework="pt")
-
+    
    # Extract the string values from the DataFrame column
-   text_data = results.select("_2").rdd.flatMap(lambda x: x).collect()
-
+   text_data = results["text"].tolist()
+    
    # Pass the extracted text data to the summarizer function
    summary = summarizer(text_data, max_length=512, min_length=100, do_sample=True)
-
+    
    def augment_prompt(query_text):
        context = " ".join([item['summary_text'] for item in summary])
-       return f"Query: {query_text}\nContext: {context}"
-
+       return f"{context}\n\nQuestion: {query_text}\nAnswer:"
+    
    prompt = augment_prompt("Explain the significance of Anthropology")
    print(prompt)
     ```
 
-3. En una nueva celda, ejecuta el código siguiente para usar un LLM para generar respuestas.
+1. En una nueva celda, ejecuta el código siguiente para usar un LLM para generar respuestas.
 
     ```python
    from transformers import GPT2LMHeadModel, GPT2Tokenizer

@@ -89,7 +89,7 @@ Azure proporciona un portal basado en web denominado **Fundición de IA de Azure
 
 Azure Databricks es una plataforma de procesamiento distribuido que usa clústeres* de Apache Spark *para procesar datos en paralelo en varios nodos. Cada clúster consta de un nodo de controlador para coordinar el trabajo y nodos de trabajo para hacer tareas de procesamiento. En este ejercicio, crearás un clúster de *nodo único* para minimizar los recursos de proceso usados en el entorno de laboratorio (en los que se pueden restringir los recursos). En un entorno de producción, normalmente crearías un clúster con varios nodos de trabajo.
 
-> **Sugerencia**: Si ya dispones de un clúster con una versión de runtime 15.4 LTS **<u>ML</u>** o superior en su área de trabajo de Azure Databricks, puedes utilizarlo para completar este ejercicio y omitir este procedimiento.
+> **Sugerencia**: Si ya dispone de un clúster con una versión de runtime 16.4 LTS **<u>ML</u>** o superior en el área de trabajo de Azure Databricks, puede utilizarlo para completar este ejercicio y omitir este procedimiento.
 
 1. En Azure Portal, ve al grupo de recursos donde se creó el espacio de trabajo de Azure Databricks.
 1. Selecciona tu recurso del servicio Azure Databricks.
@@ -102,7 +102,7 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
     - **Nombre del clúster**: clúster del *Nombre de usuario*  (el nombre del clúster predeterminado)
     - **Directiva**: Unrestricted (Sin restricciones)
     - **Aprendizaje automático**: Habilitado
-    - **Databricks Runtime**: 15.4 LTS
+    - **Databricks Runtime**: 16.4 LTS
     - **Utilizar la Aceleración de fotones**: <u>No</u> seleccionada
     - **Tipo de trabajo**: Standard_D4ds_v5
     - **Nodo único**: Activado
