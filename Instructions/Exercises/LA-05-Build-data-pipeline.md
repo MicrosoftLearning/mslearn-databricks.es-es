@@ -159,7 +159,7 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 1. Una vez que la canalización se haya ejecutado correctamente, vuelve al cuaderno *Crear una canalización con tablas Delta Live* reciente que creaste primero y ejecuta el código siguiente en una nueva celda para comprobar que los archivos de las 3 tablas nuevas se han creado en la ubicación de almacenamiento especificada:
 
      ```python
-    display(dbutils.fs.ls("dbfs:/pipelines/delta_lab/tables"))
+    display(dbutils.fs.ls("dbfs:/pipelines/delta_lab/schemas/default/tables"))
      ```
 
 1. Agrega otra celda de código y ejecuta el código siguiente para comprobar que las tablas se han creado en la base de datos **predeterminada**:
