@@ -253,13 +253,15 @@ El parámetro `seed` controla la reproducibilidad del trabajo de optimización. 
    fine_tuned_model = response.fine_tuned_model
     ```
 
+4. Revise la respuesta json y anote el nombre único generado en el campo `"fine_tuned_model"`. Se usará en la tarea opcional siguiente.
+
     >**NOTA**: El ajuste preciso de un modelo puede tardar más de 60 minutos, por lo que puede finalizar el ejercicio en este momento y considerar la implementación del modelo como una tarea opcional en caso de que tenga tiempo.
 
 ## [OPCIONAL] Implementación del modelo ajustado
 
 Ahora que tienes un modelo optimizado, puedes implementarlo como modelo personalizado y usarlo como cualquier otro modelo implementado en el sitio de prueba de **Chat** de la Fundición de IA de Azure o a través de la API de finalización de chat.
 
-1. En una nueva celda, ejecute el código siguiente para implementar el modelo ajustado y reemplace los marcadores de posición `<YOUR_SUBSCRIPTION_ID>`, `<YOUR_RESOURCE_GROUP_NAME>` y `<YOUR_AZURE_OPENAI_RESOURCE_NAME>`:
+1. En una nueva celda, ejecute el código siguiente para implementar el modelo ajustado y reemplace los marcadores de posición `<YOUR_SUBSCRIPTION_ID>`, `<YOUR_RESOURCE_GROUP_NAME>`, `<YOUR_AZURE_OPENAI_RESOURCE_NAME>` y `<FINE_TUNED_MODEL>`:
    
     ```python
    import json
@@ -279,7 +281,7 @@ Ahora que tienes un modelo optimizado, puedes implementarlo como modelo personal
        "properties": {
            "model": {
                "format": "OpenAI",
-               "name": "gpt-4o-ft",
+               "name": "<FINE_TUNED_MODEL>",
                "version": "1"
            }
        }
@@ -323,7 +325,9 @@ Ahora que tienes un modelo optimizado, puedes implementarlo como modelo personal
 
    print(response.choices[0].message.content)
     ```
- 
+
+>**NOTA**: Puede tardar unos minutos antes de que se complete la implementación del modelo ajustado. Puede comprobarlo en la página **Implementaciones** de Fundición de IA de Azure.
+
 ## Limpieza
 
 Cuando hayas terminado de usar el recurso de Azure OpenAI, recuerda eliminar la implementación o todo el recurso en **Azure Portal**, en `https://portal.azure.com`.
