@@ -19,18 +19,30 @@ Este ejercicio debería tardar aproximadamente **20** minutos en completarse.
 
 > **Sugerencia**: si ya tienes un área de trabajo de Azure Databricks, puedes omitir este procedimiento y usar el área de trabajo existente.
 
-1. Inicie sesión en **Azure Portal** en `https://portal.azure.com`.
-2. Crea un recurso de **Azure Databricks** con la siguiente configuración:
-    - **Suscripción**: *Seleccione la suscripción de Azure*
-    - **** Grupo de recursos: *crea un nuevo grupo de recursos denominado `msl-xxxxxxx` (donde "xxxxxxx" es un valor único)*
-    - **Nombre del área de trabajo**: `databricks-xxxxxxx`*(donde "xxxxxxx" es el valor usado en el nombre del grupo de recursos)*.
-    - **Región**: *selecciona cualquier región disponible*.
-    - **Plan de tarifa**: *Premium* o *Prueba*
-    - **Nombre del grupo de recursos administrados**: `databricks-xxxxxxx-managed`*(donde "xxxxxxx" es el valor usado en el nombre del grupo de recursos)*.
+1. Inicia sesión en **Azure Portal** en `https://portal.azure.com`.
+2. Usa el botón **[\>_]** situado a la derecha de la barra de búsqueda en la parte superior de la página para crear una nueva instancia de Cloud Shell en Azure Portal, para lo que deberás seleccionar un entorno de ***PowerShell***. Cloud Shell proporciona una interfaz de línea de comandos en un panel situado en la parte inferior de Azure Portal, como se muestra a continuación:
 
-    ![Captura de pantalla de la página Crear un área de trabajo de Azure Databricks en Azure Portal.](./images/create-databricks.png)
+    ![Azure Portal con un panel de Cloud Shell](./images/cloud-shell.png)
 
-3. Selecciona **Revisar y crear** y espera a que se complete la implementación. Después, ve al recurso e inicia el espacio de trabajo.
+    > **Nota**: si has creado anteriormente una instancia de Cloud Shell que usa un entorno de *Bash*, cámbiala a ***PowerShell***.
+
+3. Ten en cuenta que puedes cambiar el tamaño de la instancia de Cloud Shell. Para ello, arrastra la barra de separación de la parte superior del panel o utiliza los iconos **&#8212;**, **&#10530;** y **X** de la parte superior derecha del panel para minimizar, maximizar y cerrar el panel. Para obtener más información sobre el uso de Azure Cloud Shell, consulta la [documentación de Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview).
+
+4. En el panel de PowerShell, introduce los siguientes comandos para clonar este repositorio:
+
+    ```
+    rm -r mslearn-databricks -f
+    git clone https://github.com/MicrosoftLearning/mslearn-databricks
+    ```
+
+5. Una vez clonado el repositorio, escribe el siguiente comando para ejecutar el script **setup.ps1**, que aprovisiona un área de trabajo de Azure Databricks en una región disponible:
+
+    ```
+    ./mslearn-databricks/setup.ps1
+    ```
+
+6. Si se solicita, elige la suscripción que quieres usar (esto solo ocurrirá si tienes acceso a varias suscripciones de Azure).
+7. Espera a que se complete el script: normalmente tarda unos 5 minutos, pero en algunos casos puede tardar más. Mientras esperas, revisa el artículo [Análisis de datos exploratorios en Azure Databricks](https://learn.microsoft.com/azure/databricks/exploratory-data-analysis/) en la documentación de Azure Databricks.
 
 ## Crear un clúster
 
