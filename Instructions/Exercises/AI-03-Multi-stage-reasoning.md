@@ -119,7 +119,7 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 1. En la primera celda de código, escribe y ejecuta el código siguiente para instalar las bibliotecas necesarias:
    
     ```python
-   %pip install langchain openai langchain_openai faiss-cpu
+   %pip install langchain openai langchain_openai langchain-community faiss-cpu
     ```
 
 1. Una vez completada la instalación, reinicia el kernel en una nueva celda:
