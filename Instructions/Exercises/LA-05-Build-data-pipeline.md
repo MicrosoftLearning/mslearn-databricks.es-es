@@ -1,15 +1,17 @@
 ---
 lab:
-  title: Creación de una canalización de datos con Delta Live Tables
+  title: Creación de una canalización declarativa de Lakeflow
 ---
 
-# Creación de una canalización de datos con Delta Live Tables
+# Creación de una canalización declarativa de Lakeflow
 
-Delta Live Tables es una plataforma para crear canalizaciones de procesamiento de datos confiables, fáciles de mantener y que se pueden probar. Una canalización es la unidad principal utilizada para configurar y ejecutar flujos de trabajo de procesamiento de datos con Delta Live Tables. Vincula los orígenes de datos a los conjuntos de datos de destino a través de un grafo Acíclico dirigido (DAG) declarado en Python o SQL.
+Las canalizaciones declarativas de Lakeflow son un marco dentro de la plataforma Databricks Lakehouse para compilar y ejecutar canalizaciones de datos de forma **declarativa**. Esto significa que se especifican las transformaciones de datos que desea lograr y el sistema determina automáticamente cómo ejecutarlas de forma eficaz, controlando muchas de las complejidades de la ingeniería de datos tradicional.
+
+Las canalizaciones declarativas de Lakeflow simplifican el desarrollo de canalizaciones de ETL (extracción, transformación, carga) mediante la abstracción de los detalles complejos y de bajo nivel. En lugar de escribir código de procedimiento que dicta cada paso, se usa una sintaxis declarativa más sencilla y declarativa en SQL o Python.
 
 Se tardan aproximadamente **40** minutos en completar este laboratorio.
 
-> **Nota**: la interfaz de usuario de Azure Databricks está sujeta a una mejora continua. Es posible que la interfaz de usuario haya cambiado desde que se escribieron las instrucciones de este ejercicio.
+> **Nota**: la interfaz de usuario de Azure Databricks está sujeta a una mejora continua. Es posible que la interfaz de usuario haya cambiado desde que se escribieron las instrucciones de este ejercicio. Las canalizaciones declarativas de Lakeflow son la evolución de Delta Live Tables (DLT) de Databricks, que ofrecen un enfoque unificado para cargas de trabajo por lotes y de streaming.
 
 ## Aprovisiona un área de trabajo de Azure Databricks.
 
@@ -41,7 +43,7 @@ En este ejercicio, se incluye un script para aprovisionar una nueva área de tra
 
 6. Si se solicita, elige la suscripción que quieres usar (esto solo ocurrirá si tienes acceso a varias suscripciones de Azure).
 
-7. Espera a que se complete el script: normalmente tarda unos 5 minutos, pero en algunos casos puede tardar más. Mientras esperas, revisa el artículo [Qué es Delta Live Tables](https://learn.microsoft.com/azure/databricks/delta-live-tables/) en la documentación de Azure Databricks.
+7. Espera a que se complete el script: normalmente tarda unos 5 minutos, pero en algunos casos puede tardar más. Mientras espera, revise el artículo [Canalizaciones declarativas de Lakeflow](https://learn.microsoft.com/azure/databricks/dlt/) en la documentación de Azure Databricks.
 
 ## Crear un clúster
 
@@ -77,7 +79,7 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 
 1. En la barra lateral, usa el vínculo **(+) Nuevo** para crear un **cuaderno**.
 
-2. Cambia el nombre por defecto del cuaderno (**Cuaderno sin título *[fecha]***) por `Create a pipeline with Delta Live tables` y en la lista desplegable **Conectar**, selecciona tu clúster si aún no está seleccionado. Si el clúster no se está ejecutando, puede tardar un minuto en iniciarse.
+2. Cambia el nombre por defecto del cuaderno (**Cuaderno sin título *[fecha]***) por `Data Ingestion and Exploration` y en la lista desplegable **Conectar**, selecciona tu clúster si aún no está seleccionado. Si el clúster no se está ejecutando, puede tardar un minuto en iniciarse.
 
 3. En la primera celda del cuaderno, escribe el siguiente código, que utiliza comandos del *shell* para descargar los archivos de datos de GitHub en el sistema de archivos utilizado por el clúster.
 
@@ -90,16 +92,16 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 
 4. Usa la opción del menú **&#9656; Ejecutar celda** situado a la izquierda de la celda para ejecutarla. A continuación, espera a que se complete el trabajo de Spark ejecutado por el código.
 
-## Creación de una canalización de Delta Live Tables mediante SQL
+## Creación de una canalización declarativa de Lakeflow mediante SQL
 
-1. Crea un nuevo cuaderno y cámbiale el nombre por `Pipeline Notebook`.
+1. Crea un nuevo cuaderno y cámbiale el nombre por `Covid Pipeline Notebook`.
 
 1. Junto al nombre del cuaderno, selecciona **Python** y cambia el lenguaje predeterminado a **SQL**.
 
-1. Escribe el código siguiente en la primera celda sin ejecutarlo. Todas las celdas se ejecutarán después de crear la canalización. Este código define una tabla Delta Live Table que se rellenará con los datos sin procesar descargados anteriormente:
+1. Escriba el código siguiente en la primera celda *sin ejecutarlo*. Todas las celdas se ejecutarán después de crear la canalización. Este código define una vista materializada que se rellenará con los datos sin procesar descargados anteriormente:
 
      ```sql
-    CREATE OR REFRESH LIVE TABLE raw_covid_data
+    CREATE OR REFRESH MATERIALIZED VIEW raw_covid_data
     COMMENT "COVID sample dataset. This data was ingested from the COVID-19 Data Repository by the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University."
     AS
     SELECT
@@ -114,7 +116,7 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 1. En la primera celda, utiliza el icono **+ Código** para agregar una nueva celda y especifica el código siguiente para consultar, filtrar y dar formato a los datos de la tabla anterior antes del análisis.
 
      ```sql
-    CREATE OR REFRESH LIVE TABLE processed_covid_data(
+    CREATE OR REFRESH MATERIALIZED VIEW processed_covid_data(
       CONSTRAINT valid_country_region EXPECT (Country_Region IS NOT NULL) ON VIOLATION FAIL UPDATE
     )
     COMMENT "Formatted and filtered data for analysis."
@@ -131,7 +133,7 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 1. En una tercera nueva celda de código, especifica el código siguiente que creará una vista de datos enriquecida para su posterior análisis una vez que la canalización se ejecute correctamente.
 
      ```sql
-    CREATE OR REFRESH LIVE TABLE aggregated_covid_data
+    CREATE OR REFRESH MATERIALIZED VIEW aggregated_covid_data
     COMMENT "Aggregated daily data for the US with total counts."
     AS
     SELECT
@@ -143,20 +145,20 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
     GROUP BY Report_Date;
      ```
      
-1. Selecciona **Delta Live Tables** en la barra lateral izquierda y, luego, selecciona **Crear canalización**.
+1. Seleccione **Trabajos y canalizaciones** en la barra lateral izquierda y, a continuación, seleccione **Canalización de ETL**.
 
 1. En la página **Crear canalización**, crea una canalización con la siguiente configuración:
     - **Nombre de la canalización**: `Covid Pipeline`
     - **Edición del producto**: avanzado
     - **Modo de canalización**: desencadenado
-    - **Código fuente**: *navega a tu cuaderno* Cuaderno de canalización *en la carpeta *Users/user@name**.
+    - **Código fuente**: *Vaya al cuaderno* Covid Pipeline Notebook *en la carpeta* Users/user@name **.
     - **Opciones de almacenamiento**: metastore de Hive
     - **Ubicación de almacenamiento**: `dbfs:/pipelines/delta_lab`
     - **Esquema de destino**: *especifica*`default`
 
 1. Selecciona **Crear** y después **Guardar**. A continuación, espera a que se ejecute la canalización (que puede tardar algún tiempo).
  
-1. Una vez que la canalización se haya ejecutado correctamente, vuelve al cuaderno *Crear una canalización con tablas Delta Live* reciente que creaste primero y ejecuta el código siguiente en una nueva celda para comprobar que los archivos de las 3 tablas nuevas se han creado en la ubicación de almacenamiento especificada:
+1. Una vez que la canalización se haya ejecutado correctamente, vuelva al cuaderno reciente *Exploración e ingesta de datos* que creó primero y ejecute el código siguiente en una nueva celda para comprobar que los archivos de las 3 tablas nuevas se han creado en la ubicación de almacenamiento especificada:
 
      ```python
     display(dbutils.fs.ls("dbfs:/pipelines/delta_lab/schemas/default/tables"))
@@ -174,7 +176,7 @@ Azure Databricks es una plataforma de procesamiento distribuido que usa clúster
 
 Después de crear las tablas, es posible cargarlas en dataframes y visualizar los datos.
 
-1. En el cuaderno *Crear una canalización con tablas Delta Live*, agrega una nueva celda de código y ejecuta el código siguiente para cargar `aggregated_covid_data` en un dataframe:
+1. En el cuaderno *Exploración e ingesta de datos*, agregue una nueva celda de código y ejecute el código siguiente para cargar `aggregated_covid_data` en un dataframe:
 
     ```sql
     %sql

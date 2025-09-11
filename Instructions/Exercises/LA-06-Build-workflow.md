@@ -1,11 +1,11 @@
 ---
 lab:
-  title: Implementación de cargas de trabajo con flujos de trabajo de Azure Databricks
+  title: Implementación de cargas de trabajo con los trabajos de Lakeflow de Azure Databricks
 ---
 
-# Implementación de cargas de trabajo con flujos de trabajo de Azure Databricks
+# Implementación de cargas de trabajo con los trabajos de Lakeflow de Azure Databricks
 
-Los flujos de trabajo de Azure Databricks proporcionan una plataforma sólida para implementar cargas de trabajo de forma eficaz. Con características como Azure Databricks Jobs y Delta Live Tables, los usuarios pueden orquestar canalizaciones complejas de procesamiento de datos, aprendizaje automático y análisis.
+Los trabajos de Lakeflow de Azure Databricks proporcionan una plataforma sólida para implementar cargas de trabajo de manera eficaz. Con características como Azure Databricks Jobs y Delta Live Tables, los usuarios pueden orquestar canalizaciones complejas de procesamiento de datos, aprendizaje automático y análisis.
 
 Se tardan aproximadamente **40** minutos en completar este laboratorio.
 
@@ -41,7 +41,7 @@ En este ejercicio, se incluye un script para aprovisionar una nueva área de tra
 
 6. Si se solicita, elige la suscripción que quieres usar (esto solo ocurrirá si tienes acceso a varias suscripciones de Azure).
 
-7. Espera a que se complete el script: normalmente tarda unos 5 minutos, pero en algunos casos puede tardar más. Mientras esperas, revisa el artículo [Programación y organización de flujos de trabajo](https://learn.microsoft.com/azure/databricks/jobs/) en la documentación de Azure Databricks.
+7. Espera a que se complete el script: normalmente tarda unos 5 minutos, pero en algunos casos puede tardar más. Mientras espera, revise el artículo [Trabajos de Lakeflow](https://learn.microsoft.com/azure/databricks/jobs/) en la documentación de Azure Databricks.
 
 ## Crear un clúster
 
@@ -143,9 +143,9 @@ Implementa el flujo de trabajo de procesamiento y análisis de datos mediante ta
 
 Azure Databricks administra la orquestación de tareas, la administración de clústeres, la supervisión y la generación de informes de errores en todos los trabajos. Puedes ejecutar los trabajos inmediatamente, periódicamente a través de un sistema de programación fácil de usar, siempre que los nuevos archivos lleguen a una ubicación externa o de forma continua para asegurarse de que una instancia del trabajo siempre se está ejecutando.
 
-1. En la barra de menús de la izquierda, selecciona **Flujos de trabajo**.
+1. En el área de trabajo, haga clic en el icono de ![Flujos de trabajo](./images/WorkflowsIcon.svg). **Trabajos y canalizaciones** en la barra lateral.
 
-2. En el panel Flujos de trabajo, selecciona **Crear trabajo**.
+2. En el panel "Trabajos y canalizaciones", seleccione **Crear** y, a continuación, **Trabajo**.
 
 3. Cambia el nombre de trabajo predeterminado (**Nuevo trabajo *[fecha]***) a `ETL job`
 
