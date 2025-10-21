@@ -99,24 +99,24 @@ Usará un cuaderno para ejecutar comandos SQL que crean y exploran objetos de Un
 
 3. En la primera celda del cuaderno, escriba y ejecute el código siguiente para establecer el nuevo catálogo como el predeterminado y compruebe lo siguiente:
 
-    ```
-    %sql
-    USE CATALOG <your_catalog_name>;
-    SELECT current_catalog();
-    ```
+```sql
+%sql
+USE CATALOG <your_catalog_name>;
+SELECT current_catalog();
+```
 
 ## Creación y administración de esquemas
 
 1. Agregue una nueva celda y ejecute el código siguiente para crear un esquema denominado **sales** y establecerlo como predeterminado:
 
-    ```
-    %sql
-    CREATE SCHEMA IF NOT EXISTS sales
-    COMMENT 'Schema for sales data';
+```sql
+%sql
+CREATE SCHEMA IF NOT EXISTS sales
+COMMENT 'Schema for sales data';
 
-    USE SCHEMA sales;
-    SELECT current_schema();
-    ```
+USE SCHEMA sales;
+SELECT current_schema();
+```
 
 2. En el **Explorador de catálogos**, vaya al catálogo y expándalo para ver el esquema **sales** que acaba de crear junto con los esquemas **default** e **information_schema**.
 
@@ -126,31 +126,31 @@ Usará un cuaderno para ejecutar comandos SQL que crean y exploran objetos de Un
 
 1. Agregue una nueva celda y ejecute el código siguiente a fin de crear una tabla administrada para los datos del cliente:
 
-    ```
-    %sql
-    CREATE OR REPLACE TABLE customers (
-      customer_id INT,
-      customer_name STRING,
-      email STRING,
-      city STRING,
-      country STRING
-    )
-    COMMENT 'Customer information table';
-    ```
+```sql
+%sql
+CREATE OR REPLACE TABLE customers (
+  customer_id INT,
+  customer_name STRING,
+  email STRING,
+  city STRING,
+  country STRING
+)
+COMMENT 'Customer information table';
+```
 
 2. Agregue una nueva celda y ejecute el código siguiente para insertar datos de ejemplo y comprobar que se han insertado:
 
-    ```
-    %sql
-    INSERT INTO customers VALUES
-      (1, 'Aaron Gonzales', 'aaron@contoso.com', 'Seattle', 'USA'),
-      (2, 'Anne Patel', 'anne@contoso.com', 'London', 'UK'),
-      (3, 'Casey Jensen', 'casey@contoso.com', 'Toronto', 'Canada'),
-      (4, 'Elizabeth Moore', 'elizabeth@contoso.com', 'Sydney', 'Australia'),
-      (5, 'Liam Davis', 'liam@contoso.com', 'Berlin', 'Germany');
+```sql
+%sql
+INSERT INTO customers VALUES
+  (1, 'Aaron Gonzales', 'aaron@contoso.com', 'Seattle', 'USA'),
+  (2, 'Anne Patel', 'anne@contoso.com', 'London', 'UK'),
+  (3, 'Casey Jensen', 'casey@contoso.com', 'Toronto', 'Canada'),
+  (4, 'Elizabeth Moore', 'elizabeth@contoso.com', 'Sydney', 'Australia'),
+  (5, 'Liam Davis', 'liam@contoso.com', 'Berlin', 'Germany');
 
-    SELECT * FROM customers;
-    ```
+SELECT * FROM customers;
+```
 3. Cambie al **Explorador de catálogos** y vaya a la tabla catálogo > **sales** schema > **customers**. Haga clic en la tabla para explorar:
    - Pestaña **Esquema**: vea las definiciones de columna y los tipos de datos
    - Pestaña **Datos de ejemplo**: consulte una vista previa de los datos que ha insertado
@@ -162,15 +162,15 @@ Usará un cuaderno para ejecutar comandos SQL que crean y exploran objetos de Un
 
 1. Agregue una nueva celda y ejecute el código siguiente para crear una vista que filtre a los clientes:
 
-    ```
-    %sql
-    CREATE OR REPLACE VIEW usa_customers AS
-    SELECT customer_id, customer_name, email, city
-    FROM customers
-    WHERE country = 'USA';
+```sql
+%sql
+CREATE OR REPLACE VIEW usa_customers AS
+SELECT customer_id, customer_name, email, city
+FROM customers
+WHERE country = 'USA';
 
-    SELECT * FROM usa_customers;
-    ```
+SELECT * FROM usa_customers;
+```
 
 2. Cambie al **Explorador de catálogos** y vaya al esquema catálogo > **sales**. Observe que ahora se muestran la tabla **customers** y la vista **usa_customers**.
 
@@ -184,33 +184,33 @@ Ahora que ha creado objetos mediante SQL y los ha comprobado en el Explorador de
 
 2. Agregue una nueva celda y ejecute el código siguiente para enumerar todos los catálogos a los que tiene acceso:
 
-    ```
-    %sql
-    SHOW CATALOGS;
-    ```
+```sql
+%sql
+SHOW CATALOGS;
+```
 
    Aquí se enumeran todos los catálogos a los que tiene acceso, incluido el catálogo **system**, el catálogo del área de trabajo y el catálogo personalizado.
 
 3. Agregue una nueva celda y ejecute el código siguiente para enumerar todos los esquemas del catálogo actual:
 
-    ```
-    %sql
-    SHOW SCHEMAS;
-    ```
+```sql
+%sql
+SHOW SCHEMAS;
+```
 
 4. Agregue una nueva celda y ejecute el código siguiente para enumerar todas las tablas y vistas del catálogo actual:
 
-    ```
-    %sql
-    SHOW TABLES;
-    ```
+```sql
+%sql
+SHOW TABLES;
+```
 
 5. Agregue una nueva celda y ejecute el código siguiente para usar DESCRIBE a fin de obtener metadatos de tabla detallados:
 
-    ```
-    %sql
-    DESCRIBE EXTENDED customers;
-    ```
+```sql
+%sql
+DESCRIBE EXTENDED customers;
+```
 
    El comando DESCRIBE EXTENDED proporciona información completa sobre la tabla, incluidas las definiciones de columna, las propiedades de la tabla, la ubicación de almacenamiento, etc.
 
