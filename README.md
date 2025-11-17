@@ -1,3 +1,5 @@
+**⚠️ This GitHub repo will retire on 28th November 2025.**
+
 # Laboratorios de Azure Databricks
 
 Este repositorio contiene instrucciones y recursos de apoyo para los ejercicios prácticos de los [módulos de Microsoft Learn sobre Azure Databricks](https://docs.microsoft.com/training/paths/data-engineer-azure-databricks/).
